@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:putulinmo/src/data/models/disconnect_model.dart';
+import 'package:diconnection/src/data/models/disconnect_model.dart';
 import 'package:sizer/sizer.dart';
 
 class DisconnectStatusModal extends StatefulWidget {

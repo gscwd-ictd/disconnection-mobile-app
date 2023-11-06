@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:putulinmo/src/core/utils/constants.dart';
-import 'package:putulinmo/src/presentation/view/dashboard_screen/dashboard_screen.dart';
+import 'package:diconnection/src/core/utils/constants.dart';
+import 'package:diconnection/src/presentation/view/dashboard_screen/dashboard_screen.dart';
 import 'package:sizer/sizer.dart';
 
 class Login extends StatefulWidget {

@@ -1,6 +1,6 @@
 {
-    "name": "putulinmo",
-    "short_name": "putulinmo",
+    "name": "diconnection",
+    "short_name": "diconnection",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

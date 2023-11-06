@@ -1,4 +1,4 @@
-package com.waterdistrict.putulinmo
+package com.waterdistrict.diconnection
 
 import io.flutter.embedding.android.FlutterActivity
 

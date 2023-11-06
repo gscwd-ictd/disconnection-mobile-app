@@ -1,4 +1,4 @@
-import 'package:putulinmo/src/data/models/user_model.dart';
+import 'package:diconnection/src/data/models/user_model.dart';
 
 class AuthMock{
   static List<UserModel> authList = [

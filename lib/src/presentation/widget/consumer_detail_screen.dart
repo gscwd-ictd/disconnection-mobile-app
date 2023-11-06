@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:putulinmo/src/data/models/consumer_model.dart';
-import 'package:putulinmo/src/data/models/disconnect_model.dart';
-import 'package:putulinmo/src/presentation/widget/consumer_location.dart';
-import 'package:putulinmo/src/presentation/widget/diconnect_stats_modal.dart';
+import 'package:diconnection/src/data/models/consumer_model.dart';
+import 'package:diconnection/src/data/models/disconnect_model.dart';
+import 'package:diconnection/src/presentation/widget/consumer_location.dart';
+import 'package:diconnection/src/presentation/widget/diconnect_stats_modal.dart';
 import 'package:sizer/sizer.dart';
 
 class ConsumerDetailScreen extends StatefulWidget {

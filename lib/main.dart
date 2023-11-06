@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:putulinmo/src/core/utils/constants.dart';
-import 'package:putulinmo/src/presentation/view/login_screen/login_screen.dart';
+import 'package:diconnection/src/core/utils/constants.dart';
+import 'package:diconnection/src/presentation/view/login_screen/login_screen.dart';
 import 'package:sizer/sizer.dart';
 
 Future<void> main() async{
@@ -67,18 +67,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

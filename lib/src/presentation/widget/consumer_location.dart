@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:putulinmo/src/core/utils/constants.dart';
+import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:sizer/sizer.dart';
 
 class ConsumerLocation extends StatefulWidget {

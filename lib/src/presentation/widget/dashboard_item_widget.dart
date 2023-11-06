@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:putulinmo/src/core/utils/constants.dart';
+import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:sizer/sizer.dart';
 
 class DashBoardItemWidget extends StatefulWidget {

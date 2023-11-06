@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:putulinmo/src/core/enums/auth/auth_level.dart';
-import 'package:putulinmo/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
-import 'package:putulinmo/src/core/utils/constants.dart';
-import 'package:putulinmo/src/data/models/consumer_model.dart';
-import 'package:putulinmo/src/presentation/widget/consumer_detail_for_team.dart';
-import 'package:putulinmo/src/presentation/widget/consumer_detail_screen.dart';
+import 'package:diconnection/src/core/enums/auth/auth_level.dart';
+import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
+import 'package:diconnection/src/core/utils/constants.dart';
+import 'package:diconnection/src/data/models/consumer_model.dart';
+import 'package:diconnection/src/presentation/widget/consumer_detail_for_team.dart';
+import 'package:diconnection/src/presentation/widget/consumer_detail_screen.dart';
 import 'package:sizer/sizer.dart';
 
 class ConsumerAccountItemWidget extends StatefulWidget {

@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.waterdistrict" "\0"
-            VALUE "FileDescription", "putulinmo" "\0"
+            VALUE "FileDescription", "diconnection" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "putulinmo" "\0"
+            VALUE "InternalName", "diconnection" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.waterdistrict. All rights reserved." "\0"
-            VALUE "OriginalFilename", "putulinmo.exe" "\0"
-            VALUE "ProductName", "putulinmo" "\0"
+            VALUE "OriginalFilename", "diconnection.exe" "\0"
+            VALUE "ProductName", "diconnection" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

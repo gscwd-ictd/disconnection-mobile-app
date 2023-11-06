@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:putulinmo/src/core/messages/reminder_message/reminder_message.dart';
-import 'package:putulinmo/src/core/messages/success_message/success_message.dart';
-import 'package:putulinmo/src/core/utils/constants.dart';
-import 'package:putulinmo/src/data/models/consumer_model.dart';
+import 'package:diconnection/src/core/messages/reminder_message/reminder_message.dart';
+import 'package:diconnection/src/core/messages/success_message/success_message.dart';
+import 'package:diconnection/src/core/utils/constants.dart';
+import 'package:diconnection/src/data/models/consumer_model.dart';
 import 'package:sizer/sizer.dart';
 
 class ConsumerDetailForTeam extends StatefulWidget {

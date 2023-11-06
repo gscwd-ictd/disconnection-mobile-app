@@ -1,4 +1,4 @@
-import 'package:putulinmo/src/data/models/consumer_model.dart';
+import 'package:diconnection/src/data/models/consumer_model.dart';
 
 class ConsumerMockData{
   static List<ConsumerModel> consumerList = [

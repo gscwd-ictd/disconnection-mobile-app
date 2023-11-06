@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:putulinmo/src/core/messages/reminder_message/reminder_message.dart';
+import 'package:diconnection/src/core/messages/reminder_message/reminder_message.dart';
 
 class TeamItemWidget extends StatefulWidget {
   final String teamName;
