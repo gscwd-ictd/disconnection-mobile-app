@@ -20,7 +20,7 @@ class TeamAssignmentScreen extends StatefulWidget {
 }
 
 class _TeamAssignmentScreenState extends State<TeamAssignmentScreen> {
-  List<ConsumerModel> consumerList = ConsumerMockData.consumerList;
+  List<ConsumerModel> consumerList = ConsumerMockData.consumerListA;
   TextEditingController txtSearch = TextEditingController();
   List<ConsumerModel> filterList = [];
   final _scrollController = ScrollController();

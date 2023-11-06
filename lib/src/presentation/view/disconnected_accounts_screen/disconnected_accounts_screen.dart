@@ -21,7 +21,7 @@ class DisconnectedAccountScreen extends StatefulWidget {
 }
 
 class _DisconnectedAccountScreenState extends State<DisconnectedAccountScreen> {
-  List<ConsumerModel> consumerList = ConsumerMockData.consumerList;
+  List<ConsumerModel> consumerList = ConsumerMockData.consumerListA;
   TextEditingController txtSearch = TextEditingController();
   List<ConsumerModel> filterList = [];
   final _scrollController = ScrollController();

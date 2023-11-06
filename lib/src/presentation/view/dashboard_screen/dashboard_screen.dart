@@ -1,3 +1,4 @@
+import 'package:diconnection/src/presentation/view/zone_assigned_screen/zone_assigned_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:diconnection/src/core/enums/auth/auth_level.dart';
@@ -41,7 +42,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     onPressedFunction: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
-                              const AssignedTeamAccounts(auth:  AuthLevel.Team1,)));
+                              const ZoneAssignedScreen()));
                     },
                   ),
                   SizedBox(height: 3.0.h),

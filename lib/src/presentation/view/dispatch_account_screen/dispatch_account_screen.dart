@@ -20,7 +20,7 @@ class DispatchAccountScreen extends StatefulWidget {
 }
 
 class _DispatchAccountScreenState extends State<DispatchAccountScreen> {
-  List<ConsumerModel> consumerList = ConsumerMockData.consumerList;
+  List<ConsumerModel> consumerList = ConsumerMockData.consumerListA;
   TextEditingController txtSearch = TextEditingController();
   List<ConsumerModel> filterList = [];
   bool chkSelectAll = false;
@@ -40,7 +40,7 @@ class _DispatchAccountScreenState extends State<DispatchAccountScreen> {
     accounts.forEach((account) {
       if(CheckBoxHandler.distributeSelected[count]){
         //changing Consumer mock data "Teams"
-        ConsumerMockData.consumerList.forEach((element) {
+        ConsumerMockData.consumerListA.forEach((element) {
           
          });
       }
@@ -216,7 +216,7 @@ class _DispatchAccountScreenState extends State<DispatchAccountScreen> {
                           ? consumerList.length
                           : filterList.length,
                       itemBuilder: (context, index) {
-                        int consumerLength = ConsumerMockData.consumerList.length;
+                        int consumerLength = ConsumerMockData.consumerListA.length;
                         int chkHandler = CheckBoxHandler.distributeSelected.length;
                         if(chkHandler < consumerLength){
                           CheckBoxHandler.distributeSelected.add(false);

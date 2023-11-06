@@ -23,7 +23,7 @@ class ConsumerList extends StatefulWidget {
 }
 
 class _ConsumerListState extends State<ConsumerList> {
-  List<ConsumerModel> consumerList = ConsumerMockData.consumerList;
+  List<ConsumerModel> consumerList = ConsumerMockData.consumerListA;
   TextEditingController txtSearch = TextEditingController();
   List<ConsumerModel> filterList = [];
   final _scrollController = ScrollController();

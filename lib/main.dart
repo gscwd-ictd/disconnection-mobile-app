@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/presentation/view/login_screen/login_screen.dart';
@@ -14,7 +15,7 @@ Future<void> main() async{
 
   await Hive.openBox('registration');
   await Hive.openBox('category');
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -77,6 +78,5 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return const Login();
-    //return DistributeAccountDetail(consumerData: ConsumerMockData.consumerList[0], icondata: Icons.abc, index: 0, onPressedFunction: (){},);
   }
 }

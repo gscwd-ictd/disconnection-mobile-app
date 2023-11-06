@@ -1,51 +1,28 @@
-import 'package:dropdown_search/dropdown_search.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:diconnection/src/core/enums/auth/auth_level.dart';
 import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
-import 'package:diconnection/src/core/messages/reminder_message/reminder_message.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
-import 'package:diconnection/src/data/mock/consumer_mock.dart';
-import 'package:diconnection/src/data/models/consumer_model.dart';
-import 'package:diconnection/src/presentation/widget/consumer_account_item_widget.dart';
-import 'package:diconnection/src/presentation/widget/team_item_widget.dart';
+import 'package:diconnection/src/data/mock/zones_mock.dart';
+import 'package:diconnection/src/data/models/zone_model.dart';
+import 'package:diconnection/src/presentation/widget/Zone_item_widget.dart';
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-class AssignedTeamAccounts extends StatefulWidget {
-  final AuthLevel auth;
-  const AssignedTeamAccounts(
-      {Key? key,
-      required this.auth})
-      : super(key: key);
+class ZoneAssignedScreen extends StatefulWidget {
+  const ZoneAssignedScreen({super.key});
 
   @override
-  State<AssignedTeamAccounts> createState() =>
-      _AssignedTeamAccountsState();
+  State<ZoneAssignedScreen> createState() => _ZoneAssignedScreenState();
 }
 
-class _AssignedTeamAccountsState extends State<AssignedTeamAccounts> {
-  List<ConsumerModel> consumerList = ConsumerMockData.consumerListA;
+class _ZoneAssignedScreenState extends State<ZoneAssignedScreen> {
   TextEditingController txtSearch = TextEditingController();
-  List<ConsumerModel> filterList = [];
-  final _scrollController = ScrollController();
-
-  void _alterfilter(String query) {
-    filterList = [];
-    consumerList.forEach((item) {
-      if (item.zone == query) {
-        filterList.add(item);
-      }
-    });
-  }
-
+  List<ZoneModel> zonesData = ZonesMock.zoneList;
+  ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: kScaffoldColor,
-      ),
+      appBar: AppBar(),
       body: Column(
         children: [
           Padding(
@@ -60,7 +37,7 @@ class _AssignedTeamAccountsState extends State<AssignedTeamAccounts> {
                     onChanged: (val) {
                       CheckBoxHandler.distributeSelected = [];
                       setState(() {
-                        _alterfilter(val);
+                        // _alterfilter(val);
                       });
                     },
                     controller: txtSearch,
@@ -123,18 +100,18 @@ class _AssignedTeamAccountsState extends State<AssignedTeamAccounts> {
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: txtSearch.text == ""
-                          ? consumerList.length
-                          : filterList.length,
+                          ? zonesData.length
+                          : zonesData.length,
                       itemBuilder: (context, index) {
                         CheckBoxHandler.distributeSelected.add(false);
-                        return ConsumerAccountItemWidget(
-                          consumerData: txtSearch.text == ""
-                              ? consumerList[index]
-                              : filterList[index],
+                        return ZoneItemWidget(
+                          zoneData: txtSearch.text == ""
+                              ? zonesData[index]
+                              : zonesData[index],
                           index: index,
                           onPressedFunction: () {},
                           isDiconnected: true,
-                          auth: widget.auth,
+                          auth: AuthLevel.Admin,
                         );
                       },
                     ),
