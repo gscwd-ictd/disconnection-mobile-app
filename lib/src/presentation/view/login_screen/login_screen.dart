@@ -1,7 +1,7 @@
+import 'package:diconnection/src/presentation/view/zone_assigned_screen/zone_assigned_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
-import 'package:diconnection/src/presentation/view/dashboard_screen/dashboard_screen.dart';
 import 'package:sizer/sizer.dart';
 
 class Login extends StatefulWidget {
@@ -105,26 +105,13 @@ class _LoginState extends State<Login> {
                       borderRadius: BorderRadius.circular(15.0)))),
               onPressed: () async {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const DashBoardScreen(isTeam: false)));
+                    builder: (context) => const ZoneAssignedScreen()));
               },
               child: const Padding(
                 padding: EdgeInsets.all(10.0),
                 child: Text('Log in', style: TextStyle(color: Colors.black)),
               )),
           const SizedBox(height: 20.0),
-          ElevatedButton(
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(kWhiteColor),
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0)))),
-              onPressed: () async {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const DashBoardScreen(isTeam: true, teamName: "Team1",)));
-              },
-              child: const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Text('Log in as TEAM 1', style: TextStyle(color: Colors.black)),
-              )),
         ],
       ),
     );

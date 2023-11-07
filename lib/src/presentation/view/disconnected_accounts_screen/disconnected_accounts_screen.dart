@@ -1,15 +1,11 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:diconnection/src/core/enums/auth/auth_level.dart';
 import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
-import 'package:diconnection/src/core/messages/reminder_message/reminder_message.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/mock/consumer_mock.dart';
 import 'package:diconnection/src/data/models/consumer_model.dart';
 import 'package:diconnection/src/presentation/widget/consumer_account_item_widget.dart';
-import 'package:diconnection/src/presentation/widget/team_item_widget.dart';
 import 'package:sizer/sizer.dart';
 
 class DisconnectedAccountScreen extends StatefulWidget {
@@ -129,8 +125,7 @@ class _DisconnectedAccountScreenState extends State<DisconnectedAccountScreen> {
                               : filterList[index],
                           index: index,
                           onPressedFunction: () {},
-                          isDiconnected: true,
-                          auth: AuthLevel.Admin,
+                          isDiconnected: true
                         );
                       },
                     ),

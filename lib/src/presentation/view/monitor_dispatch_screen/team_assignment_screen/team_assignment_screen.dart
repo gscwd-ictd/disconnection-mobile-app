@@ -2,7 +2,6 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:diconnection/src/core/enums/auth/auth_level.dart';
 import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/mock/consumer_mock.dart';
@@ -188,8 +187,7 @@ class _TeamAssignmentScreenState extends State<TeamAssignmentScreen> {
                               : filterList[index],
                           index: index,
                           onPressedFunction: () {},
-                          isDiconnected: false,
-                          auth: AuthLevel.Admin,
+                          isDiconnected: false
                         );
                       },
                     ),

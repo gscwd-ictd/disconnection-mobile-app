@@ -12,6 +12,7 @@ class ConsumerModel{
   final double numMonths;
   final String zone;
   final int team;
+  final String remarks;
   const ConsumerModel({
     required this.idNumber, 
     required this.accountNumber, 
@@ -25,6 +26,7 @@ class ConsumerModel{
     required this.numMonths,
     required this.zone,
     required this.team,
+    required this.remarks,
     this.id});
   
   factory ConsumerModel.fromJson(Map<String, dynamic> json) {
@@ -41,7 +43,8 @@ class ConsumerModel{
       unpaidBal: json['unpaidBal'] as double,
       zone: json['zone'] as String,
       address: json['address'] as String,
-      name: json['first_name'] + " " + json['last_name'] as String
+      name: json['first_name'] + " " + json['last_name'] as String,
+      remarks: json['remarks'] as String
       );
   }
 }

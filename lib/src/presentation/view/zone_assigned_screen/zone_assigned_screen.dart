@@ -22,17 +22,18 @@ class _ZoneAssignedScreenState extends State<ZoneAssignedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: kScaffoldColor,
+      ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 12.0),
+            padding: const EdgeInsets.only(top: 12.0, left: 10.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 SizedBox(
                   height: 50,
-                  width: 50.0.w,
+                  width: 70.0.w,
                   child: TextField(
                     onChanged: (val) {
                       CheckBoxHandler.distributeSelected = [];
@@ -54,33 +55,6 @@ class _ZoneAssignedScreenState extends State<ZoneAssignedScreen> {
                         fillColor: kBackgroundColor,
                         filled: true),
                     enabled: true,
-                  ),
-                ),
-                SizedBox(
-                  width: 35.0.w,
-                  child: DropdownSearch<String>(
-                    enabled: true,
-                    dropdownDecoratorProps: DropDownDecoratorProps(
-                        baseStyle:
-                            TextStyle(fontSize: 12.0.sp, color: kWhiteColor),
-                        dropdownSearchDecoration: InputDecoration(
-                            filled: true,
-                            fillColor: kBackgroundColor,
-                            hintText: "Filter",
-                            hintStyle: TextStyle(
-                                fontSize: 12.0.sp, color: kWhiteColor),
-                            border: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(16.0)),
-                                borderSide: BorderSide(
-                                    color: Colors.black,
-                                    style: BorderStyle.solid)))),
-                    items: ["Zone", "Team"],
-                    onChanged: (data) {
-                      if (data != null) {
-                        setState(() {});
-                      } else {}
-                    },
                   ),
                 ),
               ],
@@ -110,8 +84,7 @@ class _ZoneAssignedScreenState extends State<ZoneAssignedScreen> {
                               : zonesData[index],
                           index: index,
                           onPressedFunction: () {},
-                          isDiconnected: true,
-                          auth: AuthLevel.Admin,
+                          isDiconnected: true
                         );
                       },
                     ),

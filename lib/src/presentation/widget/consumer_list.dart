@@ -191,8 +191,7 @@ class _ConsumerListState extends State<ConsumerList> {
                               : filterList[index],
                           index: index,
                           onPressedFunction: () {},
-                          isDiconnected: false,
-                          auth: AuthLevel.Admin,
+                          isDiconnected: false
                         );
                       },
                     ),

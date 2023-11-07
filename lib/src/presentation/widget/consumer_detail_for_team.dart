@@ -23,6 +23,7 @@ class ConsumerDetailForTeam extends StatefulWidget {
 
 class _ConsumerDetailForTeamState extends State<ConsumerDetailForTeam> {
   TextEditingController txtCurrentReader = TextEditingController();
+  TextEditingController txtRemarks = TextEditingController();
   bool isFormValidate = false;
   @override
   Widget build(BuildContext context) {
@@ -81,6 +82,15 @@ class _ConsumerDetailForTeamState extends State<ConsumerDetailForTeam> {
                         "Status:",
                         style: TextStyle(fontSize: 12.0.sp),
                       ),
+                      SizedBox(
+                          height: 100,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 12.0),
+                            child: Text(
+                              "Remarks:",
+                              style: TextStyle(fontSize: 12.0.sp),
+                            ),
+                          )),
                       SizedBox(
                           height: 50,
                           child: Padding(
@@ -144,6 +154,37 @@ class _ConsumerDetailForTeamState extends State<ConsumerDetailForTeam> {
                           stats ? "ACTIVE" : "DISCONNECTED",
                           style: TextStyle(
                               fontSize: 12.0.sp, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 100.0,
+                          width: 50.0.w,
+                          child: TextField(
+                            keyboardType: TextInputType.multiline,
+                            maxLines: 3,
+                            controller: txtRemarks,
+                            scrollPadding: EdgeInsets.symmetric(
+                                vertical:
+                                    MediaQuery.of(context).viewInsets.bottom +
+                                        5),
+                            onChanged: (val) {
+                              _checkValidation(val);
+                            },
+                            style: TextStyle(
+                                fontSize: 12.0.sp, color: kWhiteColor),
+                            decoration: InputDecoration(
+                                border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(16.0)),
+                                    borderSide: BorderSide(
+                                        color: Colors.black,
+                                        style: BorderStyle.solid)),
+                                hintText: "Input Remarks Here",
+                                hintStyle: TextStyle(
+                                    fontSize: 12.0.sp, color: kWhiteColor),
+                                fillColor: kBackgroundColor,
+                                filled: true),
+                            enabled: true,
+                          ),
                         ),
                         SizedBox(
                           height: 50,

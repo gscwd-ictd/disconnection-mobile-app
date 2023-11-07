@@ -12,14 +12,12 @@ class ConsumerAccountItemWidget extends StatefulWidget {
   final ConsumerModel consumerData;
   final Function onPressedFunction;
   final bool isDiconnected;
-  final AuthLevel auth;
   const ConsumerAccountItemWidget(
       {Key? key,
       required this.consumerData,
       required this.onPressedFunction,
       required this.index,
-      required this.isDiconnected,
-      required this.auth})
+      required this.isDiconnected})
       : super(key: key);
 
   @override
@@ -93,7 +91,7 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
               GestureDetector(
                 onTap: (){
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => widget.auth == AuthLevel.Admin ? ConsumerDetailScreen(consumerData: consumerData, index: 0, onPressedFunction: (){},) : ConsumerDetailForTeam(consumerData: consumerData, index: 0, onPressedFunction: (){},)));
+                    builder: (context) => ConsumerDetailForTeam(consumerData: consumerData, index: 0, onPressedFunction: (){},)));
                 },
                 child: Text(
                       "Show more...",

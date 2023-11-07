@@ -1,12 +1,9 @@
-import 'package:diconnection/src/data/models/player_model.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
+import 'package:diconnection/src/presentation/view/assigned_team_accounts/view_assigned_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:diconnection/src/core/enums/auth/auth_level.dart';
 import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
-import 'package:diconnection/src/data/models/consumer_model.dart';
-import 'package:diconnection/src/presentation/widget/consumer_detail_for_team.dart';
-import 'package:diconnection/src/presentation/widget/consumer_detail_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
 
@@ -15,14 +12,12 @@ class ZoneItemWidget extends StatefulWidget {
   final ZoneModel zoneData;
   final Function onPressedFunction;
   final bool isDiconnected;
-  final AuthLevel auth;
   const ZoneItemWidget(
       {Key? key,
       required this.zoneData,
       required this.onPressedFunction,
       required this.index,
-      required this.isDiconnected,
-      required this.auth})
+      required this.isDiconnected})
       : super(key: key);
 
   @override
@@ -94,8 +89,9 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
               ),
               GestureDetector(
                 onTap: (){
-                  // Navigator.of(context).push(MaterialPageRoute(
-                  //   builder: (context) => widget.auth == AuthLevel.Admin ? ConsumerDetailScreen(consumerData: consumerData, index: 0, onPressedFunction: (){},) : ConsumerDetailForTeam(consumerData: consumerData, index: 0, onPressedFunction: (){},)));
+                  String address = "${zoneData.barangay} Z${zoneData.zoneNumber} Book${zoneData.bookNumber}";
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => AssignedAccounts(consumerList: zoneData.consumerList, address: address)));
                 },
                 child: Text(
                       "Show more...",
