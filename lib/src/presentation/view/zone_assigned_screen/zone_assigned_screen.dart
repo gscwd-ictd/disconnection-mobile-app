@@ -17,11 +17,12 @@ class ZoneAssignedScreen extends StatefulWidget {
 
 class _ZoneAssignedScreenState extends State<ZoneAssignedScreen> {
   TextEditingController txtSearch = TextEditingController();
-  List<ZoneModel> zonesData = ZonesMock.zoneList;
   ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
+    List<ZoneModel> zonesData = ZonesMock.zoneList.where((c) => c.barangay.toUpperCase().contains(txtSearch.text.toUpperCase())).toList();
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: kScaffoldColor,
       ),

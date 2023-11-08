@@ -13,6 +13,7 @@ class ConsumerModel{
   final String zone;
   final int team;
   final String remarks;
+  final int? currentReading;
   const ConsumerModel({
     required this.idNumber, 
     required this.accountNumber, 
@@ -27,7 +28,8 @@ class ConsumerModel{
     required this.zone,
     required this.team,
     required this.remarks,
-    this.id});
+    this.id,
+    this.currentReading});
   
   factory ConsumerModel.fromJson(Map<String, dynamic> json) {
     return ConsumerModel(
@@ -44,7 +46,8 @@ class ConsumerModel{
       zone: json['zone'] as String,
       address: json['address'] as String,
       name: json['first_name'] + " " + json['last_name'] as String,
-      remarks: json['remarks'] as String
+      remarks: json['remarks'] as String,
+      currentReading: json['currentReading'] as int
       );
   }
 }

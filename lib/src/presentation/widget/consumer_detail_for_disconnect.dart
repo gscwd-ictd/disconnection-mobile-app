@@ -6,11 +6,11 @@ import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/consumer_model.dart';
 import 'package:sizer/sizer.dart';
 
-class ConsumerDetailForTeam extends StatefulWidget {
+class ConsumerDetailForDisconnect extends StatefulWidget {
   final int index;
   final ConsumerModel consumerData;
   final Function onPressedFunction;
-  const ConsumerDetailForTeam(
+  const ConsumerDetailForDisconnect(
       {Key? key,
       required this.consumerData,
       required this.onPressedFunction,
@@ -18,10 +18,10 @@ class ConsumerDetailForTeam extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<ConsumerDetailForTeam> createState() => _ConsumerDetailForTeamState();
+  State<ConsumerDetailForDisconnect> createState() => _ConsumerDetailForDisconnectState();
 }
 
-class _ConsumerDetailForTeamState extends State<ConsumerDetailForTeam> {
+class _ConsumerDetailForDisconnectState extends State<ConsumerDetailForDisconnect> {
   TextEditingController txtCurrentReader = TextEditingController();
   TextEditingController txtRemarks = TextEditingController();
   bool isFormValidate = false;
@@ -30,7 +30,9 @@ class _ConsumerDetailForTeamState extends State<ConsumerDetailForTeam> {
     ConsumerModel consumerData = widget.consumerData;
     bool stats = consumerData.status;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: kScaffoldColor,
+      ),
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
@@ -63,10 +65,6 @@ class _ConsumerDetailForTeamState extends State<ConsumerDetailForTeam> {
                         style: TextStyle(fontSize: 12.0.sp),
                       ),
                       Text(
-                        "Mat Loan Balance:",
-                        style: TextStyle(fontSize: 12.0.sp),
-                      ),
-                      Text(
                         "Meter Number:",
                         style: TextStyle(fontSize: 12.0.sp),
                       ),
@@ -92,7 +90,7 @@ class _ConsumerDetailForTeamState extends State<ConsumerDetailForTeam> {
                             ),
                           )),
                       SizedBox(
-                          height: 50,
+                          height: !stats ? null : 50,
                           child: Padding(
                             padding: const EdgeInsets.only(top: 12.0),
                             child: Text(
@@ -131,11 +129,6 @@ class _ConsumerDetailForTeamState extends State<ConsumerDetailForTeam> {
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          consumerData.matLoan.toStringAsFixed(2),
-                          style: TextStyle(
-                              fontSize: 12.0.sp, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
                           consumerData.meterNumber.toString(),
                           style: TextStyle(
                               fontSize: 12.0.sp, fontWeight: FontWeight.bold),
@@ -158,7 +151,7 @@ class _ConsumerDetailForTeamState extends State<ConsumerDetailForTeam> {
                         SizedBox(
                           height: 100.0,
                           width: 50.0.w,
-                          child: TextField(
+                          child: !stats ? Text(consumerData.remarks) : TextField(
                             keyboardType: TextInputType.multiline,
                             maxLines: 3,
                             controller: txtRemarks,
@@ -167,7 +160,7 @@ class _ConsumerDetailForTeamState extends State<ConsumerDetailForTeam> {
                                     MediaQuery.of(context).viewInsets.bottom +
                                         5),
                             onChanged: (val) {
-                              _checkValidation(val);
+                              _checkValidation();
                             },
                             style: TextStyle(
                                 fontSize: 12.0.sp, color: kWhiteColor),
@@ -187,9 +180,9 @@ class _ConsumerDetailForTeamState extends State<ConsumerDetailForTeam> {
                           ),
                         ),
                         SizedBox(
-                          height: 50,
+                          height: !stats ? null : 50,
                           width: 50.0.w,
-                          child: TextField(
+                          child: !stats ? Text(consumerData.currentReading.toString()) : TextField(
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true, signed: false),
                             inputFormatters: <TextInputFormatter>[
@@ -202,7 +195,7 @@ class _ConsumerDetailForTeamState extends State<ConsumerDetailForTeam> {
                                     MediaQuery.of(context).viewInsets.bottom +
                                         5),
                             onChanged: (val) {
-                              _checkValidation(val);
+                              _checkValidation();
                             },
                             style: TextStyle(
                                 fontSize: 12.0.sp, color: kWhiteColor),
@@ -227,7 +220,7 @@ class _ConsumerDetailForTeamState extends State<ConsumerDetailForTeam> {
                 ],
               ),
             ),
-            Center(
+            !stats ? Container() : Center(
                 child: GestureDetector(
               onTap: !isFormValidate
                   ? () {}
@@ -293,9 +286,9 @@ class _ConsumerDetailForTeamState extends State<ConsumerDetailForTeam> {
     );
   }
 
-  void _checkValidation(String val) {
+  void _checkValidation() {
     setState(() {
-      if (val.isNotEmpty) {
+      if (txtRemarks.text.isNotEmpty && txtCurrentReader.text.isNotEmpty) {
         isFormValidate = true;
       } else {
         isFormValidate = false;

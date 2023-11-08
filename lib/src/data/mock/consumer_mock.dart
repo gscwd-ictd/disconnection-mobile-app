@@ -144,7 +144,8 @@ class ConsumerMockData {
         prevReading: 122200,
         zone: "1",
         team: 0,
-        remarks: ""),
+        currentReading: 123300,
+        remarks: "Dog at meter pero putol gihapon"),
     const ConsumerModel(
         idNumber: "2",
         accountNumber: "1234-MTR",

@@ -23,10 +23,26 @@ class _AssignedAccountsState extends State<AssignedAccounts> {
   bool isSecondPage = false;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    isSecondPage = false;
+    pageController.initialPage;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List<ConsumerModel> consumerList = widget.consumerList;
-    var forDiscon = consumerList.where((c) => c.status == true).toList();
-    var disconnected = consumerList.where((c) => c.status == false).toList();
+    var forDiscon = consumerList
+        .where((c) =>
+            c.status == true &&
+            c.name!.toUpperCase().contains(txtSearch.text.toUpperCase()))
+        .toList();
+    var disconnected = consumerList
+        .where((c) =>
+            c.status == false &&
+            c.name!.toUpperCase().contains(txtSearch.text.toUpperCase()))
+        .toList();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -85,7 +101,9 @@ class _AssignedAccountsState extends State<AssignedAccounts> {
                     pageController.previousPage(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeIn);
-                    isSecondPage = !isSecondPage;
+                    if (pageController.page != 0) {
+                      isSecondPage = !isSecondPage;
+                    }
                     setState(() {});
                   },
                   child: SizedBox(
@@ -104,7 +122,9 @@ class _AssignedAccountsState extends State<AssignedAccounts> {
                     pageController.nextPage(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeIn);
-                    isSecondPage = !isSecondPage;
+                    if (pageController.page != 1) {
+                      isSecondPage = !isSecondPage;
+                    }
                     setState(() {});
                   },
                   child: SizedBox(

@@ -1,3 +1,4 @@
+import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:diconnection/src/data/models/consumer_model.dart';
@@ -6,11 +7,11 @@ import 'package:diconnection/src/presentation/widget/consumer_location.dart';
 import 'package:diconnection/src/presentation/widget/diconnect_stats_modal.dart';
 import 'package:sizer/sizer.dart';
 
-class ConsumerDetailScreen extends StatefulWidget {
+class ConsumerDetailDisconnected extends StatefulWidget {
   final int index;
   final ConsumerModel consumerData;
   final Function onPressedFunction;
-  const ConsumerDetailScreen(
+  const ConsumerDetailDisconnected(
       {Key? key,
       required this.consumerData,
       required this.onPressedFunction,
@@ -18,24 +19,27 @@ class ConsumerDetailScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<ConsumerDetailScreen> createState() => _ConsumerDetailScreenState();
+  State<ConsumerDetailDisconnected> createState() => _ConsumerDetailDisconnectedState();
 }
 
-class _ConsumerDetailScreenState extends State<ConsumerDetailScreen> {
+class _ConsumerDetailDisconnectedState extends State<ConsumerDetailDisconnected> {
+  double fontDefault = 16.0;
   @override
   Widget build(BuildContext context) {
     ConsumerModel consumerData = widget.consumerData;
     bool stats = consumerData.status;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+         backgroundColor: kScaffoldColor,
+      ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _menuItem("Account Number:", consumerData.accountNumber, fontVal: 20.0),
-              _menuItem("Consumer Name:", consumerData.name!, fontVal: 20.0),
+              _menuItem("Account Number:", consumerData.accountNumber, fontVal: fontDefault),
+              _menuItem("Consumer Name:", consumerData.name!, fontVal: fontDefault),
               Padding(
                 padding: EdgeInsets.only(left: 8.0.w),
                 child: Row(
@@ -47,11 +51,10 @@ class _ConsumerDetailScreenState extends State<ConsumerDetailScreen> {
                   ],
                 ),
               ),
-              _menuItem("No. of Months:", consumerData.numMonths.toString(), fontVal: 20.0),
-              _menuItem("Mat. Loan Balance:", consumerData.matLoan.toStringAsFixed(2), fontVal: 20.0),
-              _menuItem("Meter Number:", consumerData.meterNumber.toString(), fontVal: 20.0),
-              _menuItem("previous Reading:", consumerData.prevReading.toString(), fontVal: 20.0),
-              _menuItem("Unpaid Balance:", "P${consumerData.unpaidBal.toStringAsFixed(2)}", fontVal: 20.0),
+              _menuItem("No. of Months:", consumerData.numMonths.toString(), fontVal: fontDefault),
+              _menuItem("Meter Number:", consumerData.meterNumber.toString(), fontVal: fontDefault),
+              _menuItem("previous Reading:", consumerData.prevReading.toString(), fontVal: fontDefault),
+              _menuItem("Unpaid Balance:", "P${consumerData.unpaidBal.toStringAsFixed(2)}", fontVal: fontDefault),
               Padding(
                 padding: EdgeInsets.only(left: stats ? 0 : 12.0.w),
                 child: Row(
@@ -67,7 +70,8 @@ class _ConsumerDetailScreenState extends State<ConsumerDetailScreen> {
                   ],
                 ),
               ),
-              _menuItem("Assigned Team:", _team(consumerData.team), fontVal: 20.0),
+              _menuItem("Current Reading:", consumerData.currentReading.toString(), fontVal: fontDefault),
+              _menuItem("Remarks:", consumerData.remarks, fontVal: fontDefault),
             ],
           ),
         ],

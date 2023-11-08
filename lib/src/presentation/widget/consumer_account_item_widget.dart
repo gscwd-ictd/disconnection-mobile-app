@@ -3,8 +3,8 @@ import 'package:diconnection/src/core/enums/auth/auth_level.dart';
 import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/consumer_model.dart';
-import 'package:diconnection/src/presentation/widget/consumer_detail_for_team.dart';
-import 'package:diconnection/src/presentation/widget/consumer_detail_screen.dart';
+import 'package:diconnection/src/presentation/widget/consumer_detail_for_disconnect.dart';
+import 'package:diconnection/src/presentation/widget/consumer_detail_disconnected.dart';
 import 'package:sizer/sizer.dart';
 
 class ConsumerAccountItemWidget extends StatefulWidget {
@@ -28,6 +28,7 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
   @override
   Widget build(BuildContext context) {
     ConsumerModel consumerData = widget.consumerData;
+    bool stats = consumerData.status;
     return GestureDetector(
       onTap: (){
         widget.onPressedFunction();
@@ -91,7 +92,7 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
               GestureDetector(
                 onTap: (){
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ConsumerDetailForTeam(consumerData: consumerData, index: 0, onPressedFunction: (){},)));
+                    builder: (context) => !stats ? ConsumerDetailDisconnected(consumerData: consumerData, index: widget.index, onPressedFunction: (){},) : ConsumerDetailForDisconnect(consumerData: consumerData, index: 0, onPressedFunction: (){},)));
                 },
                 child: Text(
                       "Show more...",
