@@ -3,28 +3,34 @@ import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.da
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/mock/zones_mock.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
+import 'package:diconnection/src/presentation/view/login_screen/authState.dart';
 import 'package:diconnection/src/presentation/widget/Zone_item_widget.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
 
-class ZoneAssignedScreen extends StatefulWidget {
+class ZoneAssignedScreen extends ConsumerStatefulWidget {
   const ZoneAssignedScreen({super.key});
 
   @override
-  State<ZoneAssignedScreen> createState() => _ZoneAssignedScreenState();
+  ConsumerState<ZoneAssignedScreen> createState() => _ZoneAssignedScreenState();
 }
 
-class _ZoneAssignedScreenState extends State<ZoneAssignedScreen> {
+class _ZoneAssignedScreenState extends ConsumerState<ZoneAssignedScreen> {
   TextEditingController txtSearch = TextEditingController();
   ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
+    final auth = ref.watch(authNotifierProvider);
     List<ZoneModel> zonesData = ZonesMock.zoneList.where((c) => c.barangay.toUpperCase().contains(txtSearch.text.toUpperCase())).toList();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: kScaffoldColor,
+        actions: [
+          IconButton(onPressed: (){ref.read(authNotifierProvider.notifier).logout();}, icon: const Icon(Icons.logout_rounded))
+        ],
       ),
       body: Column(
         children: [
@@ -43,7 +49,7 @@ class _ZoneAssignedScreenState extends State<ZoneAssignedScreen> {
                       });
                     },
                     controller: txtSearch,
-                    style: TextStyle(fontSize: 12.0.sp, color: kWhiteColor),
+                    style: TextStyle(fontSize: 12.0.sp, color: Colors.black),
                     decoration: InputDecoration(
                         border: const OutlineInputBorder(
                             borderRadius:
@@ -52,8 +58,8 @@ class _ZoneAssignedScreenState extends State<ZoneAssignedScreen> {
                                 color: Colors.black, style: BorderStyle.solid)),
                         hintText: "Search here",
                         hintStyle:
-                            TextStyle(fontSize: 12.0.sp, color: kWhiteColor),
-                        fillColor: kBackgroundColor,
+                            TextStyle(fontSize: 12.0.sp, color: Colors.grey),
+                        fillColor: kWhiteColor,
                         filled: true),
                     enabled: true,
                   ),

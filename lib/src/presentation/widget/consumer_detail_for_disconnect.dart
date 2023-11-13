@@ -1,3 +1,4 @@
+import 'package:diconnection/src/presentation/widget/image_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:diconnection/src/core/messages/reminder_message/reminder_message.dart';
@@ -77,8 +78,15 @@ class _ConsumerDetailForDisconnectState extends State<ConsumerDetailForDisconnec
                         style: TextStyle(fontSize: 12.0.sp),
                       ),
                       Text(
-                        "Status:",
-                        style: TextStyle(fontSize: 12.0.sp),
+                          "Status:",
+                          style: TextStyle(fontSize: 12.0.sp),
+                        ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 40.0),
+                        child: Text(
+                          "Proof:",
+                          style: TextStyle(fontSize: 12.0.sp),
+                        ),
                       ),
                       SizedBox(
                           height: 100,
@@ -148,6 +156,7 @@ class _ConsumerDetailForDisconnectState extends State<ConsumerDetailForDisconnec
                           style: TextStyle(
                               fontSize: 12.0.sp, fontWeight: FontWeight.bold),
                         ),
+                        const ImagePickerWidget(),
                         SizedBox(
                           height: 100.0,
                           width: 50.0.w,

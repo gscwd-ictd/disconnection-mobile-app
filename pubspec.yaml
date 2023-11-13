@@ -47,6 +47,9 @@ dependencies:
   flutter_riverpod: ^2.4.5
   http: ^1.1.0
   logger: ^2.0.2+1
+  riverpod_annotation: ^2.3.0
+  image_picker: ^1.0.4
+  video_player: ^2.8.1
 
 dev_dependencies:
   flutter_test:

@@ -5,10 +5,10 @@ const String kMaterialAppTitle = 'Putulin Mo';
 const String bingMapKey = "AhkEgNbLCfEkDksb2EQrhwYphgbfAbwcF6OR4Pexem68p8t_9nWeTeVAHOfC0eEd";
 
 //Colors
-const Color kBackgroundColor = Color(0xFF398C97);
-const kScaffoldColor = Color(0xFF409DAA);
+const Color kBackgroundColor = Color(0xFF2879C1);
+const kScaffoldColor = Color(0xFF2879C1);
 const kWhiteColor = Color(0xFFFFFFFF);
-const kLightBlue = Color(0xFF66B0BB);
+const kLightBlue = Color(0xFF36CCF7);
 
 ///My Theme EDF6E5
 const Color primaryMat = Color(0xFFB5EAEA);
