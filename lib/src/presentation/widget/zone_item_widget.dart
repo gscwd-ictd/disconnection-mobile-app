@@ -94,7 +94,7 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
                 onTap: (){
                   String address = "${zoneData.barangay} Z${zoneData.zoneNumber} Book${zoneData.bookNumber}";
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AssignedAccounts(consumerList: zoneData.consumerList, address: address)));
+                    builder: (context) => AssignedAccounts(consumerList: zoneData.consumerList, address: address, index: widget.index,)));
                 },
                 child: Text(
                       "Show more...",

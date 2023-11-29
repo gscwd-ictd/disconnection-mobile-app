@@ -6,7 +6,8 @@ import 'package:sizer/sizer.dart';
 
 class DisconnectedScreen extends ConsumerStatefulWidget {
   final List<ConsumerModel> consumerList;
-  const DisconnectedScreen({Key? key, required this.consumerList}) : super(key: key);
+  final Function onPressedFunction;
+  const DisconnectedScreen({Key? key, required this.consumerList, required this.onPressedFunction}) : super(key: key);
 
   @override
   ConsumerState<DisconnectedScreen> createState() => _DisconnectedScreenState();
@@ -15,6 +16,13 @@ class DisconnectedScreen extends ConsumerStatefulWidget {
 class _DisconnectedScreenState extends ConsumerState<DisconnectedScreen> {
   TextEditingController txtSearch = TextEditingController();
   ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var consumerList = widget.consumerList;
@@ -43,7 +51,7 @@ class _DisconnectedScreenState extends ConsumerState<DisconnectedScreen> {
                                   ? consumerList[index]
                                   : consumerList[index],
                               index: index,
-                              onPressedFunction: () {},
+                              onPressedFunction: widget.onPressedFunction,
                               isDiconnected: true,
                             );
                           },

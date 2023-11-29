@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
-import 'package:diconnection/src/data/services/for_disconnection_provider/for_disconnection_provider.dart';
 import 'package:diconnection/src/presentation/widget/image_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -268,7 +267,6 @@ class _ConsumerDetailForDisconnectState
                     onTap: !isFormValidate
                         ? () {}
                         : () {
-                            widget.onPressedFunction();
                             showDialog(
                                 context: context,
                                 barrierDismissible: false,
@@ -319,7 +317,7 @@ class _ConsumerDetailForDisconnectState
                                                                 Navigator.pop(
                                                                     context);
                                                                 Navigator.pop(
-                                                                    context);
+                                                                    context, 'refresh');
                                                               },
                                                             );
                                                       }));

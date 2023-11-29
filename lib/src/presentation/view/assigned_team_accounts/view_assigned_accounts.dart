@@ -1,3 +1,4 @@
+import 'package:diconnection/src/core/handler/zoneHandler.dart';
 import 'package:diconnection/src/presentation/view/assigned_team_accounts/disconnected_screen.dart/disconnected_screen.dart';
 import 'package:diconnection/src/presentation/view/assigned_team_accounts/for_disconnect_screen.dart/for_disconnect_screen.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,9 @@ import 'package:sizer/sizer.dart';
 class AssignedAccounts extends StatefulWidget {
   final String address;
   final List<ConsumerModel> consumerList;
+  final int index;
   const AssignedAccounts(
-      {Key? key, required this.consumerList, required this.address})
+      {Key? key, required this.consumerList, required this.address, required this.index})
       : super(key: key);
 
   @override
@@ -20,6 +22,7 @@ class AssignedAccounts extends StatefulWidget {
 class _AssignedAccountsState extends State<AssignedAccounts> {
   TextEditingController txtSearch = TextEditingController();
   final PageController pageController = PageController();
+  List<ConsumerModel> consumerList = [];
   bool isSecondPage = false;
 
   @override
@@ -27,12 +30,13 @@ class _AssignedAccountsState extends State<AssignedAccounts> {
     // TODO: implement initState
     isSecondPage = false;
     pageController.initialPage;
+    consumerList = Zonehandler.zones[widget.index].consumerList;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<ConsumerModel> consumerList = widget.consumerList;
+    consumerList = Zonehandler.zones[widget.index].consumerList;
     var forDiscon = consumerList
         .where((c) =>
             c.isConnected == true &&
@@ -89,8 +93,16 @@ class _AssignedAccountsState extends State<AssignedAccounts> {
               physics: const NeverScrollableScrollPhysics(),
               controller: pageController,
               children: [
-                ForDisconnectScreen(consumerList: forDiscon),
-                DisconnectedScreen(consumerList: disconnected)
+                ForDisconnectScreen(consumerList: forDiscon, onPressedFunction: (){
+                  setState(() {
+                    
+                  });
+                },),
+                DisconnectedScreen(consumerList: disconnected, onPressedFunction: (){
+                  setState(() {
+                    
+                  });
+                },)
               ],
             ),
           ),

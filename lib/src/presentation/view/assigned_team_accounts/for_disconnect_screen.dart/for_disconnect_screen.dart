@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 class ForDisconnectScreen extends StatefulWidget {
+  final Function onPressedFunction;
   final List<ConsumerModel> consumerList;
-  const ForDisconnectScreen({Key? key, required this.consumerList}) : super(key: key);
+  const ForDisconnectScreen({Key? key, required this.consumerList, required this.onPressedFunction}) : super(key: key);
 
   @override
   State<ForDisconnectScreen> createState() => _ForDisconnectScreenState();
@@ -14,6 +15,12 @@ class ForDisconnectScreen extends StatefulWidget {
 class _ForDisconnectScreenState extends State<ForDisconnectScreen> {
   TextEditingController txtSearch = TextEditingController();
   ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     var consumerList = widget.consumerList;
@@ -42,7 +49,7 @@ class _ForDisconnectScreenState extends State<ForDisconnectScreen> {
                                   ? consumerList[index]
                                   : consumerList[index],
                               index: index,
-                              onPressedFunction: () {},
+                              onPressedFunction: widget.onPressedFunction,
                               isDiconnected: true,
                             );
                           },

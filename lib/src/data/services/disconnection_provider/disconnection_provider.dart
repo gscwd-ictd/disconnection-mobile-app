@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:diconnection/src/core/handler/zoneHandler.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
@@ -35,6 +36,7 @@ class AsyncDisconnection extends _$AsyncDisconnection {
         zoneList.add(zone);
       }
      });
+     Zonehandler.zones = zoneList;
     return zoneList;
   }
 

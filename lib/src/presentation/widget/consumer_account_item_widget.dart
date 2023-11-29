@@ -90,9 +90,12 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
                 height: 1.h,
               ),
               GestureDetector(
-                onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(
+                onTap: ()async {
+                  String refresh = await Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => !stats ? ConsumerDetailDisconnected(consumerData: consumerData, index: widget.index, onPressedFunction: (){},) : ConsumerDetailForDisconnect(consumerData: consumerData, index: 0, onPressedFunction: (){},)));
+                  if(refresh == 'refresh'){
+                    widget.onPressedFunction();
+                  }
                 },
                 child: Text(
                       "Show more...",
