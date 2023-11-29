@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+
+const String kHost = "c054-122-3-104-117.ngrok-free.app";
+
 const String kMaterialAppTitle = 'Putulin Mo';
 const String bingMapKey = "AhkEgNbLCfEkDksb2EQrhwYphgbfAbwcF6OR4Pexem68p8t_9nWeTeVAHOfC0eEd";
 

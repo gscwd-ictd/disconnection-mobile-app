@@ -1,5 +1,5 @@
 import 'package:diconnection/src/data/mock/consumer_mock.dart';
-import 'package:diconnection/src/data/models/consumer_model.dart';
+import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
 
 List<ConsumerModel> a = ConsumerMockData.consumerListA;

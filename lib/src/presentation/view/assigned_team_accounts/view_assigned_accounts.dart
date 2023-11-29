@@ -3,7 +3,7 @@ import 'package:diconnection/src/presentation/view/assigned_team_accounts/for_di
 import 'package:flutter/material.dart';
 import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
-import 'package:diconnection/src/data/models/consumer_model.dart';
+import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 import 'package:sizer/sizer.dart';
 
 class AssignedAccounts extends StatefulWidget {
@@ -35,13 +35,13 @@ class _AssignedAccountsState extends State<AssignedAccounts> {
     List<ConsumerModel> consumerList = widget.consumerList;
     var forDiscon = consumerList
         .where((c) =>
-            c.status == true &&
-            c.name!.toUpperCase().contains(txtSearch.text.toUpperCase()))
+            c.isConnected == true &&
+            c.consumerName!.toUpperCase().contains(txtSearch.text.toUpperCase()))
         .toList();
     var disconnected = consumerList
         .where((c) =>
-            c.status == false &&
-            c.name!.toUpperCase().contains(txtSearch.text.toUpperCase()))
+            c.isConnected == false &&
+            c.consumerName!.toUpperCase().contains(txtSearch.text.toUpperCase()))
         .toList();
     return Scaffold(
       resizeToAvoidBottomInset: false,

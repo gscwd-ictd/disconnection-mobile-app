@@ -11,8 +11,8 @@ class ImagePickerWidget extends StatefulWidget {
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: const [
+    return const Row(
+      children: [
         Card(
           elevation: 2.0,
           color: Colors.blueGrey,

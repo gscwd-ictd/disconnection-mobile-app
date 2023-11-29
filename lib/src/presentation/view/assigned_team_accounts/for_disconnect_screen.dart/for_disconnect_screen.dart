@@ -1,4 +1,4 @@
-import 'package:diconnection/src/data/models/consumer_model.dart';
+import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 import 'package:diconnection/src/presentation/widget/consumer_account_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';

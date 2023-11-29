@@ -6,7 +6,7 @@ import 'package:diconnection/src/core/enums/auth/auth_level.dart';
 import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/mock/consumer_mock.dart';
-import 'package:diconnection/src/data/models/consumer_model.dart';
+import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 import 'package:diconnection/src/presentation/widget/consumer_account_item_widget.dart';
 import 'package:diconnection/src/presentation/widget/team_item_widget.dart';
 import 'package:sizer/sizer.dart';
@@ -31,7 +31,7 @@ class _ConsumerListState extends State<ConsumerList> {
   void _alterfilter(String query) {
     filterList = [];
     consumerList.forEach((item) {
-      if (item.zone == query) {
+      if (item.zoneNo == int.parse(query)) {
         filterList.add(item);
       }
     });

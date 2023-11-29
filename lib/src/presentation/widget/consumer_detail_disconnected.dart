@@ -1,7 +1,7 @@
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:diconnection/src/data/models/consumer_model.dart';
+import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 import 'package:diconnection/src/data/models/disconnect_model.dart';
 import 'package:diconnection/src/presentation/widget/consumer_location.dart';
 import 'package:diconnection/src/presentation/widget/diconnect_stats_modal.dart';
@@ -27,7 +27,7 @@ class _ConsumerDetailDisconnectedState extends State<ConsumerDetailDisconnected>
   @override
   Widget build(BuildContext context) {
     ConsumerModel consumerData = widget.consumerData;
-    bool stats = consumerData.status;
+    bool stats = consumerData.isConnected ?? false;
     return Scaffold(
       appBar: AppBar(
          backgroundColor: kScaffoldColor,
@@ -38,8 +38,8 @@ class _ConsumerDetailDisconnectedState extends State<ConsumerDetailDisconnected>
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _menuItem("Account Number:", consumerData.accountNumber, fontVal: fontDefault),
-              _menuItem("Consumer Name:", consumerData.name!, fontVal: fontDefault),
+              _menuItem("Account Number:", consumerData.accountNo ?? "", fontVal: fontDefault),
+              _menuItem("Consumer Name:", consumerData.consumerName ?? "", fontVal: fontDefault),
               Padding(
                 padding: EdgeInsets.only(left: 8.0.w),
                 child: Row(
@@ -51,10 +51,10 @@ class _ConsumerDetailDisconnectedState extends State<ConsumerDetailDisconnected>
                   ],
                 ),
               ),
-              _menuItem("No. of Months:", consumerData.numMonths.toString(), fontVal: fontDefault),
-              _menuItem("Meter Number:", consumerData.meterNumber.toString(), fontVal: fontDefault),
-              _menuItem("previous Reading:", consumerData.prevReading.toString(), fontVal: fontDefault),
-              _menuItem("Unpaid Balance:", "P${consumerData.unpaidBal.toStringAsFixed(2)}", fontVal: fontDefault),
+              _menuItem("No. of Months:", consumerData.noOfMonths.toString(), fontVal: fontDefault),
+              _menuItem("Meter Number:", consumerData.meterNo.toString(), fontVal: fontDefault),
+              _menuItem("previous Reading:", consumerData.lastReading.toString(), fontVal: fontDefault),
+              _menuItem("Unpaid Balance:", "P${consumerData.billAmount.toString()}", fontVal: fontDefault),
               Padding(
                 padding: EdgeInsets.only(left: stats ? 0 : 12.0.w),
                 child: Row(
@@ -62,8 +62,8 @@ class _ConsumerDetailDisconnectedState extends State<ConsumerDetailDisconnected>
                     _menuItem("Status", stats ? "ACTIVE" : "DISCONNECTED", colorVal: stats ? Colors.green : Colors.red, fontVal: stats ? 22.0 : 16.0),
                     stats ? Container() :IconButton(onPressed: (){
                       final discon = DisconnectModel(
-                      dateTimeDisconnect: DateTime.now(),
-                      teamAssigned: _team(consumerData.team)
+                      dateTimeDisconnect: consumerData.disconnectedDate!,
+                      teamAssigned: consumerData.disconnectionTeam!.teamName ?? ""
                       );
                       showDialog(context: context, builder: (context) => DisconnectStatusModal(disconnectStats: discon,));
                     }, icon: const Icon(FontAwesomeIcons.circleInfo))
@@ -71,7 +71,7 @@ class _ConsumerDetailDisconnectedState extends State<ConsumerDetailDisconnected>
                 ),
               ),
               _menuItem("Current Reading:", consumerData.currentReading.toString(), fontVal: fontDefault),
-              _menuItem("Remarks:", consumerData.remarks, fontVal: fontDefault),
+              _menuItem("Remarks:", consumerData.remarks ?? "", fontVal: fontDefault),
             ],
           ),
         ],

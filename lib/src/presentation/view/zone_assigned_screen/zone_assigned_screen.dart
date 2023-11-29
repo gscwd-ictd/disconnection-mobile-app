@@ -2,7 +2,10 @@ import 'package:diconnection/src/core/enums/auth/auth_level.dart';
 import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/mock/zones_mock.dart';
+import 'package:diconnection/src/data/models/viewLedger_model/viewLedger_model.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
+import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
+import 'package:diconnection/src/data/services/view_ledger_provider/view_ledger_provider.dart';
 import 'package:diconnection/src/presentation/view/login_screen/authState.dart';
 import 'package:diconnection/src/presentation/widget/Zone_item_widget.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -22,7 +25,7 @@ class _ZoneAssignedScreenState extends ConsumerState<ZoneAssignedScreen> {
   ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    final auth = ref.watch(authNotifierProvider);
+    final disconnection = ref.watch(asyncDisconnectionProvider);
     List<ZoneModel> zonesData = ZonesMock.zoneList.where((c) => c.barangay.toUpperCase().contains(txtSearch.text.toUpperCase())).toList();
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -78,23 +81,29 @@ class _ZoneAssignedScreenState extends ConsumerState<ZoneAssignedScreen> {
                   controller: _scrollController,
                   child: SizedBox(
                     height: 77.h,
-                    child: ListView.builder(
+                    child: switch(disconnection){
+                      AsyncData(:final value) => ListView.builder(
                       shrinkWrap: true,
                       itemCount: txtSearch.text == ""
-                          ? zonesData.length
-                          : zonesData.length,
+                          ? value.length
+                          : value.length,
                       itemBuilder: (context, index) {
                         CheckBoxHandler.distributeSelected.add(false);
                         return ZoneItemWidget(
                           zoneData: txtSearch.text == ""
-                              ? zonesData[index]
-                              : zonesData[index],
+                              ? value[index]
+                              : value[index],
                           index: index,
                           onPressedFunction: () {},
                           isDiconnected: true
                         );
                       },
                     ),
+                    AsyncError(:final error) => Text('Error $error'),
+                    _ => const Center(
+                      child: CircularProgressIndicator()
+                    )
+                    }
                   ),
                 ),
               ),

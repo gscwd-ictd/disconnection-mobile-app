@@ -1,4 +1,4 @@
-import 'package:diconnection/src/data/models/consumer_model.dart';
+import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 
 class ZoneModel{
   final String barangay;

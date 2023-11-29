@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:diconnection/src/core/enums/auth/auth_level.dart';
 import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
-import 'package:diconnection/src/data/models/consumer_model.dart';
+import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 import 'package:diconnection/src/presentation/widget/consumer_detail_for_disconnect.dart';
 import 'package:diconnection/src/presentation/widget/consumer_detail_disconnected.dart';
 import 'package:sizer/sizer.dart';
@@ -28,7 +28,7 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
   @override
   Widget build(BuildContext context) {
     ConsumerModel consumerData = widget.consumerData;
-    bool stats = consumerData.status;
+    bool stats = consumerData.isConnected ?? false;
     return GestureDetector(
       onTap: (){
         widget.onPressedFunction();
@@ -59,7 +59,7 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
                       children: [
                         const Text("Consumer Name: "),
                         Text(
-                          consumerData.name!,
+                          consumerData.consumerName ?? "",
                           softWrap: true,
                           style: TextStyle(
                             fontSize: 14.sp, 
@@ -73,7 +73,7 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
                       children: [
                         const Text("Unpaid: "),
                         Text(
-                          "P${consumerData.unpaidBal}",
+                          "P${consumerData.billAmount ?? 0.00}",
                           softWrap: true,
                           style: TextStyle(
                             color: Colors.redAccent,

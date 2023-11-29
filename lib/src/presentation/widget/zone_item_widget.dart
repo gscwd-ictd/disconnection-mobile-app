@@ -42,7 +42,7 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
             mainAxisSize: MainAxisSize.max,
             children: [
               SizedBox(
-                height: 40,
+                height: zoneData.barangay.length <= 12 ?40 : 60,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -57,7 +57,9 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
                     Column(
                       children: [
                         const Text("Address: "),
-                        Text(
+                        SizedBox(
+                          width: 60.w,
+                          child: Text(
                           zoneData.barangay,
                           softWrap: true,
                           style: TextStyle(
@@ -65,10 +67,11 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
                             fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
+                        ),
                       ],
                     ),
-                    SizedBox(width: 1.w,),
                     Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("Zone: ${zoneData.zoneNumber}"),
                         Text("Book: ${zoneData.bookNumber}"),
