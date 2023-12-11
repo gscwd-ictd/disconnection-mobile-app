@@ -40,7 +40,7 @@ class _DisconnectedScreenState extends ConsumerState<DisconnectedScreen> {
                     children: [
                       SizedBox(
                         height: 67.h,
-                        child:ListView.builder(
+                        child: consumerList.isEmpty ? const Text("Empty"):ListView.builder(
                           shrinkWrap: true,
                           itemCount: txtSearch.text == ""
                               ? consumerList.length

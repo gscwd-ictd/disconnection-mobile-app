@@ -1,14 +1,9 @@
-import 'package:diconnection/src/core/enums/auth/auth_level.dart';
-import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/mock/zones_mock.dart';
-import 'package:diconnection/src/data/models/viewLedger_model/viewLedger_model.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
 import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
-import 'package:diconnection/src/data/services/view_ledger_provider/view_ledger_provider.dart';
 import 'package:diconnection/src/presentation/view/login_screen/authState.dart';
 import 'package:diconnection/src/presentation/widget/Zone_item_widget.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
@@ -46,7 +41,6 @@ class _ZoneAssignedScreenState extends ConsumerState<ZoneAssignedScreen> {
                   width: 70.0.w,
                   child: TextField(
                     onChanged: (val) {
-                      CheckBoxHandler.distributeSelected = [];
                       setState(() {
                         // _alterfilter(val);
                       });
@@ -82,13 +76,12 @@ class _ZoneAssignedScreenState extends ConsumerState<ZoneAssignedScreen> {
                   child: SizedBox(
                     height: 77.h,
                     child: switch(disconnection){
-                      AsyncData(:final value) => ListView.builder(
+                      AsyncData(:final value) => value.isEmpty ? const Center(child: Text("Empty")) : ListView.builder(
                       shrinkWrap: true,
                       itemCount: txtSearch.text == ""
                           ? value.length
                           : value.length,
                       itemBuilder: (context, index) {
-                        CheckBoxHandler.distributeSelected.add(false);
                         return ZoneItemWidget(
                           zoneData: txtSearch.text == ""
                               ? value[index]

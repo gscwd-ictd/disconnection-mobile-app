@@ -26,7 +26,7 @@ mixin _$ConsumerModel {
   String? get consumerName => throw _privateConstructorUsedError;
   String? get address => throw _privateConstructorUsedError;
   String? get meterNo => throw _privateConstructorUsedError;
-  double? get billAmount => throw _privateConstructorUsedError;
+  String? get billAmount => throw _privateConstructorUsedError;
   int? get noOfMonths => throw _privateConstructorUsedError;
   int? get lastReading => throw _privateConstructorUsedError;
   int? get currentReading => throw _privateConstructorUsedError;
@@ -59,7 +59,7 @@ abstract class $ConsumerModelCopyWith<$Res> {
       String? consumerName,
       String? address,
       String? meterNo,
-      double? billAmount,
+      String? billAmount,
       int? noOfMonths,
       int? lastReading,
       int? currentReading,
@@ -137,7 +137,7 @@ class _$ConsumerModelCopyWithImpl<$Res, $Val extends ConsumerModel>
       billAmount: freezed == billAmount
           ? _value.billAmount
           : billAmount // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as String?,
       noOfMonths: freezed == noOfMonths
           ? _value.noOfMonths
           : noOfMonths // ignore: cast_nullable_to_non_nullable
@@ -217,7 +217,7 @@ abstract class _$$ConsumerModelImplCopyWith<$Res>
       String? consumerName,
       String? address,
       String? meterNo,
-      double? billAmount,
+      String? billAmount,
       int? noOfMonths,
       int? lastReading,
       int? currentReading,
@@ -294,7 +294,7 @@ class __$$ConsumerModelImplCopyWithImpl<$Res>
       billAmount: freezed == billAmount
           ? _value.billAmount
           : billAmount // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as String?,
       noOfMonths: freezed == noOfMonths
           ? _value.noOfMonths
           : noOfMonths // ignore: cast_nullable_to_non_nullable
@@ -387,7 +387,7 @@ class _$ConsumerModelImpl implements _ConsumerModel {
   @override
   final String? meterNo;
   @override
-  final double? billAmount;
+  final String? billAmount;
   @override
   final int? noOfMonths;
   @override
@@ -504,7 +504,7 @@ abstract class _ConsumerModel implements ConsumerModel {
       required final String? consumerName,
       required final String? address,
       required final String? meterNo,
-      required final double? billAmount,
+      required final String? billAmount,
       required final int? noOfMonths,
       required final int? lastReading,
       required final int? currentReading,
@@ -534,7 +534,7 @@ abstract class _ConsumerModel implements ConsumerModel {
   @override
   String? get meterNo;
   @override
-  double? get billAmount;
+  String? get billAmount;
   @override
   int? get noOfMonths;
   @override

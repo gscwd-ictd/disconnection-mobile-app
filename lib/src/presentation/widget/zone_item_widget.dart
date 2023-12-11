@@ -1,8 +1,6 @@
 import 'package:diconnection/src/data/models/zone_model.dart';
 import 'package:diconnection/src/presentation/view/assigned_team_accounts/view_assigned_accounts.dart';
 import 'package:flutter/material.dart';
-import 'package:diconnection/src/core/enums/auth/auth_level.dart';
-import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
@@ -37,23 +35,15 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(12.0))),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 18.0),
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 18.0, bottom: 8.0),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
               SizedBox(
-                height: zoneData.barangay.length <= 12 ?40 : 60,
+                height: zoneData.barangay.length <= 12 ?40 : 80,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    widget.isDiconnected ? Container() : Checkbox(
-                      activeColor: kLightBlue,
-                      value: CheckBoxHandler.distributeSelected[widget.index], 
-                      onChanged: (val){
-                        setState(() {
-                          CheckBoxHandler.distributeSelected[widget.index] = val!;
-                        });
-                      }),
                     Column(
                       children: [
                         const Text("Address: "),
@@ -96,13 +86,18 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => AssignedAccounts(consumerList: zoneData.consumerList, address: address, index: widget.index,)));
                 },
-                child: Text(
-                      "Show more...",
-                      softWrap: true,
-                      style:
-                          TextStyle(fontSize: 10.sp, fontWeight: FontWeight.bold, color: kLightBlue),
-                      textAlign: TextAlign.center,
-                    ),
+                child: Container(
+                  color: Colors.white,
+                  width: 90.w,
+                  height: 3.h,
+                  child: Text(
+                        "Show more...",
+                        softWrap: true,
+                        style:
+                            TextStyle(fontSize: 10.sp, fontWeight: FontWeight.bold, color: kLightBlue),
+                        textAlign: TextAlign.center,
+                      ),
+                ),
               )
             ],
           ),

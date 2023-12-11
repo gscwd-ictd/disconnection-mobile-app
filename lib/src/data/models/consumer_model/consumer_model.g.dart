@@ -14,7 +14,7 @@ _$ConsumerModelImpl _$$ConsumerModelImplFromJson(Map<String, dynamic> json) =>
       consumerName: json['consumerName'] as String?,
       address: json['address'] as String?,
       meterNo: json['meterNo'] as String?,
-      billAmount: (json['billAmount'] as num?)?.toDouble(),
+      billAmount: json['billAmount'] as String?,
       noOfMonths: json['noOfMonths'] as int?,
       lastReading: json['lastReading'] as int?,
       currentReading: json['currentReading'] as int?,

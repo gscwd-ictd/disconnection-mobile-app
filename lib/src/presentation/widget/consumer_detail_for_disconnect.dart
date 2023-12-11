@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:diconnection/src/core/handler/utils_handler.dart';
+import 'package:diconnection/src/core/messages/error_message/error_message.dart';
 import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
 import 'package:diconnection/src/presentation/widget/image_picker_widget.dart';
 import 'package:flutter/material.dart';
@@ -36,10 +39,10 @@ class _ConsumerDetailForDisconnectState
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _events = StreamController<bool>();
   }
+
   @override
   Widget build(BuildContext context) {
     ConsumerModel consumerData = widget.consumerData;
@@ -73,7 +76,7 @@ class _ConsumerDetailForDisconnectState
                         style: TextStyle(fontSize: 12.0.sp),
                       ),
                       SizedBox(
-                        height: consumerData.address!.length <= 12 ? null : 35,
+                        height: 35,
                         child: Text(
                           "Address:",
                           style: TextStyle(fontSize: 12.0.sp),
@@ -178,7 +181,9 @@ class _ConsumerDetailForDisconnectState
                           style: TextStyle(
                               fontSize: 12.0.sp, fontWeight: FontWeight.bold),
                         ),
-                        const ImagePickerWidget(),
+                        ImagePickerWidget(onChanged: (){
+                          _checkValidation();
+                        }),
                         SizedBox(
                           height: 100.0,
                           width: 50.0.w,
@@ -266,69 +271,100 @@ class _ConsumerDetailForDisconnectState
                     child: GestureDetector(
                     onTap: !isFormValidate
                         ? () {}
-                        : () {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) => ReminderMessage(
-                                        title: 'DISCONNECT ACCOUNT?',
-                                        content:
-                                            'Confirm Disconnection for ${consumerData.consumerName}?',
-                                        textButtons: [
-                                          TextButton(
-                                              onPressed: () {
-                                                bool test = false;
-                                                test = disconnection.when(
-                                                  data: (data){
-                                                    setState(() {
-                                                    });
+                        : () async {
+                            var connectivityResult =
+                                await (Connectivity().checkConnectivity());
+                            if (connectivityResult ==
+                                    ConnectivityResult.mobile ||
+                                connectivityResult == ConnectivityResult.wifi) {
+                              // ignore: use_build_context_synchronously
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) => ReminderMessage(
+                                          title: 'DISCONNECT ACCOUNT?',
+                                          content:
+                                              'Confirm Disconnection for ${consumerData.consumerName}?',
+                                          textButtons: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  bool test = false;
+                                                  test = disconnection.when(
+                                                      data: (data) {
+                                                    setState(() {});
                                                     return true;
-                                                  }, 
-                                                  error: (error, stackTrace){return false;}, 
-                                                  loading: (){return true;});
-                                                final input = formUpdate();
-                                                final result = ref
-                                                    .read(
-                                                        asyncDisconnectionProvider
-                                                            .notifier)
-                                                    .fetchUpdateDisconnection(
-                                                        input, _events);
-                                                
-                                                showDialog(
-                                                    context: context,
-                                                    barrierDismissible: false,
-                                                    builder: (context) =>
-                                                    StreamBuilder<bool>(
-                                                      initialData: true,
-                                                      stream: _events.stream, 
-                                                      builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
-                                                        return snapshot.data!
-                                                        ? const Center(
-                                                          child: CircularProgressIndicator(),
-                                                        )
-                                                        : SuccessMessage(
-                                                              title: "Success",
-                                                              content:
-                                                                  "Disconnect Successfully",
-                                                              onPressedFunction:
-                                                                  () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                                Navigator.pop(
-                                                                    context);
-                                                                Navigator.pop(
-                                                                    context, 'refresh');
-                                                              },
-                                                            );
-                                                      }));
-                                              },
-                                              child: const Text('Yes')),
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('No'))
-                                        ]));
+                                                  }, error:
+                                                          (error, stackTrace) {
+                                                    return false;
+                                                  }, loading: () {
+                                                    return true;
+                                                  });
+                                                  final input = formUpdate();
+                                                  final result = ref
+                                                      .read(
+                                                          asyncDisconnectionProvider
+                                                              .notifier)
+                                                      .fetchUpdateDisconnection(
+                                                          input, _events);
+
+                                                  showDialog(
+                                                      context: context,
+                                                      barrierDismissible: false,
+                                                      builder: (context) =>
+                                                          StreamBuilder<bool>(
+                                                              initialData: true,
+                                                              stream: _events
+                                                                  .stream,
+                                                              builder: (BuildContext
+                                                                      context,
+                                                                  AsyncSnapshot<
+                                                                          bool>
+                                                                      snapshot) {
+                                                                return snapshot
+                                                                        .data!
+                                                                    ? const Center(
+                                                                        child:
+                                                                            CircularProgressIndicator(),
+                                                                      )
+                                                                    : SuccessMessage(
+                                                                        title:
+                                                                            "Success",
+                                                                        content:
+                                                                            "Disconnect Successfully",
+                                                                        onPressedFunction:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          Navigator.pop(
+                                                                              context,
+                                                                              'refresh');
+                                                                        },
+                                                                      );
+                                                              }));
+                                                },
+                                                child: const Text('Yes')),
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('No'))
+                                          ]));
+                            } else {
+                              // ignore: use_build_context_synchronously
+                              showDialog(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (context) => ErrorMessage(
+                                        content:
+                                            'Please connect to your wifi or mobile data',
+                                        onPressedFunction: () {
+                                          Navigator.pop(context);
+                                        },
+                                        title: 'No Internet Connection',
+                                      ));
+                            }
                           },
                     child: Card(
                       color: isFormValidate ? kWhiteColor : Colors.grey,
@@ -359,7 +395,7 @@ class _ConsumerDetailForDisconnectState
 
   void _checkValidation() {
     setState(() {
-      if (txtRemarks.text.isNotEmpty && txtCurrentReader.text.isNotEmpty) {
+      if (txtRemarks.text.isNotEmpty && txtCurrentReader.text.isNotEmpty && UtilsHandler.mediaFileList!.isNotEmpty) {
         isFormValidate = true;
       } else {
         isFormValidate = false;

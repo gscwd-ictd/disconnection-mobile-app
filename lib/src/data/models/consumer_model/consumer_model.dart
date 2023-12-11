@@ -13,7 +13,7 @@ class ConsumerModel with _$ConsumerModel{
       required String? consumerName,
       required String? address,
       required String? meterNo,
-      required double? billAmount,
+      required String? billAmount,
       required int? noOfMonths,
       required int? lastReading,
       required int? currentReading,

@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/presentation/widget/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +11,7 @@ import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/presentation/view/login_screen/login_screen.dart';
 import 'package:sizer/sizer.dart';
 
-Future<void> main() async{
+Future<void> main() async {
   await Hive.initFlutter();
 
   // Hive.registerAdapter(RegistrationAdapter());
@@ -29,30 +31,66 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+  final GlobalKey<ScaffoldMessengerState> snackbarKey =
+      GlobalKey<ScaffoldMessengerState>();
+  bool initConState = false;
+  final snackBar = SnackBar(
+    content: const Text('Yay! A SnackBar!'),
+    action: SnackBarAction(
+      label: 'Undo',
+      onPressed: () {
+        // Some code to undo the change.
+      },
+    ),
+  );
   @override
   Widget build(BuildContext context) {
     //Prevent from Landscape mode
     SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return Sizer(
-        builder: (context, orientation, deviceType) {
-          return MaterialApp(
-            scrollBehavior: const MaterialScrollBehavior().copyWith(
-              dragDevices: {
-                PointerDeviceKind.mouse,
-                PointerDeviceKind.touch,
-                PointerDeviceKind.stylus,
-                PointerDeviceKind.unknown
-              },
-            ),
-            debugShowCheckedModeBanner: false,
-            home: const MyHomePage(title: 'Flutter Demo Home Page'),
-            title: kMaterialAppTitle,
-          );
-        },
-      );
+      builder: (context, orientation, deviceType) {
+        return StreamBuilder<Object>(
+            initialData: Connectivity().checkConnectivity(),
+            stream: Connectivity().onConnectivityChanged,
+            builder: (context, snapshot) {
+              final connectivityResult = snapshot.data;
+              if (connectivityResult == ConnectivityResult.none ||
+                  connectivityResult == null) {
+                const SnackBar snackBar =
+                    SnackBar(content: Text("No Internet Connection"));
+                snackbarKey.currentState?.showSnackBar(snackBar);
+                UtilsHandler.hasConnection = false;
+                initConState = true;
+              }else{
+                if(initConState){
+                  SnackBar snackBar =
+                    const SnackBar(
+                      backgroundColor: Colors.greenAccent,
+                      content: Text("Connection Restored", style: TextStyle(color: Colors.black),));
+                snackbarKey.currentState?.showSnackBar(snackBar);
+                }
+                UtilsHandler.hasConnection = true;
+              }
+              return MaterialApp(
+                scaffoldMessengerKey: snackbarKey,
+                scrollBehavior: const MaterialScrollBehavior().copyWith(
+                  dragDevices: {
+                    PointerDeviceKind.mouse,
+                    PointerDeviceKind.touch,
+                    PointerDeviceKind.stylus,
+                    PointerDeviceKind.unknown
+                  },
+                ),
+                debugShowCheckedModeBanner: false,
+                home: const MyHomePage(title: 'Flutter Demo Home Page'),
+                title: kMaterialAppTitle,
+              );
+            });
+      },
+    );
   }
 }
 
@@ -75,7 +113,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done

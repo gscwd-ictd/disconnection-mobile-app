@@ -2,7 +2,6 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/mock/consumer_mock.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
@@ -32,19 +31,6 @@ class _DispatchAccountScreenState extends State<DispatchAccountScreen> {
         filterList.add(item);
       }
     });
-  }
-
-  void _deployAccount(List<ConsumerModel> accounts, int team){
-    int count = 0;
-    accounts.forEach((account) {
-      if(CheckBoxHandler.distributeSelected[count]){
-        //changing Consumer mock data "Teams"
-        ConsumerMockData.consumerListA.forEach((element) {
-          
-         });
-      }
-      count++;
-     });
   }
 
   @override
@@ -129,7 +115,6 @@ class _DispatchAccountScreenState extends State<DispatchAccountScreen> {
                   width: 50.0.w,
                   child: TextField(
                     onChanged: (val) {
-                      CheckBoxHandler.distributeSelected = [];
                       setState(() {
                         _alterfilter(val);
                       });
@@ -180,24 +165,6 @@ class _DispatchAccountScreenState extends State<DispatchAccountScreen> {
               ],
             ),
           ),
-          Row(
-            children: [
-              Checkbox(
-                          activeColor: kLightBlue,
-                          value: chkSelectAll, 
-                          onChanged: (val){
-                            int count = 0;
-                            setState(() {
-                              chkSelectAll = !chkSelectAll;
-                              CheckBoxHandler.distributeSelected.forEach((item){
-                                CheckBoxHandler.distributeSelected[count] = chkSelectAll;
-                                count++;
-                              });
-                            });
-                          }),
-              const Text("Select All?", style: TextStyle(fontWeight: FontWeight.bold),)
-            ],
-          ),
           Padding(
             padding: const EdgeInsets.only(top: 12.0),
             child: SizedBox(
@@ -215,11 +182,6 @@ class _DispatchAccountScreenState extends State<DispatchAccountScreen> {
                           ? consumerList.length
                           : filterList.length,
                       itemBuilder: (context, index) {
-                        int consumerLength = ConsumerMockData.consumerListA.length;
-                        int chkHandler = CheckBoxHandler.distributeSelected.length;
-                        if(chkHandler < consumerLength){
-                          CheckBoxHandler.distributeSelected.add(false);
-                        }
                         return ConsumerAccountItemWidget(
                           consumerData: txtSearch.text == ""
                               ? consumerList[index]

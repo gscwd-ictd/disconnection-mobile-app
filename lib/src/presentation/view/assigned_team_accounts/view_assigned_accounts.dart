@@ -1,8 +1,7 @@
-import 'package:diconnection/src/core/handler/zoneHandler.dart';
+import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/presentation/view/assigned_team_accounts/disconnected_screen.dart/disconnected_screen.dart';
 import 'package:diconnection/src/presentation/view/assigned_team_accounts/for_disconnect_screen.dart/for_disconnect_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 import 'package:sizer/sizer.dart';
@@ -30,13 +29,13 @@ class _AssignedAccountsState extends State<AssignedAccounts> {
     // TODO: implement initState
     isSecondPage = false;
     pageController.initialPage;
-    consumerList = Zonehandler.zones[widget.index].consumerList;
+    consumerList = UtilsHandler.zones[widget.index].consumerList;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    consumerList = Zonehandler.zones[widget.index].consumerList;
+    consumerList = UtilsHandler.zones[widget.index].consumerList;
     var forDiscon = consumerList
         .where((c) =>
             c.isConnected == true &&
@@ -64,7 +63,6 @@ class _AssignedAccountsState extends State<AssignedAccounts> {
                   width: 70.0.w,
                   child: TextField(
                     onChanged: (val) {
-                      CheckBoxHandler.distributeSelected = [];
                       setState(() {});
                     },
                     controller: txtSearch,

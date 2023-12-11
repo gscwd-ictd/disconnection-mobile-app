@@ -1,4 +1,5 @@
-import 'package:diconnection/src/data/models/test_model.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:diconnection/src/core/messages/error_message/error_message.dart';
 import 'package:diconnection/src/presentation/view/login_screen/authState.dart';
 import 'package:diconnection/src/presentation/view/zone_assigned_screen/zone_assigned_screen.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,6 @@ class _LoginState extends ConsumerState<Login> {
   @override
   Widget build(BuildContext context) {
     final auth = ref.watch(authNotifierProvider);
-    final boredSuggestion = ref.watch(boredSuggestionProvider);
     return auth
         ? const ZoneAssignedScreen()
         : SafeArea(
@@ -137,7 +137,20 @@ class _LoginState extends ConsumerState<Login> {
                               RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15.0)))),
                       onPressed: () async {
-                        ref.read(authNotifierProvider.notifier).login();
+                        var connectivityResult = await (Connectivity().checkConnectivity());
+                        if(connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi){
+                          ref.read(authNotifierProvider.notifier).login();
+                        }else{
+                          // ignore: use_build_context_synchronously
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context, 
+                            builder: (context) => ErrorMessage(
+                              content: 'Please connect to your wifi or mobile data',
+                              onPressedFunction: (){ Navigator.pop(context);}, 
+                              title: 'No Internet Connection',
+                            ));
+                        }
                         // Navigator.of(context).push(MaterialPageRoute(
                         //     builder: (context) => const ZoneAssignedScreen()));
                       },

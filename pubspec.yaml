@@ -53,6 +53,10 @@ dependencies:
   video_player: ^2.8.1
   dio: ^5.3.4
   freezed: ^2.4.5
+  mime: ^1.0.4
+  connectivity_plus: ^5.0.2
+  http_parser: ^4.0.2
+  cached_network_image: ^3.3.0
 
 dev_dependencies:
   flutter_test:

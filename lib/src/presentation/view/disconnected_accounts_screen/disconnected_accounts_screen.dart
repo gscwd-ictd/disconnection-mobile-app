@@ -1,6 +1,5 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:diconnection/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/mock/consumer_mock.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
@@ -51,7 +50,6 @@ class _DisconnectedAccountScreenState
                   width: 50.0.w,
                   child: TextField(
                     onChanged: (val) {
-                      CheckBoxHandler.distributeSelected = [];
                       setState(() {
                         _alterfilter(val);
                       });
@@ -119,7 +117,6 @@ class _DisconnectedAccountScreenState
                                 ? consumerList.length
                                 : filterList.length,
                             itemBuilder: (context, index) {
-                              CheckBoxHandler.distributeSelected.add(false);
                               return ConsumerAccountItemWidget(
                                   consumerData: txtSearch.text == ""
                                       ? consumerList[index]
