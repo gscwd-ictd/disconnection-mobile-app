@@ -7,7 +7,9 @@ import 'package:sizer/sizer.dart';
 class DisconnectedScreen extends ConsumerStatefulWidget {
   final List<ConsumerModel> consumerList;
   final Function onPressedFunction;
-  const DisconnectedScreen({Key? key, required this.consumerList, required this.onPressedFunction}) : super(key: key);
+  const DisconnectedScreen(
+      {Key? key, required this.consumerList, required this.onPressedFunction})
+      : super(key: key);
 
   @override
   ConsumerState<DisconnectedScreen> createState() => _DisconnectedScreenState();
@@ -26,21 +28,27 @@ class _DisconnectedScreenState extends ConsumerState<DisconnectedScreen> {
   @override
   Widget build(BuildContext context) {
     var consumerList = widget.consumerList;
-    return 
-          Padding(
-            padding: const EdgeInsets.only(top: 12.0),
-            child: SizedBox(
-              height: 67.h,
-              width: 100.w,
-              child: Scrollbar(
-                controller: _scrollController,
-                child: SingleChildScrollView(
-                  controller: _scrollController,
-                  child: Stack(
-                    children: [
-                      SizedBox(
-                        height: 67.h,
-                        child: consumerList.isEmpty ? const Text("Empty"):ListView.builder(
+    return Padding(
+      padding: const EdgeInsets.only(top: 12.0),
+      child: SizedBox(
+        height: 67.h,
+        width: 100.w,
+        child: Scrollbar(
+          controller: _scrollController,
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: 67.h,
+                  child: consumerList.isEmpty
+                      ? Center(
+                          child: Text(
+                          "Empty",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 18.sp),
+                        ))
+                      : ListView.builder(
                           shrinkWrap: true,
                           itemCount: txtSearch.text == ""
                               ? consumerList.length
@@ -56,27 +64,26 @@ class _DisconnectedScreenState extends ConsumerState<DisconnectedScreen> {
                             );
                           },
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 75.w, top: 60.h),
-                        child: SizedBox(
-                          height: 5.0.h,
-                          child: Card(
-                              elevation: 12.0,
-                              child: Center(
-                                  child: Text(
-                                "Total: ${consumerList.length}",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14.0.sp),
-                              ))),
-                        ),
-                      )
-                    ],
-                  ),
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsets.only(left: 75.w, top: 60.h),
+                  child: SizedBox(
+                    height: 5.0.h,
+                    child: Card(
+                        elevation: 12.0,
+                        child: Center(
+                            child: Text(
+                          "Total: ${consumerList.length}",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14.0.sp),
+                        ))),
+                  ),
+                )
+              ],
             ),
-          );
+          ),
+        ),
+      ),
+    );
   }
 }

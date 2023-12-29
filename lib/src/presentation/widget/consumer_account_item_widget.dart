@@ -19,7 +19,8 @@ class ConsumerAccountItemWidget extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<ConsumerAccountItemWidget> createState() => _ConsumerAccountItemWidgetState();
+  State<ConsumerAccountItemWidget> createState() =>
+      _ConsumerAccountItemWidgetState();
 }
 
 class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
@@ -28,7 +29,7 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
     ConsumerModel consumerData = widget.consumerData;
     bool stats = consumerData.isConnected ?? false;
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         widget.onPressedFunction();
       },
       child: Card(
@@ -36,7 +37,8 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(12.0))),
         child: Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 18.0, bottom: 8.0),
+          padding: const EdgeInsets.only(
+              left: 8.0, right: 8.0, top: 18.0, bottom: 8.0),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -52,13 +54,17 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
                           consumerData.consumerName ?? "",
                           softWrap: true,
                           style: TextStyle(
-                            fontSize: 14.sp, 
-                            fontWeight: FontWeight.bold),
+                              fontSize: consumerData.consumerName!.length >= 22
+                                  ? 12.sp
+                                  : 14.sp,
+                              fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
                       ],
                     ),
-                    SizedBox(width: 14.w,),
+                    SizedBox(
+                      width: 14.w,
+                    ),
                     Column(
                       children: [
                         const Text("Unpaid: "),
@@ -66,9 +72,9 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
                           "P${consumerData.billAmount ?? 0.00}",
                           softWrap: true,
                           style: TextStyle(
-                            color: Colors.redAccent,
-                            fontSize: 14.sp, 
-                            fontWeight: FontWeight.bold),
+                              color: Colors.redAccent,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -80,10 +86,22 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
                 height: 1.h,
               ),
               GestureDetector(
-                onTap: ()async {
-                  String? refresh = await Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => !stats ? ConsumerDetailDisconnected(consumerData: consumerData, index: widget.index, onPressedFunction: (){},) : ConsumerDetailForDisconnect(consumerData: consumerData, index: 0, onPressedFunction: (){},))) ?? "";
-                  if(refresh == 'refresh'){
+                onTap: () async {
+                  String? refresh =
+                      await Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => !stats
+                                  ? ConsumerDetailDisconnected(
+                                      consumerData: consumerData,
+                                      index: widget.index,
+                                      onPressedFunction: () {},
+                                    )
+                                  : ConsumerDetailForDisconnect(
+                                      consumerData: consumerData,
+                                      index: 0,
+                                      onPressedFunction: () {},
+                                    ))) ??
+                          "";
+                  if (refresh == 'refresh') {
                     widget.onPressedFunction();
                   }
                 },
@@ -92,12 +110,14 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
                   width: 90.w,
                   height: 3.h,
                   child: Text(
-                        "Show more...",
-                        softWrap: true,
-                        style:
-                            TextStyle(fontSize: 10.sp, fontWeight: FontWeight.bold, color: kLightBlue),
-                        textAlign: TextAlign.center,
-                      ),
+                    "Show more...",
+                    softWrap: true,
+                    style: TextStyle(
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.bold,
+                        color: kLightBlue),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               )
             ],

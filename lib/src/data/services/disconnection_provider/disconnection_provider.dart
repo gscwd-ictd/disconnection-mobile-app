@@ -45,8 +45,9 @@ class AsyncDisconnection extends _$AsyncDisconnection {
           }
         });
         UtilsHandler.zones = zoneList;
-      }else{
-        throw Exception('Error: ${json.statusCode} \n Failed to load Zones from API');
+      } else {
+        throw Exception(
+            'Error: ${json.statusCode} \n Failed to load Zones from API');
       }
       return zoneList;
     } catch (ex) {
@@ -86,10 +87,12 @@ class AsyncDisconnection extends _$AsyncDisconnection {
             events.add(false);
             return _fetchGetDisconnection();
           } else {
-            throw Exception('Error: ${uploadResponse.statusCode} /n Failed to update Consumers from API');
+            throw Exception(
+                'Error: ${uploadResponse.statusCode} /n Failed to update Consumers from API');
           }
-        }else{
-          throw Exception('Error: ${uploadResponse.statusCode} /n Failed to upload from API');
+        } else {
+          throw Exception(
+              'Error: ${uploadResponse.statusCode} /n Failed to upload from API');
         }
       });
       UtilsHandler.mediaFileList = [];

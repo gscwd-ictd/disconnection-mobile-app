@@ -11,7 +11,10 @@ class AssignedAccounts extends StatefulWidget {
   final List<ConsumerModel> consumerList;
   final int index;
   const AssignedAccounts(
-      {Key? key, required this.consumerList, required this.address, required this.index})
+      {Key? key,
+      required this.consumerList,
+      required this.address,
+      required this.index})
       : super(key: key);
 
   @override
@@ -33,18 +36,26 @@ class _AssignedAccountsState extends State<AssignedAccounts> {
     super.initState();
   }
 
+  Future<String> fordelayed() async {
+    return await Future.delayed(const Duration(seconds: 1), () => "Hello");
+  }
+
   @override
   Widget build(BuildContext context) {
     consumerList = UtilsHandler.zones[widget.index].consumerList;
     var forDiscon = consumerList
         .where((c) =>
             c.isConnected == true &&
-            c.consumerName!.toUpperCase().contains(txtSearch.text.toUpperCase()))
+            c.consumerName!
+                .toUpperCase()
+                .contains(txtSearch.text.toUpperCase()))
         .toList();
     var disconnected = consumerList
         .where((c) =>
             c.isConnected == false &&
-            c.consumerName!.toUpperCase().contains(txtSearch.text.toUpperCase()))
+            c.consumerName!
+                .toUpperCase()
+                .contains(txtSearch.text.toUpperCase()))
         .toList();
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -85,25 +96,26 @@ class _AssignedAccountsState extends State<AssignedAccounts> {
             ),
           ),
           SizedBox(
-            height: 70.h,
-            child: PageView(
-              scrollDirection: Axis.horizontal,
-              physics: const NeverScrollableScrollPhysics(),
-              controller: pageController,
-              children: [
-                ForDisconnectScreen(consumerList: forDiscon, onPressedFunction: (){
-                  setState(() {
-                    
-                  });
-                },),
-                DisconnectedScreen(consumerList: disconnected, onPressedFunction: (){
-                  setState(() {
-                    
-                  });
-                },)
-              ],
-            ),
-          ),
+              height: 70.h,
+              child: PageView(
+                scrollDirection: Axis.horizontal,
+                physics: const NeverScrollableScrollPhysics(),
+                controller: pageController,
+                children: [
+                  ForDisconnectScreen(
+                    consumerList: forDiscon,
+                    onPressedFunction: () {
+                      setState(() {});
+                    },
+                  ),
+                  DisconnectedScreen(
+                    consumerList: disconnected,
+                    onPressedFunction: () {
+                      setState(() {});
+                    },
+                  )
+                ],
+              )),
           Row(
             children: [
               GestureDetector(
