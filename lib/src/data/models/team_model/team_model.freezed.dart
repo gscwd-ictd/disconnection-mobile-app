@@ -24,6 +24,7 @@ mixin _$Team {
   String? get teamName => throw _privateConstructorUsedError;
   String? get teamLeader => throw _privateConstructorUsedError;
   bool? get status => throw _privateConstructorUsedError;
+  List<Member>? get disconnectionMember => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,7 +37,11 @@ abstract class $TeamCopyWith<$Res> {
       _$TeamCopyWithImpl<$Res, Team>;
   @useResult
   $Res call(
-      {String? teamId, String? teamName, String? teamLeader, bool? status});
+      {String? teamId,
+      String? teamName,
+      String? teamLeader,
+      bool? status,
+      List<Member>? disconnectionMember});
 }
 
 /// @nodoc
@@ -56,6 +61,7 @@ class _$TeamCopyWithImpl<$Res, $Val extends Team>
     Object? teamName = freezed,
     Object? teamLeader = freezed,
     Object? status = freezed,
+    Object? disconnectionMember = freezed,
   }) {
     return _then(_value.copyWith(
       teamId: freezed == teamId
@@ -74,6 +80,10 @@ class _$TeamCopyWithImpl<$Res, $Val extends Team>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as bool?,
+      disconnectionMember: freezed == disconnectionMember
+          ? _value.disconnectionMember
+          : disconnectionMember // ignore: cast_nullable_to_non_nullable
+              as List<Member>?,
     ) as $Val);
   }
 }
@@ -86,7 +96,11 @@ abstract class _$$TeamImplCopyWith<$Res> implements $TeamCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String? teamId, String? teamName, String? teamLeader, bool? status});
+      {String? teamId,
+      String? teamName,
+      String? teamLeader,
+      bool? status,
+      List<Member>? disconnectionMember});
 }
 
 /// @nodoc
@@ -103,6 +117,7 @@ class __$$TeamImplCopyWithImpl<$Res>
     Object? teamName = freezed,
     Object? teamLeader = freezed,
     Object? status = freezed,
+    Object? disconnectionMember = freezed,
   }) {
     return _then(_$TeamImpl(
       teamId: freezed == teamId
@@ -121,6 +136,10 @@ class __$$TeamImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as bool?,
+      disconnectionMember: freezed == disconnectionMember
+          ? _value._disconnectionMember
+          : disconnectionMember // ignore: cast_nullable_to_non_nullable
+              as List<Member>?,
     ));
   }
 }
@@ -132,7 +151,9 @@ class _$TeamImpl implements _Team {
       {required this.teamId,
       required this.teamName,
       required this.teamLeader,
-      required this.status});
+      required this.status,
+      required final List<Member>? disconnectionMember})
+      : _disconnectionMember = disconnectionMember;
 
   factory _$TeamImpl.fromJson(Map<String, dynamic> json) =>
       _$$TeamImplFromJson(json);
@@ -145,10 +166,20 @@ class _$TeamImpl implements _Team {
   final String? teamLeader;
   @override
   final bool? status;
+  final List<Member>? _disconnectionMember;
+  @override
+  List<Member>? get disconnectionMember {
+    final value = _disconnectionMember;
+    if (value == null) return null;
+    if (_disconnectionMember is EqualUnmodifiableListView)
+      return _disconnectionMember;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'Team(teamId: $teamId, teamName: $teamName, teamLeader: $teamLeader, status: $status)';
+    return 'Team(teamId: $teamId, teamName: $teamName, teamLeader: $teamLeader, status: $status, disconnectionMember: $disconnectionMember)';
   }
 
   @override
@@ -161,13 +192,15 @@ class _$TeamImpl implements _Team {
                 other.teamName == teamName) &&
             (identical(other.teamLeader, teamLeader) ||
                 other.teamLeader == teamLeader) &&
-            (identical(other.status, status) || other.status == status));
+            (identical(other.status, status) || other.status == status) &&
+            const DeepCollectionEquality()
+                .equals(other._disconnectionMember, _disconnectionMember));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, teamId, teamName, teamLeader, status);
+  int get hashCode => Object.hash(runtimeType, teamId, teamName, teamLeader,
+      status, const DeepCollectionEquality().hash(_disconnectionMember));
 
   @JsonKey(ignore: true)
   @override
@@ -188,7 +221,8 @@ abstract class _Team implements Team {
       {required final String? teamId,
       required final String? teamName,
       required final String? teamLeader,
-      required final bool? status}) = _$TeamImpl;
+      required final bool? status,
+      required final List<Member>? disconnectionMember}) = _$TeamImpl;
 
   factory _Team.fromJson(Map<String, dynamic> json) = _$TeamImpl.fromJson;
 
@@ -200,6 +234,8 @@ abstract class _Team implements Team {
   String? get teamLeader;
   @override
   bool? get status;
+  @override
+  List<Member>? get disconnectionMember;
   @override
   @JsonKey(ignore: true)
   _$$TeamImplCopyWith<_$TeamImpl> get copyWith =>

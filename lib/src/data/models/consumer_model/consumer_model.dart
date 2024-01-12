@@ -1,3 +1,4 @@
+import 'package:diconnection/src/data/models/member_model/member_model.dart';
 import 'package:diconnection/src/data/models/team_model/team_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -5,7 +6,7 @@ part 'consumer_model.freezed.dart';
 part 'consumer_model.g.dart';
 
 @freezed
-class ConsumerModel with _$ConsumerModel{
+class ConsumerModel with _$ConsumerModel {
   const factory ConsumerModel(
       {required String? disconnectionId,
       required String? accountNo,
@@ -27,5 +28,6 @@ class ConsumerModel with _$ConsumerModel{
       required bool? isPayed,
       required Team? disconnectionTeam}) = _ConsumerModel;
 
-  factory ConsumerModel.fromJson(Map<String, dynamic> json) => _$ConsumerModelFromJson(json);
+  factory ConsumerModel.fromJson(Map<String, dynamic> json) =>
+      _$ConsumerModelFromJson(json);
 }
