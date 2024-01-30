@@ -501,7 +501,7 @@ class _ConsumerDetailForDisconnectState
                                       );
                                     case 2:
                                       return VerifyingMessage(
-                                        content: 'Disconnecting',
+                                        content: 'Submitting',
                                         onPressedFunction: () {},
                                         state: snapshot.data!,
                                         success: 2,
@@ -510,7 +510,7 @@ class _ConsumerDetailForDisconnectState
                                     case 3:
                                       return SuccessMessage(
                                         title: "Success",
-                                        content: "Disconnect Successfully",
+                                        content: "Submit Successfully",
                                         onPressedFunction: () {
                                           Navigator.pop(context);
                                           Navigator.pop(context);
@@ -608,11 +608,11 @@ class _ConsumerDetailForDisconnectState
         currentReading: isRead ? int.parse(txtCurrentReader.text) : null,
         remarks: txtRemarks.text,
         disconnectionDate: a.disconnectionDate,
-        disconnectedDate: a.disconnectedDate,
+        disconnectedDate: isDisconnected ? a.disconnectedDate : null,
         proofOfDisconnection: a.proofOfDisconnection ?? "",
         zoneNo: a.zoneNo,
         bookNo: a.bookNo,
-        isConnected: false,
+        isConnected: !isDisconnected,
         isPayed: a.isPayed,
         disconnectionTeam: a.disconnectionTeam,
         status: isDisconnected ? 1 : 2);
