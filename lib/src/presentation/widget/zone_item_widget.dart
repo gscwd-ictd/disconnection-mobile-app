@@ -27,7 +27,7 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
   Widget build(BuildContext context) {
     ZoneModel zoneData = widget.zoneData;
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         widget.onPressedFunction();
       },
       child: Card(
@@ -35,12 +35,13 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(12.0))),
         child: Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 18.0, bottom: 8.0),
+          padding: const EdgeInsets.only(
+              left: 8.0, right: 8.0, top: 18.0, bottom: 8.0),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
               SizedBox(
-                height: zoneData.barangay.length <= 12 ?40 : 80,
+                height: zoneData.barangay.length <= 12 ? 50 : 80,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -50,13 +51,12 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
                         SizedBox(
                           width: 60.w,
                           child: Text(
-                          zoneData.barangay,
-                          softWrap: true,
-                          style: TextStyle(
-                            fontSize: 14.sp, 
-                            fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
+                            zoneData.barangay,
+                            softWrap: true,
+                            style: TextStyle(
+                                fontSize: 14.sp, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ],
                     ),
@@ -68,12 +68,13 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
                       ],
                     ),
                     Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            const SizedBox( width: 40, child: Icon(FontAwesomeIcons.users)),
-                            Text(zoneData.totalCount.toString())
-                          ],
-                        )
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const SizedBox(
+                            width: 40, child: Icon(FontAwesomeIcons.users)),
+                        Text(zoneData.totalCount.toString())
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -81,22 +82,28 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
                 height: 1.h,
               ),
               GestureDetector(
-                onTap: (){
-                  String address = "${zoneData.barangay} Z${zoneData.zoneNumber} Book${zoneData.bookNumber}";
+                onTap: () {
+                  String address =
+                      "${zoneData.barangay} Z${zoneData.zoneNumber} Book${zoneData.bookNumber}";
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AssignedAccounts(consumerList: zoneData.consumerList, address: address, index: widget.index,)));
+                      builder: (context) => AssignedAccounts(
+                            consumerList: zoneData.consumerList,
+                            address: address,
+                            index: widget.index,
+                          )));
                 },
                 child: Container(
-                  color: Colors.white,
                   width: 90.w,
                   height: 3.h,
                   child: Text(
-                        "Show more...",
-                        softWrap: true,
-                        style:
-                            TextStyle(fontSize: 10.sp, fontWeight: FontWeight.bold, color: kLightBlue),
-                        textAlign: TextAlign.center,
-                      ),
+                    "Show more...",
+                    softWrap: true,
+                    style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.bold,
+                        color: kLightBlue),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               )
             ],

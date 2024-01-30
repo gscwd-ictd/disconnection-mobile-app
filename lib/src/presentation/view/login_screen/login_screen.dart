@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/core/messages/error_message/error_message.dart';
 import 'package:diconnection/src/presentation/view/login_screen/authState.dart';
 import 'package:diconnection/src/presentation/view/zone_assigned_screen/zone_assigned_screen.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
 class Login extends ConsumerStatefulWidget {
@@ -18,6 +20,7 @@ class Login extends ConsumerStatefulWidget {
 class _LoginState extends ConsumerState<Login> {
   final userText = TextEditingController();
   final passText = TextEditingController();
+  final urlText = TextEditingController();
 
   Color _passwordStat = Colors.red;
   bool _hidePassword = true;
@@ -44,6 +47,45 @@ class _LoginState extends ConsumerState<Login> {
               appBar: null,
               resizeToAvoidBottomInset: false,
               backgroundColor: kWhiteColor,
+              floatingActionButton: FloatingActionButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: Text(
+                                "SET HOST API URL",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.lato(
+                                    fontWeight: FontWeight.w900),
+                              ),
+                              actions: [
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        SizedBox(
+                                            width: 40.w,
+                                            child:
+                                                TextField(controller: urlText)),
+                                        TextButton(
+                                          onPressed: () {
+                                            UtilsHandler.apiLink = urlText.text;
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('SAVE'),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ));
+                  },
+                  child: const Icon(Icons.settings)),
               body: Column(
                 children: [
                   Padding(
@@ -70,9 +112,8 @@ class _LoginState extends ConsumerState<Login> {
                     padding: EdgeInsets.symmetric(horizontal: 10.w),
                     child: TextFormField(
                       scrollPadding: EdgeInsets.symmetric(
-                                vertical:
-                                    MediaQuery.of(context).viewInsets.bottom +
-                                        5),
+                          vertical:
+                              MediaQuery.of(context).viewInsets.bottom + 5),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           userText.clear();
@@ -98,9 +139,8 @@ class _LoginState extends ConsumerState<Login> {
                     padding: EdgeInsets.symmetric(horizontal: 10.w),
                     child: TextFormField(
                       scrollPadding: EdgeInsets.symmetric(
-                                vertical:
-                                    MediaQuery.of(context).viewInsets.bottom +
-                                        5),
+                          vertical:
+                              MediaQuery.of(context).viewInsets.bottom + 5),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           passText.clear();
@@ -137,19 +177,25 @@ class _LoginState extends ConsumerState<Login> {
                               RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15.0)))),
                       onPressed: () async {
-                        var connectivityResult = await (Connectivity().checkConnectivity());
-                        if(connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi){
+                        var connectivityResult =
+                            await (Connectivity().checkConnectivity());
+                        if (connectivityResult == ConnectivityResult.mobile ||
+                            connectivityResult == ConnectivityResult.wifi ||
+                            connectivityResult == ConnectivityResult.ethernet) {
                           ref.read(authNotifierProvider.notifier).login();
-                        }else{
+                        } else {
                           // ignore: use_build_context_synchronously
                           showDialog(
-                            barrierDismissible: false,
-                            context: context, 
-                            builder: (context) => ErrorMessage(
-                              content: 'Please connect to your wifi or mobile data',
-                              onPressedFunction: (){ Navigator.pop(context);}, 
-                              title: 'No Internet Connection',
-                            ));
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) => ErrorMessage(
+                                    content:
+                                        'Please connect to your wifi or mobile data',
+                                    onPressedFunction: () {
+                                      Navigator.pop(context);
+                                    },
+                                    title: 'No Internet Connection',
+                                  ));
                         }
                         // Navigator.of(context).push(MaterialPageRoute(
                         //     builder: (context) => const ZoneAssignedScreen()));

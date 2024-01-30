@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-const String kHost = "4cb6-122-3-104-117.ngrok-free.app";
-const String kHostHttp = "https://4cb6-122-3-104-117.ngrok-free.app";
+const String kHost = "0508-122-3-104-117.ngrok-free.app";
+const String kHostHttp = "https://0508-122-3-104-117.ngrok-free.app";
 
 const String kMaterialAppTitle = 'Disconnection App';
 const String bingMapKey =
     "AhkEgNbLCfEkDksb2EQrhwYphgbfAbwcF6OR4Pexem68p8t_9nWeTeVAHOfC0eEd";
+const bool isDebug = true;
 
 //Colors
 const Color kBackgroundColor = Color(0xFF2879C1);

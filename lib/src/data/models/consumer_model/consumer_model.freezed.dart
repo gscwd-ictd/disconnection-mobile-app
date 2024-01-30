@@ -38,6 +38,7 @@ mixin _$ConsumerModel {
   int? get bookNo => throw _privateConstructorUsedError;
   bool? get isConnected => throw _privateConstructorUsedError;
   bool? get isPayed => throw _privateConstructorUsedError;
+  int? get status => throw _privateConstructorUsedError;
   Team? get disconnectionTeam => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -71,6 +72,7 @@ abstract class $ConsumerModelCopyWith<$Res> {
       int? bookNo,
       bool? isConnected,
       bool? isPayed,
+      int? status,
       Team? disconnectionTeam});
 
   $TeamCopyWith<$Res>? get disconnectionTeam;
@@ -107,6 +109,7 @@ class _$ConsumerModelCopyWithImpl<$Res, $Val extends ConsumerModel>
     Object? bookNo = freezed,
     Object? isConnected = freezed,
     Object? isPayed = freezed,
+    Object? status = freezed,
     Object? disconnectionTeam = freezed,
   }) {
     return _then(_value.copyWith(
@@ -182,6 +185,10 @@ class _$ConsumerModelCopyWithImpl<$Res, $Val extends ConsumerModel>
           ? _value.isPayed
           : isPayed // ignore: cast_nullable_to_non_nullable
               as bool?,
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as int?,
       disconnectionTeam: freezed == disconnectionTeam
           ? _value.disconnectionTeam
           : disconnectionTeam // ignore: cast_nullable_to_non_nullable
@@ -229,6 +236,7 @@ abstract class _$$ConsumerModelImplCopyWith<$Res>
       int? bookNo,
       bool? isConnected,
       bool? isPayed,
+      int? status,
       Team? disconnectionTeam});
 
   @override
@@ -264,6 +272,7 @@ class __$$ConsumerModelImplCopyWithImpl<$Res>
     Object? bookNo = freezed,
     Object? isConnected = freezed,
     Object? isPayed = freezed,
+    Object? status = freezed,
     Object? disconnectionTeam = freezed,
   }) {
     return _then(_$ConsumerModelImpl(
@@ -339,6 +348,10 @@ class __$$ConsumerModelImplCopyWithImpl<$Res>
           ? _value.isPayed
           : isPayed // ignore: cast_nullable_to_non_nullable
               as bool?,
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as int?,
       disconnectionTeam: freezed == disconnectionTeam
           ? _value.disconnectionTeam
           : disconnectionTeam // ignore: cast_nullable_to_non_nullable
@@ -369,6 +382,7 @@ class _$ConsumerModelImpl implements _ConsumerModel {
       required this.bookNo,
       required this.isConnected,
       required this.isPayed,
+      required this.status,
       required this.disconnectionTeam});
 
   factory _$ConsumerModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -411,15 +425,17 @@ class _$ConsumerModelImpl implements _ConsumerModel {
   @override
   final bool? isPayed;
   @override
+  final int? status;
+  @override
   final Team? disconnectionTeam;
 
   @override
   String toString() {
-    return 'ConsumerModel(disconnectionId: $disconnectionId, accountNo: $accountNo, prevAccountNo: $prevAccountNo, consumerName: $consumerName, address: $address, meterNo: $meterNo, billAmount: $billAmount, noOfMonths: $noOfMonths, lastReading: $lastReading, currentReading: $currentReading, remarks: $remarks, disconnectionDate: $disconnectionDate, disconnectedDate: $disconnectedDate, proofOfDisconnection: $proofOfDisconnection, zoneNo: $zoneNo, bookNo: $bookNo, isConnected: $isConnected, isPayed: $isPayed, disconnectionTeam: $disconnectionTeam)';
+    return 'ConsumerModel(disconnectionId: $disconnectionId, accountNo: $accountNo, prevAccountNo: $prevAccountNo, consumerName: $consumerName, address: $address, meterNo: $meterNo, billAmount: $billAmount, noOfMonths: $noOfMonths, lastReading: $lastReading, currentReading: $currentReading, remarks: $remarks, disconnectionDate: $disconnectionDate, disconnectedDate: $disconnectedDate, proofOfDisconnection: $proofOfDisconnection, zoneNo: $zoneNo, bookNo: $bookNo, isConnected: $isConnected, isPayed: $isPayed, status: $status, disconnectionTeam: $disconnectionTeam)';
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ConsumerModelImpl &&
@@ -453,6 +469,7 @@ class _$ConsumerModelImpl implements _ConsumerModel {
             (identical(other.isConnected, isConnected) ||
                 other.isConnected == isConnected) &&
             (identical(other.isPayed, isPayed) || other.isPayed == isPayed) &&
+            (identical(other.status, status) || other.status == status) &&
             (identical(other.disconnectionTeam, disconnectionTeam) ||
                 other.disconnectionTeam == disconnectionTeam));
   }
@@ -479,6 +496,7 @@ class _$ConsumerModelImpl implements _ConsumerModel {
         bookNo,
         isConnected,
         isPayed,
+        status,
         disconnectionTeam
       ]);
 
@@ -516,6 +534,7 @@ abstract class _ConsumerModel implements ConsumerModel {
       required final int? bookNo,
       required final bool? isConnected,
       required final bool? isPayed,
+      required final int? status,
       required final Team? disconnectionTeam}) = _$ConsumerModelImpl;
 
   factory _ConsumerModel.fromJson(Map<String, dynamic> json) =
@@ -557,6 +576,8 @@ abstract class _ConsumerModel implements ConsumerModel {
   bool? get isConnected;
   @override
   bool? get isPayed;
+  @override
+  int? get status;
   @override
   Team? get disconnectionTeam;
   @override

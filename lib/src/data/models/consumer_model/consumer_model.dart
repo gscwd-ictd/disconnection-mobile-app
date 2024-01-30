@@ -26,6 +26,7 @@ class ConsumerModel with _$ConsumerModel {
       required int? bookNo,
       required bool? isConnected,
       required bool? isPayed,
+      required int? status,
       required Team? disconnectionTeam}) = _ConsumerModel;
 
   factory ConsumerModel.fromJson(Map<String, dynamic> json) =>

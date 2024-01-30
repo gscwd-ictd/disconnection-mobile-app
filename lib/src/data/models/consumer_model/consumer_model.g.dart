@@ -30,6 +30,7 @@ _$ConsumerModelImpl _$$ConsumerModelImplFromJson(Map<String, dynamic> json) =>
       bookNo: json['bookNo'] as int?,
       isConnected: json['isConnected'] as bool?,
       isPayed: json['isPayed'] as bool?,
+      status: json['status'] as int?,
       disconnectionTeam: json['disconnectionTeam'] == null
           ? null
           : Team.fromJson(json['disconnectionTeam'] as Map<String, dynamic>),
@@ -55,5 +56,6 @@ Map<String, dynamic> _$$ConsumerModelImplToJson(_$ConsumerModelImpl instance) =>
       'bookNo': instance.bookNo,
       'isConnected': instance.isConnected,
       'isPayed': instance.isPayed,
+      'status': instance.status,
       'disconnectionTeam': instance.disconnectionTeam,
     };

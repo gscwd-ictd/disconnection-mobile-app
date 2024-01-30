@@ -43,7 +43,7 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
             mainAxisSize: MainAxisSize.max,
             children: [
               SizedBox(
-                height: 40,
+                height: 50,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -106,7 +106,6 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
                   }
                 },
                 child: Container(
-                  color: Colors.white,
                   width: 90.w,
                   height: 3.h,
                   child: Text(

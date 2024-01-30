@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/core/messages/error_message/error_message.dart';
+import 'package:diconnection/src/core/messages/verifying_messgae/verifying_message.dart';
 import 'package:diconnection/src/core/messages/warning_message/warning_message.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
 import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
@@ -16,17 +17,17 @@ import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
+import 'dart:ui' as ui;
 
 class ConsumerDetailForDisconnect extends ConsumerStatefulWidget {
   final int index;
   final ConsumerModel consumerData;
   final Function onPressedFunction;
   const ConsumerDetailForDisconnect(
-      {Key? key,
+      {super.key,
       required this.consumerData,
       required this.onPressedFunction,
-      required this.index})
-      : super(key: key);
+      required this.index});
 
   @override
   ConsumerState<ConsumerDetailForDisconnect> createState() =>
@@ -37,17 +38,27 @@ class _ConsumerDetailForDisconnectState
     extends ConsumerState<ConsumerDetailForDisconnect> {
   TextEditingController txtCurrentReader = TextEditingController();
   TextEditingController txtRemarks = TextEditingController();
-  bool isFormValidate = false;
-  late StreamController<bool> _events;
+  bool isFormValidate = false, isRead = true, isDisconnected = true;
+  late StreamController<int> _events;
   late Widget _imageWidget;
 
   @override
   void initState() {
+    UtilsHandler.mediaFileList = [];
     _imageWidget = ImagePickerWidget(onChanged: () {
       _checkValidation();
     });
     super.initState();
-    _events = StreamController<bool>();
+    _events = StreamController<int>();
+  }
+
+  Size _textSize(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        maxLines: 3,
+        textDirection: TextDirection.ltr)
+      ..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size;
   }
 
   @override
@@ -55,6 +66,10 @@ class _ConsumerDetailForDisconnectState
     ConsumerModel consumerData = widget.consumerData;
     bool stats = consumerData.isConnected ?? false;
     final disconnection = ref.watch(asyncDisconnectionProvider);
+    final numLines = '\n'.allMatches(consumerData.address!).length + 1;
+    final TextStyle textStyle =
+        TextStyle(fontSize: 12.0.sp, fontWeight: FontWeight.bold);
+    final Size txtSize = _textSize(consumerData.address!, textStyle);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kScaffoldColor,
@@ -84,7 +99,7 @@ class _ConsumerDetailForDisconnectState
                         style: TextStyle(fontSize: 12.0.sp),
                       ),
                       SizedBox(
-                        height: 35,
+                        height: txtSize.width > 150 ? 6.h : null,
                         child: Text(
                           "Address:",
                           style: TextStyle(fontSize: 12.0.sp),
@@ -133,9 +148,8 @@ class _ConsumerDetailForDisconnectState
                             child: Text(
                               consumerData.address!,
                               softWrap: true,
-                              style: TextStyle(
-                                  fontSize: 12.0.sp,
-                                  fontWeight: FontWeight.bold),
+                              maxLines: 3,
+                              style: textStyle,
                             )),
                         Text(
                           consumerData.noOfMonths.toString(),
@@ -166,6 +180,43 @@ class _ConsumerDetailForDisconnectState
                         ),
                       ],
                     ),
+                  ),
+                ],
+              ),
+            ),
+            //Separate checkbox for cant read meter and cant disconnect
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "Can't read meter?",
+                        style: TextStyle(fontSize: 12.0.sp),
+                      ),
+                      Checkbox(
+                          value: !isRead,
+                          onChanged: (val) {
+                            isRead = !isRead;
+                            txtCurrentReader.text = "";
+                            _checkValidation();
+                          }),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Can't disconnect?",
+                        style: TextStyle(fontSize: 12.0.sp),
+                      ),
+                      Checkbox(
+                          value: !isDisconnected,
+                          onChanged: (val) {
+                            isDisconnected = !isDisconnected;
+                            _checkValidation();
+                          })
+                    ],
                   ),
                 ],
               ),
@@ -210,7 +261,7 @@ class _ConsumerDetailForDisconnectState
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: SizedBox(
-                        height: 100.0,
+                        height: 110.0,
                         width: 50.0.w,
                         child: Column(
                           children: [
@@ -300,12 +351,15 @@ class _ConsumerDetailForDisconnectState
                                       borderSide: BorderSide(
                                           color: Colors.black,
                                           style: BorderStyle.solid)),
-                                  hintText: "Input Reading Here",
+                                  hintText: isRead
+                                      ? "Input Reading Here"
+                                      : "Not Available",
                                   hintStyle: TextStyle(
                                       fontSize: 12.0.sp, color: kWhiteColor),
-                                  fillColor: kBackgroundColor,
+                                  fillColor:
+                                      isRead ? kBackgroundColor : Colors.grey,
                                   filled: true),
-                              enabled: true,
+                              enabled: isRead,
                             ),
                     ),
                   ),
@@ -327,23 +381,29 @@ class _ConsumerDetailForDisconnectState
                                       ConnectivityResult.mobile ||
                                   connectivityResult ==
                                       ConnectivityResult.wifi) {
-                                int currentRead =
-                                    int.parse(txtCurrentReader.text);
-                                int lastRead = consumerData.lastReading!;
-                                if (currentRead >= lastRead) {
+                                if (isRead) {
+                                  int currentRead =
+                                      int.parse(txtCurrentReader.text);
+                                  int lastRead = consumerData.lastReading!;
+                                  if (currentRead >= lastRead) {
+                                    // ignore: use_build_context_synchronously
+                                    _disconnectAccount(
+                                        context, consumerData, disconnection);
+                                  } else {
+                                    // ignore: use_build_context_synchronously
+                                    showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (context) => WarningMessage(
+                                              content:
+                                                  'Please make sure your current reading must be greater than $lastRead',
+                                              title: 'Current Reading Error',
+                                            ));
+                                  }
+                                } else {
                                   // ignore: use_build_context_synchronously
                                   _disconnectAccount(
                                       context, consumerData, disconnection);
-                                } else {
-                                  // ignore: use_build_context_synchronously
-                                  showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (context) => WarningMessage(
-                                            content:
-                                                'Please make sure your current reading must be greater than $lastRead',
-                                            title: 'Current Reading Error',
-                                          ));
                                 }
                               } else {
                                 // ignore: use_build_context_synchronously
@@ -372,7 +432,7 @@ class _ConsumerDetailForDisconnectState
                           child: SizedBox(
                               width: 40.w,
                               child: Text(
-                                "DISCONNECT",
+                                "SUBMIT",
                                 softWrap: true,
                                 style: TextStyle(
                                     fontSize: 12.sp,
@@ -401,8 +461,7 @@ class _ConsumerDetailForDisconnectState
                 textButtons: [
                   TextButton(
                       onPressed: () {
-                        bool test = false;
-                        test = disconnection.when(data: (data) {
+                        disconnection.when(data: (data) {
                           setState(() {});
                           return true;
                         }, error: (error, stackTrace) {
@@ -410,47 +469,122 @@ class _ConsumerDetailForDisconnectState
                         }, loading: () {
                           return true;
                         });
+                        _events = StreamController<int>();
                         final input = formUpdate();
-                        final result = ref
+                        ref
                             .read(asyncDisconnectionProvider.notifier)
                             .fetchUpdateDisconnection(input, _events);
-
                         showDialog(
                             context: context,
                             barrierDismissible: false,
-                            builder: (context) => StreamBuilder<bool>(
-                                initialData: true,
+                            builder: (context) => StreamBuilder<int>(
+                                initialData: 0,
                                 stream: _events.stream,
                                 builder: (BuildContext context,
-                                    AsyncSnapshot<bool> snapshot) {
-                                  return snapshot.data!
-                                      ? const Center(
-                                          child: CircularProgressIndicator(),
-                                        )
-                                      : SuccessMessage(
-                                          title: "Success",
-                                          content: "Disconnect Successfully",
-                                          onPressedFunction: () {
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                            Navigator.pop(context, 'refresh');
-                                          },
-                                        );
+                                    AsyncSnapshot<int> snapshot) {
+                                  switch (snapshot.data!) {
+                                    case 0:
+                                      return VerifyingMessage(
+                                        content: 'Verifying:',
+                                        onPressedFunction: () {},
+                                        state: snapshot.data!,
+                                        success: 2,
+                                        title: '',
+                                      );
+                                    case 1:
+                                      return VerifyingMessage(
+                                        content: 'Uploading:',
+                                        onPressedFunction: () {},
+                                        state: snapshot.data!,
+                                        success: 2,
+                                        title: '',
+                                      );
+                                    case 2:
+                                      return VerifyingMessage(
+                                        content: 'Disconnecting',
+                                        onPressedFunction: () {},
+                                        state: snapshot.data!,
+                                        success: 2,
+                                        title: '',
+                                      );
+                                    case 3:
+                                      return SuccessMessage(
+                                        title: "Success",
+                                        content: "Disconnect Successfully",
+                                        onPressedFunction: () {
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context, 'refresh');
+                                        },
+                                      );
+                                    case 400:
+                                      return SuccessMessage(
+                                        title: "Already Payed",
+                                        content:
+                                            "Please abort disconnection the Consumer was already payed",
+                                        onPressedFunction: () {
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context, 'refresh');
+                                        },
+                                      );
+                                    case 500: //Failed to Verify Please try again
+                                      return ErrorMessage(
+                                        title: 'Please try again',
+                                        content:
+                                            'Failed to Verify Please try again',
+                                        onPressedFunction: () {
+                                          Navigator.pop(context);
+                                        },
+                                      );
+                                    case 501: //Failed to upload from API
+                                      return ErrorMessage(
+                                        title: 'Please try again',
+                                        content: 'Failed to upload from API',
+                                        onPressedFunction: () {
+                                          Navigator.pop(context);
+                                        },
+                                      );
+                                    case 502: //Failed to disconnect Consumers from API
+                                      return ErrorMessage(
+                                        title: 'Please try again',
+                                        content:
+                                            'Failed to disconnect Consumers from API',
+                                        onPressedFunction: () {
+                                          Navigator.pop(context);
+                                        },
+                                      );
+                                    default:
+                                      return ErrorMessage(
+                                        title: 'Please try again',
+                                        content: 'There is error',
+                                        onPressedFunction: () {
+                                          Navigator.pop(context);
+                                        },
+                                      );
+                                  }
                                 }));
                       },
-                      child: const Text('Yes')),
+                      child: Text(
+                        'Yes',
+                        style: TextStyle(fontSize: 16.0.sp),
+                      )),
                   TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text('No'))
+                      child: Text(
+                        'No',
+                        style: TextStyle(fontSize: 16.0.sp),
+                      ))
                 ]));
   }
 
   void _checkValidation() {
     setState(() {
+      bool cantRead = isRead ? txtCurrentReader.text.isNotEmpty : true;
       if (txtRemarks.text.isNotEmpty &&
-          txtCurrentReader.text.isNotEmpty &&
+          cantRead &&
           UtilsHandler.mediaFileList!.isNotEmpty) {
         isFormValidate = true;
       } else {
@@ -471,7 +605,7 @@ class _ConsumerDetailForDisconnectState
         billAmount: a.billAmount,
         noOfMonths: a.noOfMonths,
         lastReading: a.lastReading,
-        currentReading: int.parse(txtCurrentReader.text),
+        currentReading: isRead ? int.parse(txtCurrentReader.text) : null,
         remarks: txtRemarks.text,
         disconnectionDate: a.disconnectionDate,
         disconnectedDate: a.disconnectedDate,
@@ -480,7 +614,8 @@ class _ConsumerDetailForDisconnectState
         bookNo: a.bookNo,
         isConnected: false,
         isPayed: a.isPayed,
-        disconnectionTeam: a.disconnectionTeam);
+        disconnectionTeam: a.disconnectionTeam,
+        status: isDisconnected ? 1 : 2);
     return b;
   }
 
