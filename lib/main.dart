@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
+import 'package:diconnection/src/presentation/widget/current_location.dart';
 import 'package:diconnection/src/presentation/widget/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -64,13 +65,15 @@ class _MyAppState extends State<MyApp> {
                 snackbarKey.currentState?.showSnackBar(snackBar);
                 UtilsHandler.hasConnection = false;
                 initConState = true;
-              }else{
-                if(initConState){
-                  SnackBar snackBar =
-                    const SnackBar(
+              } else {
+                if (initConState) {
+                  SnackBar snackBar = const SnackBar(
                       backgroundColor: Colors.greenAccent,
-                      content: Text("Connection Restored", style: TextStyle(color: Colors.black),));
-                snackbarKey.currentState?.showSnackBar(snackBar);
+                      content: Text(
+                        "Connection Restored",
+                        style: TextStyle(color: Colors.black),
+                      ));
+                  snackbarKey.currentState?.showSnackBar(snackBar);
                 }
                 UtilsHandler.hasConnection = true;
               }

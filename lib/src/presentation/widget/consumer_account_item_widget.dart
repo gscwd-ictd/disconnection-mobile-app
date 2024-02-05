@@ -1,3 +1,4 @@
+import 'package:diconnection/src/core/enums/status/status_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
@@ -33,6 +34,9 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
         widget.onPressedFunction();
       },
       child: Card(
+        color: getStatus(consumerData.status!) == StatusEnum.cancelled
+            ? Colors.red[100]
+            : null,
         elevation: 12.0,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(12.0))),
@@ -114,7 +118,10 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
                     style: TextStyle(
                         fontSize: 10.sp,
                         fontWeight: FontWeight.bold,
-                        color: kLightBlue),
+                        color: getStatus(consumerData.status!) ==
+                                StatusEnum.cancelled
+                            ? kBackgroundColor
+                            : kLightBlue),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -124,5 +131,22 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
         ),
       ),
     );
+  }
+
+  StatusEnum getStatus(int input) {
+    switch (input) {
+      case 0:
+        return StatusEnum.ongoing;
+      case 1:
+        return StatusEnum.done;
+      case 2:
+        return StatusEnum.cancelled;
+      case 3:
+        return StatusEnum.mlOngoing;
+      case 4:
+        return StatusEnum.mlDone;
+      default:
+        return StatusEnum.ongoing;
+    }
   }
 }

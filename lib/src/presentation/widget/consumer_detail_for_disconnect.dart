@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:diconnection/src/core/enums/status/status_enum.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/core/messages/error_message/error_message.dart';
 import 'package:diconnection/src/core/messages/verifying_messgae/verifying_message.dart';
@@ -66,7 +67,6 @@ class _ConsumerDetailForDisconnectState
     ConsumerModel consumerData = widget.consumerData;
     bool stats = consumerData.isConnected ?? false;
     final disconnection = ref.watch(asyncDisconnectionProvider);
-    final numLines = '\n'.allMatches(consumerData.address!).length + 1;
     final TextStyle textStyle =
         TextStyle(fontSize: 12.0.sp, fontWeight: FontWeight.bold);
     final Size txtSize = _textSize(consumerData.address!, textStyle);
@@ -81,167 +81,253 @@ class _ConsumerDetailForDisconnectState
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 40.h,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        "Account Number:",
-                        style: TextStyle(fontSize: 12.0.sp),
-                      ),
-                      Text(
-                        "Consumer Name:",
-                        style: TextStyle(fontSize: 12.0.sp),
-                      ),
-                      SizedBox(
-                        height: txtSize.width > 150 ? 6.h : null,
-                        child: Text(
-                          "Address:",
-                          style: TextStyle(fontSize: 12.0.sp),
-                        ),
-                      ),
-                      Text(
-                        "No. of Months:",
-                        style: TextStyle(fontSize: 12.0.sp),
-                      ),
-                      Text(
-                        "Meter Number:",
-                        style: TextStyle(fontSize: 12.0.sp),
-                      ),
-                      Text(
-                        "Previous Reading:",
-                        style: TextStyle(fontSize: 12.0.sp),
-                      ),
-                      Text(
-                        "Unpaid Balance:",
-                        style: TextStyle(fontSize: 12.0.sp),
-                      ),
-                      Text(
-                        "Status:",
-                        style: TextStyle(fontSize: 12.0.sp),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Column(
+            //Separate Account Number Consumer Name
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: SizedBox(
+                height: 10.h,
+                child: Row(
+                  children: [
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          consumerData.accountNo ?? "",
-                          style: TextStyle(
-                              fontSize: 12.0.sp, fontWeight: FontWeight.bold),
+                          "Account Number:",
+                          style: TextStyle(fontSize: 12.0.sp),
                         ),
                         Text(
-                          consumerData.consumerName ?? "",
-                          style: TextStyle(
-                              fontSize: 12.0.sp, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                            width: 60.w,
-                            child: Text(
-                              consumerData.address!,
-                              softWrap: true,
-                              maxLines: 3,
-                              style: textStyle,
-                            )),
-                        Text(
-                          consumerData.noOfMonths.toString(),
-                          style: TextStyle(
-                              fontSize: 12.0.sp,
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          consumerData.meterNo.toString(),
-                          style: TextStyle(
-                              fontSize: 12.0.sp, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          consumerData.lastReading.toString(),
-                          style: TextStyle(
-                              fontSize: 12.0.sp, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "P${consumerData.billAmount}",
-                          style: TextStyle(
-                              fontSize: 12.0.sp, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          stats ? "ACTIVE" : "DISCONNECTED",
-                          style: TextStyle(
-                              fontSize: 12.0.sp, fontWeight: FontWeight.bold),
+                          "Consumer Name:",
+                          style: TextStyle(fontSize: 12.0.sp),
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-            ),
-            //Separate checkbox for cant read meter and cant disconnect
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        "Can't read meter?",
-                        style: TextStyle(fontSize: 12.0.sp),
-                      ),
-                      Checkbox(
-                          value: !isRead,
-                          onChanged: (val) {
-                            isRead = !isRead;
-                            txtCurrentReader.text = "";
-                            _checkValidation();
-                          }),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Can't disconnect?",
-                        style: TextStyle(fontSize: 12.0.sp),
-                      ),
-                      Checkbox(
-                          value: !isDisconnected,
-                          onChanged: (val) {
-                            isDisconnected = !isDisconnected;
-                            _checkValidation();
-                          })
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            //Separate Image Widget for error handler UI
-            Padding(
-              padding: EdgeInsets.only(left: 15.0.w),
-              child: SizedBox(
-                height: 14.h,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 40.0),
-                      child: Text(
-                        "Proof:",
-                        style: TextStyle(fontSize: 12.0.sp),
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            consumerData.accountNo ?? "",
+                            style: TextStyle(
+                                fontSize: 12.0.sp, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            consumerData.consumerName ?? "",
+                            style: TextStyle(
+                                fontSize: 12.0.sp, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
-                    ),
-                    _imageWidget,
+                    )
                   ],
                 ),
               ),
             ),
-            //Separate Image Widget for error handler UI
+            Padding(
+              padding: EdgeInsets.only(left: 20.0.w),
+              child: SizedBox(
+                height: txtSize.width > 150 ? 6.h : null,
+                child: Row(
+                  children: [
+                    Text(
+                      "Address:",
+                      style: TextStyle(fontSize: 12.0.sp),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: SizedBox(
+                          width: 60.w,
+                          child: Text(
+                            consumerData.address!,
+                            softWrap: true,
+                            maxLines: 3,
+                            style: textStyle,
+                          )),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: SizedBox(
+                height: 20.h,
+                child: Row(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "No. of Months:",
+                          style: TextStyle(fontSize: 12.0.sp),
+                        ),
+                        Text(
+                          "Meter Number:",
+                          style: TextStyle(fontSize: 12.0.sp),
+                        ),
+                        Text(
+                          "Previous Reading:",
+                          style: TextStyle(fontSize: 12.0.sp),
+                        ),
+                        Text(
+                          "Unpaid Balance:",
+                          style: TextStyle(fontSize: 12.0.sp),
+                        ),
+                        Text(
+                          "Status:",
+                          style: TextStyle(fontSize: 12.0.sp),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            consumerData.noOfMonths.toString(),
+                            style: TextStyle(
+                                fontSize: 12.0.sp,
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            consumerData.meterNo.toString(),
+                            style: TextStyle(
+                                fontSize: 12.0.sp, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            consumerData.lastReading.toString(),
+                            style: TextStyle(
+                                fontSize: 12.0.sp, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "P${consumerData.billAmount}",
+                            style: TextStyle(
+                                fontSize: 12.0.sp, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            // stats ? "ACTIVE" : "DISCONNECTED",
+                            getStatus(consumerData.status!).getStringVal,
+                            style: TextStyle(
+                                fontSize: 12.0.sp,
+                                fontWeight: FontWeight.bold,
+                                color: getStatus(consumerData.status!) ==
+                                        StatusEnum.cancelled
+                                    ? Colors.red
+                                    : null),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            //Separate checkbox for cant disconnect
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Row(
+                children: [
+                  Text(
+                    "Can't disconnect?",
+                    style: TextStyle(fontSize: 12.0.sp),
+                  ),
+                  Checkbox(
+                      value: !isDisconnected,
+                      onChanged: (val) {
+                        isDisconnected = !isDisconnected;
+                        _checkValidation();
+                      })
+                ],
+              ),
+            ),
+            //Separate Current Reading
+            SizedBox(
+              height: 8.h,
+              width: 88.w,
+              child: Row(
+                children: [
+                  SizedBox(
+                      height: !stats ? null : 50,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 12.0),
+                        child: Text(
+                          "Current Reading:",
+                          style: TextStyle(fontSize: 12.0.sp),
+                        ),
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: SizedBox(
+                      height: !stats ? null : 50,
+                      width: 50.0.w,
+                      child: !stats
+                          ? Text(consumerData.currentReading.toString())
+                          : TextField(
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true, signed: false),
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.allow(
+                                    RegExp('[0-9.,]')),
+                              ], // Only numbers can be entered
+                              controller: txtCurrentReader,
+                              scrollPadding: EdgeInsets.symmetric(
+                                  vertical:
+                                      MediaQuery.of(context).viewInsets.bottom +
+                                          5),
+                              onChanged: (val) {
+                                _checkValidation();
+                              },
+                              style: TextStyle(
+                                  fontSize: 12.0.sp, color: kWhiteColor),
+                              decoration: InputDecoration(
+                                  border: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(16.0)),
+                                      borderSide: BorderSide(
+                                          color: Colors.black,
+                                          style: BorderStyle.solid)),
+                                  hintText: isRead
+                                      ? "Input Reading Here"
+                                      : "Not Available",
+                                  hintStyle: TextStyle(
+                                      fontSize: 12.0.sp, color: kWhiteColor),
+                                  fillColor:
+                                      isRead ? kBackgroundColor : Colors.grey,
+                                  filled: true),
+                              enabled: isRead,
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            //Separate checkbox for cant read meter
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Row(
+                children: [
+                  Text(
+                    "Can't read meter?",
+                    style: TextStyle(fontSize: 12.0.sp),
+                  ),
+                  Checkbox(
+                      value: !isRead,
+                      onChanged: (val) {
+                        isRead = !isRead;
+                        txtCurrentReader.text = "";
+                        _checkValidation();
+                      }),
+                ],
+              ),
+            ),
+            //Separate Remarks UI
             Padding(
               padding: EdgeInsets.only(left: 6.w),
               child: SizedBox(
@@ -304,68 +390,27 @@ class _ConsumerDetailForDisconnectState
                 ),
               ),
             ),
-            //Separate
-            SizedBox(
-              height: 8.h,
-              width: 88.w,
-              child: Row(
-                children: [
-                  SizedBox(
-                      height: !stats ? null : 50,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 12.0),
-                        child: Text(
-                          "Current Reading:",
-                          style: TextStyle(fontSize: 12.0.sp),
-                        ),
-                      )),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: SizedBox(
-                      height: !stats ? null : 50,
-                      width: 50.0.w,
-                      child: !stats
-                          ? Text(consumerData.currentReading.toString())
-                          : TextField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true, signed: false),
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.allow(
-                                    RegExp('[0-9.,]')),
-                              ], // Only numbers can be entered
-                              controller: txtCurrentReader,
-                              scrollPadding: EdgeInsets.symmetric(
-                                  vertical:
-                                      MediaQuery.of(context).viewInsets.bottom +
-                                          5),
-                              onChanged: (val) {
-                                _checkValidation();
-                              },
-                              style: TextStyle(
-                                  fontSize: 12.0.sp, color: kWhiteColor),
-                              decoration: InputDecoration(
-                                  border: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(16.0)),
-                                      borderSide: BorderSide(
-                                          color: Colors.black,
-                                          style: BorderStyle.solid)),
-                                  hintText: isRead
-                                      ? "Input Reading Here"
-                                      : "Not Available",
-                                  hintStyle: TextStyle(
-                                      fontSize: 12.0.sp, color: kWhiteColor),
-                                  fillColor:
-                                      isRead ? kBackgroundColor : Colors.grey,
-                                  filled: true),
-                              enabled: isRead,
-                            ),
+            //Separate Image Widget for error handler UI
+            Padding(
+              padding: EdgeInsets.only(left: 15.0.w),
+              child: SizedBox(
+                height: 14.h,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 40.0),
+                      child: Text(
+                        "Proof:",
+                        style: TextStyle(fontSize: 12.0.sp),
+                      ),
                     ),
-                  ),
-                ],
+                    _imageWidget,
+                  ],
+                ),
               ),
             ),
+            //Separate Submit Button
             !stats
                 ? Container()
                 : Padding(
@@ -447,6 +492,23 @@ class _ConsumerDetailForDisconnectState
         ),
       ),
     );
+  }
+
+  StatusEnum getStatus(int input) {
+    switch (input) {
+      case 0:
+        return StatusEnum.ongoing;
+      case 1:
+        return StatusEnum.done;
+      case 2:
+        return StatusEnum.cancelled;
+      case 3:
+        return StatusEnum.mlOngoing;
+      case 4:
+        return StatusEnum.mlDone;
+      default:
+        return StatusEnum.ongoing;
+    }
   }
 
   Future<dynamic> _disconnectAccount(BuildContext context,

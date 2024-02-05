@@ -1,3 +1,4 @@
+import 'package:diconnection/src/core/enums/status/status_enum.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/presentation/view/assigned_team_accounts/disconnected_screen.dart/disconnected_screen.dart';
 import 'package:diconnection/src/presentation/view/assigned_team_accounts/for_disconnect_screen.dart/for_disconnect_screen.dart';
@@ -48,14 +49,19 @@ class _AssignedAccountsState extends State<AssignedAccounts> {
             c.isConnected == true &&
             c.consumerName!
                 .toUpperCase()
-                .contains(txtSearch.text.toUpperCase()))
+                .contains(txtSearch.text.toUpperCase()) &&
+            (c.status == StatusEnum.ongoing.getIntVal ||
+                c.status == StatusEnum.cancelled.getIntVal ||
+                c.status == StatusEnum.mlOngoing.getIntVal))
         .toList();
     var disconnected = consumerList
         .where((c) =>
             c.isConnected == false &&
             c.consumerName!
                 .toUpperCase()
-                .contains(txtSearch.text.toUpperCase()))
+                .contains(txtSearch.text.toUpperCase()) &&
+            (c.status == StatusEnum.done.getIntVal ||
+                c.status == StatusEnum.mlDone.getIntVal))
         .toList();
     return Scaffold(
       resizeToAvoidBottomInset: false,

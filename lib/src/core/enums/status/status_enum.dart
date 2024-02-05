@@ -1,5 +1,24 @@
 enum StatusEnum { ongoing, done, cancelled, mlOngoing, mlDone }
 
+class StatusClass {
+  StatusEnum getStatus(int input) {
+    switch (input) {
+      case 0:
+        return StatusEnum.ongoing;
+      case 1:
+        return StatusEnum.done;
+      case 2:
+        return StatusEnum.cancelled;
+      case 3:
+        return StatusEnum.mlOngoing;
+      case 4:
+        return StatusEnum.mlDone;
+      default:
+        return StatusEnum.ongoing;
+    }
+  }
+}
+
 extension StatusExtension on StatusEnum {
   int get getIntVal {
     switch (this) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-const String kHost = "5349-122-3-104-117.ngrok-free.app";
-const String kHostHttp = "https://5349-122-3-104-117.ngrok-free.app";
+const String kHost = "1cd5-122-3-104-117.ngrok-free.app";
+const String kHostHttp = "https://1cd5-122-3-104-117.ngrok-free.app";
 
 const String kMaterialAppTitle = 'Disconnection App';
 const String bingMapKey =
