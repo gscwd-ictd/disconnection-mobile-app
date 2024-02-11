@@ -25,7 +25,6 @@ _$ConsumerModelImpl _$$ConsumerModelImplFromJson(Map<String, dynamic> json) =>
       disconnectedDate: json['disconnectedDate'] == null
           ? null
           : DateTime.parse(json['disconnectedDate'] as String),
-      proofOfDisconnection: json['proofOfDisconnection'] as String?,
       zoneNo: json['zoneNo'] as int?,
       bookNo: json['bookNo'] as int?,
       isConnected: json['isConnected'] as bool?,
@@ -34,6 +33,9 @@ _$ConsumerModelImpl _$$ConsumerModelImplFromJson(Map<String, dynamic> json) =>
       disconnectionTeam: json['disconnectionTeam'] == null
           ? null
           : Team.fromJson(json['disconnectionTeam'] as Map<String, dynamic>),
+      proofOfDisconnection: (json['proofOfDisconnection'] as List<dynamic>?)
+          ?.map((e) => ProofOfDisconnection.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$ConsumerModelImplToJson(_$ConsumerModelImpl instance) =>
@@ -51,11 +53,11 @@ Map<String, dynamic> _$$ConsumerModelImplToJson(_$ConsumerModelImpl instance) =>
       'remarks': instance.remarks,
       'disconnectionDate': instance.disconnectionDate?.toIso8601String(),
       'disconnectedDate': instance.disconnectedDate?.toIso8601String(),
-      'proofOfDisconnection': instance.proofOfDisconnection,
       'zoneNo': instance.zoneNo,
       'bookNo': instance.bookNo,
       'isConnected': instance.isConnected,
       'isPayed': instance.isPayed,
       'status': instance.status,
       'disconnectionTeam': instance.disconnectionTeam,
+      'proofOfDisconnection': instance.proofOfDisconnection,
     };

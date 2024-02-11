@@ -5,6 +5,7 @@ import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -13,6 +14,48 @@ part 'disconnection_provider.g.dart';
 
 @riverpod
 class AsyncDisconnection extends _$AsyncDisconnection {
+  // Future<bool> _handleLocationPermission() async {
+  //   bool serviceEnabled;
+  //   LocationPermission permission;
+
+  //   serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  //   if (!serviceEnabled) {
+  //     // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //     //     content: Text(
+  //     //         'Location services are disabled. Please enable the services')));
+  //     // return false;
+  //   }
+  //   permission = await Geolocator.checkPermission();
+  //   if (permission == LocationPermission.denied) {
+  //     permission = await Geolocator.requestPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       // ScaffoldMessenger.of(context).showSnackBar(
+  //       //     const SnackBar(content: Text('Location permissions are denied')));
+  //       // return false;
+  //     }
+  //   }
+  //   if (permission == LocationPermission.deniedForever) {
+  //     // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //     //     content: Text(
+  //     //         'Location permissions are permanently denied, we cannot request permissions.')));
+  //     // return false;
+  //   }
+  //   return true;
+  // }
+
+  // Future<void> _getCurrentPosition() async {
+  //   final hasPermission = await _handleLocationPermission();
+
+  //   if (!hasPermission) return;
+  //   await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+  //       .then((Position position) {
+  //     // setState(() => _currentPosition = position);
+  //     // _getAddressFromLatLng(_currentPosition!);
+  //   }).catchError((e) {
+  //     // debugPrint(e);
+  //   });
+  // }
+
   Future<List<ZoneModel>> _fetchGetDisconnection() async {
     String hostAPI = UtilsHandler.apiLink == "" ? kHost : UtilsHandler.apiLink;
     //2020-04-01Z
@@ -45,6 +88,7 @@ class AsyncDisconnection extends _$AsyncDisconnection {
             zoneList.add(zone);
           }
         });
+        //save zoneList
         UtilsHandler.zones = zoneList;
       } else {
         throw Exception(
@@ -61,7 +105,19 @@ class AsyncDisconnection extends _$AsyncDisconnection {
     String hostAPI = UtilsHandler.apiLink == "" ? kHost : UtilsHandler.apiLink;
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
+      Position currentPosition;
+      double lat = 0, long = 0;
       try {
+        await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high)
+            .then((Position position) {
+          currentPosition = position;
+          lat = position.latitude;
+          long = position.longitude;
+          // _getAddressFromLatLng(_currentPosition!);
+        }).catchError((e) {
+          // debugPrint(e);
+        });
         final verify = await http
             .get(Uri.https(hostAPI, '/disconnection/getVerify', {
               "accountNo": input.accountNo,
@@ -71,10 +127,9 @@ class AsyncDisconnection extends _$AsyncDisconnection {
         if (verify.statusCode == 200 || verify.statusCode == 201) {
           events.add(1);
           if (verify.body == "NotPayed") {
-            final uploadPicture = http.MultipartRequest(
-                "POST",
-                Uri.https(hostAPI,
-                    '/disconnection/${input.disconnectionId}/upload-photo'));
+            var inputs = '${input.disconnectionId}/$lat/$long';
+            final uploadPicture = http.MultipartRequest("POST",
+                Uri.https(hostAPI, '/disconnection/$inputs/upload-photo'));
             var singlePhoto = UtilsHandler.mediaFileList![0];
             uploadPicture.files.add(http.MultipartFile.fromBytes(
                 'image', await singlePhoto.readAsBytes(),

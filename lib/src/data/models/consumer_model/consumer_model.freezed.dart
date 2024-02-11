@@ -33,13 +33,14 @@ mixin _$ConsumerModel {
   String? get remarks => throw _privateConstructorUsedError;
   DateTime? get disconnectionDate => throw _privateConstructorUsedError;
   DateTime? get disconnectedDate => throw _privateConstructorUsedError;
-  String? get proofOfDisconnection => throw _privateConstructorUsedError;
   int? get zoneNo => throw _privateConstructorUsedError;
   int? get bookNo => throw _privateConstructorUsedError;
   bool? get isConnected => throw _privateConstructorUsedError;
   bool? get isPayed => throw _privateConstructorUsedError;
   int? get status => throw _privateConstructorUsedError;
   Team? get disconnectionTeam => throw _privateConstructorUsedError;
+  List<ProofOfDisconnection>? get proofOfDisconnection =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -67,13 +68,13 @@ abstract class $ConsumerModelCopyWith<$Res> {
       String? remarks,
       DateTime? disconnectionDate,
       DateTime? disconnectedDate,
-      String? proofOfDisconnection,
       int? zoneNo,
       int? bookNo,
       bool? isConnected,
       bool? isPayed,
       int? status,
-      Team? disconnectionTeam});
+      Team? disconnectionTeam,
+      List<ProofOfDisconnection>? proofOfDisconnection});
 
   $TeamCopyWith<$Res>? get disconnectionTeam;
 }
@@ -104,13 +105,13 @@ class _$ConsumerModelCopyWithImpl<$Res, $Val extends ConsumerModel>
     Object? remarks = freezed,
     Object? disconnectionDate = freezed,
     Object? disconnectedDate = freezed,
-    Object? proofOfDisconnection = freezed,
     Object? zoneNo = freezed,
     Object? bookNo = freezed,
     Object? isConnected = freezed,
     Object? isPayed = freezed,
     Object? status = freezed,
     Object? disconnectionTeam = freezed,
+    Object? proofOfDisconnection = freezed,
   }) {
     return _then(_value.copyWith(
       disconnectionId: freezed == disconnectionId
@@ -165,10 +166,6 @@ class _$ConsumerModelCopyWithImpl<$Res, $Val extends ConsumerModel>
           ? _value.disconnectedDate
           : disconnectedDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      proofOfDisconnection: freezed == proofOfDisconnection
-          ? _value.proofOfDisconnection
-          : proofOfDisconnection // ignore: cast_nullable_to_non_nullable
-              as String?,
       zoneNo: freezed == zoneNo
           ? _value.zoneNo
           : zoneNo // ignore: cast_nullable_to_non_nullable
@@ -193,6 +190,10 @@ class _$ConsumerModelCopyWithImpl<$Res, $Val extends ConsumerModel>
           ? _value.disconnectionTeam
           : disconnectionTeam // ignore: cast_nullable_to_non_nullable
               as Team?,
+      proofOfDisconnection: freezed == proofOfDisconnection
+          ? _value.proofOfDisconnection
+          : proofOfDisconnection // ignore: cast_nullable_to_non_nullable
+              as List<ProofOfDisconnection>?,
     ) as $Val);
   }
 
@@ -231,13 +232,13 @@ abstract class _$$ConsumerModelImplCopyWith<$Res>
       String? remarks,
       DateTime? disconnectionDate,
       DateTime? disconnectedDate,
-      String? proofOfDisconnection,
       int? zoneNo,
       int? bookNo,
       bool? isConnected,
       bool? isPayed,
       int? status,
-      Team? disconnectionTeam});
+      Team? disconnectionTeam,
+      List<ProofOfDisconnection>? proofOfDisconnection});
 
   @override
   $TeamCopyWith<$Res>? get disconnectionTeam;
@@ -267,13 +268,13 @@ class __$$ConsumerModelImplCopyWithImpl<$Res>
     Object? remarks = freezed,
     Object? disconnectionDate = freezed,
     Object? disconnectedDate = freezed,
-    Object? proofOfDisconnection = freezed,
     Object? zoneNo = freezed,
     Object? bookNo = freezed,
     Object? isConnected = freezed,
     Object? isPayed = freezed,
     Object? status = freezed,
     Object? disconnectionTeam = freezed,
+    Object? proofOfDisconnection = freezed,
   }) {
     return _then(_$ConsumerModelImpl(
       disconnectionId: freezed == disconnectionId
@@ -328,10 +329,6 @@ class __$$ConsumerModelImplCopyWithImpl<$Res>
           ? _value.disconnectedDate
           : disconnectedDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      proofOfDisconnection: freezed == proofOfDisconnection
-          ? _value.proofOfDisconnection
-          : proofOfDisconnection // ignore: cast_nullable_to_non_nullable
-              as String?,
       zoneNo: freezed == zoneNo
           ? _value.zoneNo
           : zoneNo // ignore: cast_nullable_to_non_nullable
@@ -356,6 +353,10 @@ class __$$ConsumerModelImplCopyWithImpl<$Res>
           ? _value.disconnectionTeam
           : disconnectionTeam // ignore: cast_nullable_to_non_nullable
               as Team?,
+      proofOfDisconnection: freezed == proofOfDisconnection
+          ? _value._proofOfDisconnection
+          : proofOfDisconnection // ignore: cast_nullable_to_non_nullable
+              as List<ProofOfDisconnection>?,
     ));
   }
 }
@@ -377,13 +378,14 @@ class _$ConsumerModelImpl implements _ConsumerModel {
       required this.remarks,
       required this.disconnectionDate,
       required this.disconnectedDate,
-      required this.proofOfDisconnection,
       required this.zoneNo,
       required this.bookNo,
       required this.isConnected,
       required this.isPayed,
       required this.status,
-      required this.disconnectionTeam});
+      required this.disconnectionTeam,
+      required final List<ProofOfDisconnection>? proofOfDisconnection})
+      : _proofOfDisconnection = proofOfDisconnection;
 
   factory _$ConsumerModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConsumerModelImplFromJson(json);
@@ -415,8 +417,6 @@ class _$ConsumerModelImpl implements _ConsumerModel {
   @override
   final DateTime? disconnectedDate;
   @override
-  final String? proofOfDisconnection;
-  @override
   final int? zoneNo;
   @override
   final int? bookNo;
@@ -428,10 +428,20 @@ class _$ConsumerModelImpl implements _ConsumerModel {
   final int? status;
   @override
   final Team? disconnectionTeam;
+  final List<ProofOfDisconnection>? _proofOfDisconnection;
+  @override
+  List<ProofOfDisconnection>? get proofOfDisconnection {
+    final value = _proofOfDisconnection;
+    if (value == null) return null;
+    if (_proofOfDisconnection is EqualUnmodifiableListView)
+      return _proofOfDisconnection;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'ConsumerModel(disconnectionId: $disconnectionId, accountNo: $accountNo, prevAccountNo: $prevAccountNo, consumerName: $consumerName, address: $address, meterNo: $meterNo, billAmount: $billAmount, noOfMonths: $noOfMonths, lastReading: $lastReading, currentReading: $currentReading, remarks: $remarks, disconnectionDate: $disconnectionDate, disconnectedDate: $disconnectedDate, proofOfDisconnection: $proofOfDisconnection, zoneNo: $zoneNo, bookNo: $bookNo, isConnected: $isConnected, isPayed: $isPayed, status: $status, disconnectionTeam: $disconnectionTeam)';
+    return 'ConsumerModel(disconnectionId: $disconnectionId, accountNo: $accountNo, prevAccountNo: $prevAccountNo, consumerName: $consumerName, address: $address, meterNo: $meterNo, billAmount: $billAmount, noOfMonths: $noOfMonths, lastReading: $lastReading, currentReading: $currentReading, remarks: $remarks, disconnectionDate: $disconnectionDate, disconnectedDate: $disconnectedDate, zoneNo: $zoneNo, bookNo: $bookNo, isConnected: $isConnected, isPayed: $isPayed, status: $status, disconnectionTeam: $disconnectionTeam, proofOfDisconnection: $proofOfDisconnection)';
   }
 
   @override
@@ -462,8 +472,6 @@ class _$ConsumerModelImpl implements _ConsumerModel {
                 other.disconnectionDate == disconnectionDate) &&
             (identical(other.disconnectedDate, disconnectedDate) ||
                 other.disconnectedDate == disconnectedDate) &&
-            (identical(other.proofOfDisconnection, proofOfDisconnection) ||
-                other.proofOfDisconnection == proofOfDisconnection) &&
             (identical(other.zoneNo, zoneNo) || other.zoneNo == zoneNo) &&
             (identical(other.bookNo, bookNo) || other.bookNo == bookNo) &&
             (identical(other.isConnected, isConnected) ||
@@ -471,7 +479,9 @@ class _$ConsumerModelImpl implements _ConsumerModel {
             (identical(other.isPayed, isPayed) || other.isPayed == isPayed) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.disconnectionTeam, disconnectionTeam) ||
-                other.disconnectionTeam == disconnectionTeam));
+                other.disconnectionTeam == disconnectionTeam) &&
+            const DeepCollectionEquality()
+                .equals(other._proofOfDisconnection, _proofOfDisconnection));
   }
 
   @JsonKey(ignore: true)
@@ -491,13 +501,13 @@ class _$ConsumerModelImpl implements _ConsumerModel {
         remarks,
         disconnectionDate,
         disconnectedDate,
-        proofOfDisconnection,
         zoneNo,
         bookNo,
         isConnected,
         isPayed,
         status,
-        disconnectionTeam
+        disconnectionTeam,
+        const DeepCollectionEquality().hash(_proofOfDisconnection)
       ]);
 
   @JsonKey(ignore: true)
@@ -516,26 +526,27 @@ class _$ConsumerModelImpl implements _ConsumerModel {
 
 abstract class _ConsumerModel implements ConsumerModel {
   const factory _ConsumerModel(
-      {required final String? disconnectionId,
-      required final String? accountNo,
-      required final String? prevAccountNo,
-      required final String? consumerName,
-      required final String? address,
-      required final String? meterNo,
-      required final String? billAmount,
-      required final int? noOfMonths,
-      required final int? lastReading,
-      required final int? currentReading,
-      required final String? remarks,
-      required final DateTime? disconnectionDate,
-      required final DateTime? disconnectedDate,
-      required final String? proofOfDisconnection,
-      required final int? zoneNo,
-      required final int? bookNo,
-      required final bool? isConnected,
-      required final bool? isPayed,
-      required final int? status,
-      required final Team? disconnectionTeam}) = _$ConsumerModelImpl;
+          {required final String? disconnectionId,
+          required final String? accountNo,
+          required final String? prevAccountNo,
+          required final String? consumerName,
+          required final String? address,
+          required final String? meterNo,
+          required final String? billAmount,
+          required final int? noOfMonths,
+          required final int? lastReading,
+          required final int? currentReading,
+          required final String? remarks,
+          required final DateTime? disconnectionDate,
+          required final DateTime? disconnectedDate,
+          required final int? zoneNo,
+          required final int? bookNo,
+          required final bool? isConnected,
+          required final bool? isPayed,
+          required final int? status,
+          required final Team? disconnectionTeam,
+          required final List<ProofOfDisconnection>? proofOfDisconnection}) =
+      _$ConsumerModelImpl;
 
   factory _ConsumerModel.fromJson(Map<String, dynamic> json) =
       _$ConsumerModelImpl.fromJson;
@@ -567,8 +578,6 @@ abstract class _ConsumerModel implements ConsumerModel {
   @override
   DateTime? get disconnectedDate;
   @override
-  String? get proofOfDisconnection;
-  @override
   int? get zoneNo;
   @override
   int? get bookNo;
@@ -580,6 +589,8 @@ abstract class _ConsumerModel implements ConsumerModel {
   int? get status;
   @override
   Team? get disconnectionTeam;
+  @override
+  List<ProofOfDisconnection>? get proofOfDisconnection;
   @override
   @JsonKey(ignore: true)
   _$$ConsumerModelImplCopyWith<_$ConsumerModelImpl> get copyWith =>

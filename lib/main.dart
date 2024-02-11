@@ -10,11 +10,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/presentation/view/login_screen/login_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sizer/sizer.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
-
+  const permission = Permission.location;
+  if (await permission.isDenied) {
+    await permission.request();
+  }
   // Hive.registerAdapter(RegistrationAdapter());
   // Hive.registerAdapter(CategoryAdapter());
 

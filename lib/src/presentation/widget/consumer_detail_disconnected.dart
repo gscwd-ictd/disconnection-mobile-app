@@ -116,7 +116,8 @@ class _ConsumerDetailDisconnectedState
                       ),
                     ),
                     _menuItem("Proof Of Disconnection:",
-                        value: consumerData.proofOfDisconnection ?? "",
+                        value: consumerData.proofOfDisconnection![0].fileName ??
+                            "",
                         fontVal: fontDefault,
                         isPhoto: true),
                     _menuItem("Remarks:",

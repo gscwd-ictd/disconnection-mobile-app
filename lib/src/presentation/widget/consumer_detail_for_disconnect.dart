@@ -441,7 +441,7 @@ class _ConsumerDetailForDisconnectState
                                         context: context,
                                         builder: (context) => WarningMessage(
                                               content:
-                                                  'Please make sure your current reading must be greater than $lastRead',
+                                                  'Current reading must be greater than the Previous Reading! $lastRead',
                                               title: 'Current Reading Error',
                                             ));
                                   }
@@ -671,13 +671,13 @@ class _ConsumerDetailForDisconnectState
         remarks: txtRemarks.text,
         disconnectionDate: a.disconnectionDate,
         disconnectedDate: isDisconnected ? a.disconnectedDate : null,
-        proofOfDisconnection: a.proofOfDisconnection ?? "",
         zoneNo: a.zoneNo,
         bookNo: a.bookNo,
         isConnected: !isDisconnected,
         isPayed: a.isPayed,
         disconnectionTeam: a.disconnectionTeam,
-        status: isDisconnected ? 1 : 2);
+        status: isDisconnected ? 1 : 2,
+        proofOfDisconnection: a.proofOfDisconnection);
     return b;
   }
 
