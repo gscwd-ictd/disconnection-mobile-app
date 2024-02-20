@@ -2,8 +2,7 @@ import 'dart:ui';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
-import 'package:diconnection/src/presentation/widget/current_location.dart';
-import 'package:diconnection/src/presentation/widget/image_picker.dart';
+import 'package:diconnection/src/data/models/super_user_model/super_user_hive_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,11 +18,10 @@ Future<void> main() async {
   if (await permission.isDenied) {
     await permission.request();
   }
-  // Hive.registerAdapter(RegistrationAdapter());
+  Hive.registerAdapter(SuperUserHiveAdapter());
   // Hive.registerAdapter(CategoryAdapter());
 
-  await Hive.openBox('registration');
-  await Hive.openBox('category');
+  await Hive.openBox('superUser');
   runApp(const ProviderScope(child: MyApp()));
 }
 

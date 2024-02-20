@@ -6,12 +6,12 @@ part of 'auth_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$asyncAuthHash() => r'e6fb9ed8aba7c910bc224c81aac06f153ab703b6';
+String _$asyncAuthHash() => r'3d87921242a14704a3f5bdc5f6f28fb5db93fbe7';
 
 /// See also [AsyncAuth].
 @ProviderFor(AsyncAuth)
 final asyncAuthProvider =
-    AutoDisposeAsyncNotifierProvider<AsyncAuth, List<User>>.internal(
+    AutoDisposeAsyncNotifierProvider<AsyncAuth, int>.internal(
   AsyncAuth.new,
   name: r'asyncAuthProvider',
   debugGetCreateSourceHash:
@@ -20,6 +20,6 @@ final asyncAuthProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$AsyncAuth = AutoDisposeAsyncNotifier<List<User>>;
+typedef _$AsyncAuth = AutoDisposeAsyncNotifier<int>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -24,6 +24,7 @@ mixin _$User {
   String? get username => throw _privateConstructorUsedError;
   String? get password => throw _privateConstructorUsedError;
   String? get companyId => throw _privateConstructorUsedError;
+  String? get token => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,7 +37,11 @@ abstract class $UserCopyWith<$Res> {
       _$UserCopyWithImpl<$Res, User>;
   @useResult
   $Res call(
-      {String? userId, String? username, String? password, String? companyId});
+      {String? userId,
+      String? username,
+      String? password,
+      String? companyId,
+      String? token});
 }
 
 /// @nodoc
@@ -56,6 +61,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? username = freezed,
     Object? password = freezed,
     Object? companyId = freezed,
+    Object? token = freezed,
   }) {
     return _then(_value.copyWith(
       userId: freezed == userId
@@ -74,6 +80,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.companyId
           : companyId // ignore: cast_nullable_to_non_nullable
               as String?,
+      token: freezed == token
+          ? _value.token
+          : token // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -86,7 +96,11 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String? userId, String? username, String? password, String? companyId});
+      {String? userId,
+      String? username,
+      String? password,
+      String? companyId,
+      String? token});
 }
 
 /// @nodoc
@@ -103,6 +117,7 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? username = freezed,
     Object? password = freezed,
     Object? companyId = freezed,
+    Object? token = freezed,
   }) {
     return _then(_$UserImpl(
       userId: freezed == userId
@@ -121,6 +136,10 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.companyId
           : companyId // ignore: cast_nullable_to_non_nullable
               as String?,
+      token: freezed == token
+          ? _value.token
+          : token // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -132,7 +151,8 @@ class _$UserImpl implements _User {
       {required this.userId,
       required this.username,
       required this.password,
-      required this.companyId});
+      required this.companyId,
+      required this.token});
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
@@ -145,10 +165,12 @@ class _$UserImpl implements _User {
   final String? password;
   @override
   final String? companyId;
+  @override
+  final String? token;
 
   @override
   String toString() {
-    return 'User(userId: $userId, username: $username, password: $password, companyId: $companyId)';
+    return 'User(userId: $userId, username: $username, password: $password, companyId: $companyId, token: $token)';
   }
 
   @override
@@ -162,13 +184,14 @@ class _$UserImpl implements _User {
             (identical(other.password, password) ||
                 other.password == password) &&
             (identical(other.companyId, companyId) ||
-                other.companyId == companyId));
+                other.companyId == companyId) &&
+            (identical(other.token, token) || other.token == token));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, userId, username, password, companyId);
+      Object.hash(runtimeType, userId, username, password, companyId, token);
 
   @JsonKey(ignore: true)
   @override
@@ -189,7 +212,8 @@ abstract class _User implements User {
       {required final String? userId,
       required final String? username,
       required final String? password,
-      required final String? companyId}) = _$UserImpl;
+      required final String? companyId,
+      required final String? token}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
@@ -201,6 +225,8 @@ abstract class _User implements User {
   String? get password;
   @override
   String? get companyId;
+  @override
+  String? get token;
   @override
   @JsonKey(ignore: true)
   _$$UserImplCopyWith<_$UserImpl> get copyWith =>

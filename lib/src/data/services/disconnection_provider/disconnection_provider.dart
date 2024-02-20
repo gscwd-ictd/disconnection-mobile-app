@@ -14,58 +14,14 @@ part 'disconnection_provider.g.dart';
 
 @riverpod
 class AsyncDisconnection extends _$AsyncDisconnection {
-  // Future<bool> _handleLocationPermission() async {
-  //   bool serviceEnabled;
-  //   LocationPermission permission;
-
-  //   serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  //   if (!serviceEnabled) {
-  //     // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-  //     //     content: Text(
-  //     //         'Location services are disabled. Please enable the services')));
-  //     // return false;
-  //   }
-  //   permission = await Geolocator.checkPermission();
-  //   if (permission == LocationPermission.denied) {
-  //     permission = await Geolocator.requestPermission();
-  //     if (permission == LocationPermission.denied) {
-  //       // ScaffoldMessenger.of(context).showSnackBar(
-  //       //     const SnackBar(content: Text('Location permissions are denied')));
-  //       // return false;
-  //     }
-  //   }
-  //   if (permission == LocationPermission.deniedForever) {
-  //     // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-  //     //     content: Text(
-  //     //         'Location permissions are permanently denied, we cannot request permissions.')));
-  //     // return false;
-  //   }
-  //   return true;
-  // }
-
-  // Future<void> _getCurrentPosition() async {
-  //   final hasPermission = await _handleLocationPermission();
-
-  //   if (!hasPermission) return;
-  //   await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-  //       .then((Position position) {
-  //     // setState(() => _currentPosition = position);
-  //     // _getAddressFromLatLng(_currentPosition!);
-  //   }).catchError((e) {
-  //     // debugPrint(e);
-  //   });
-  // }
-
   Future<List<ZoneModel>> _fetchGetDisconnection() async {
     String hostAPI = UtilsHandler.apiLink == "" ? kHost : UtilsHandler.apiLink;
     //2020-04-01Z
     List<ZoneModel> zoneList = [];
-    String resCode = '';
     try {
       final json = await http
           .get(Uri.https(hostAPI, '/disconnection'))
           .timeout(const Duration(seconds: 60));
-      resCode = json.statusCode.toString();
       if (json.statusCode == 200 || json.statusCode == 201) {
         final todos = List<Map<String, dynamic>>.from(jsonDecode(json.body));
         final consumerList = todos.map(ConsumerModel.fromJson).toList();
