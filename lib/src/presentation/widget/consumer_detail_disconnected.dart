@@ -39,7 +39,7 @@ class _ConsumerDetailDisconnectedState
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: SizedBox(
-          height: 90.h,
+          height: 98.h,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -55,19 +55,19 @@ class _ConsumerDetailDisconnectedState
                         value: consumerData.consumerName ?? "",
                         fontVal: fontDefault),
                     Padding(
-                      padding: EdgeInsets.only(left: 8.0.w),
+                      padding: EdgeInsets.only(left: 2.0.w),
                       child: Row(
                         children: [
                           _menuItem("Address:",
                               value: consumerData.address!, fontVal: 10.0),
-                          IconButton(
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) =>
-                                        const ConsumerLocation());
-                              },
-                              icon: const Icon(FontAwesomeIcons.circleInfo))
+                          // IconButton(
+                          //     onPressed: () {
+                          //       showDialog(
+                          //           context: context,
+                          //           builder: (context) =>
+                          //               const ConsumerLocation());
+                          //     },
+                          //     icon: const Icon(FontAwesomeIcons.circleInfo))
                         ],
                       ),
                     ),
@@ -99,8 +99,11 @@ class _ConsumerDetailDisconnectedState
                               : IconButton(
                                   onPressed: () {
                                     final discon = DisconnectModel(
-                                        dateTimeDisconnect:
-                                            consumerData.disconnectedDate!,
+                                        dateDisconnect: consumerData
+                                            .disconnectedDate!
+                                            .toLocal(),
+                                        timeDisconnect:
+                                            consumerData.disconnectedTime!,
                                         teamAssigned: consumerData
                                                 .disconnectionTeam!.teamName ??
                                             "");
@@ -158,7 +161,9 @@ class _ConsumerDetailDisconnectedState
       bool isPhoto = false,
       String value = ""}) {
     print(value);
-    final String uri = 'https://$kHost/disconnection/$value.jpg/profile-photo';
+    final String uri = isHttp
+        ? 'http://$kHost/disconnection/$value.jpg/profile-photo'
+        : 'https://$kHost/disconnection/$value.jpg/profile-photo';
     return SizedBox(
       child: Column(
         children: [
@@ -167,7 +172,7 @@ class _ConsumerDetailDisconnectedState
             style: TextStyle(fontSize: 12.0.sp),
           ),
           SizedBox(
-            width: 60.w,
+            width: 55.w,
             child: isPhoto
                 ? SizedBox(
                     height: 60,
@@ -176,6 +181,7 @@ class _ConsumerDetailDisconnectedState
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CachedNetworkImage(
+                          httpHeaders: {'Authorization': 'Bearer $kToken'},
                           imageUrl: uri,
                           placeholder: (context, url) =>
                               const CircularProgressIndicator(),

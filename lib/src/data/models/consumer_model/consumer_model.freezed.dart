@@ -33,11 +33,13 @@ mixin _$ConsumerModel {
   String? get remarks => throw _privateConstructorUsedError;
   DateTime? get disconnectionDate => throw _privateConstructorUsedError;
   DateTime? get disconnectedDate => throw _privateConstructorUsedError;
+  String? get disconnectedTime => throw _privateConstructorUsedError;
   int? get zoneNo => throw _privateConstructorUsedError;
   int? get bookNo => throw _privateConstructorUsedError;
   bool? get isConnected => throw _privateConstructorUsedError;
   bool? get isPayed => throw _privateConstructorUsedError;
   int? get status => throw _privateConstructorUsedError;
+  int? get seqNo => throw _privateConstructorUsedError;
   Team? get disconnectionTeam => throw _privateConstructorUsedError;
   List<ProofOfDisconnection>? get proofOfDisconnection =>
       throw _privateConstructorUsedError;
@@ -68,11 +70,13 @@ abstract class $ConsumerModelCopyWith<$Res> {
       String? remarks,
       DateTime? disconnectionDate,
       DateTime? disconnectedDate,
+      String? disconnectedTime,
       int? zoneNo,
       int? bookNo,
       bool? isConnected,
       bool? isPayed,
       int? status,
+      int? seqNo,
       Team? disconnectionTeam,
       List<ProofOfDisconnection>? proofOfDisconnection});
 
@@ -105,11 +109,13 @@ class _$ConsumerModelCopyWithImpl<$Res, $Val extends ConsumerModel>
     Object? remarks = freezed,
     Object? disconnectionDate = freezed,
     Object? disconnectedDate = freezed,
+    Object? disconnectedTime = freezed,
     Object? zoneNo = freezed,
     Object? bookNo = freezed,
     Object? isConnected = freezed,
     Object? isPayed = freezed,
     Object? status = freezed,
+    Object? seqNo = freezed,
     Object? disconnectionTeam = freezed,
     Object? proofOfDisconnection = freezed,
   }) {
@@ -166,6 +172,10 @@ class _$ConsumerModelCopyWithImpl<$Res, $Val extends ConsumerModel>
           ? _value.disconnectedDate
           : disconnectedDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      disconnectedTime: freezed == disconnectedTime
+          ? _value.disconnectedTime
+          : disconnectedTime // ignore: cast_nullable_to_non_nullable
+              as String?,
       zoneNo: freezed == zoneNo
           ? _value.zoneNo
           : zoneNo // ignore: cast_nullable_to_non_nullable
@@ -185,6 +195,10 @@ class _$ConsumerModelCopyWithImpl<$Res, $Val extends ConsumerModel>
       status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
+              as int?,
+      seqNo: freezed == seqNo
+          ? _value.seqNo
+          : seqNo // ignore: cast_nullable_to_non_nullable
               as int?,
       disconnectionTeam: freezed == disconnectionTeam
           ? _value.disconnectionTeam
@@ -232,11 +246,13 @@ abstract class _$$ConsumerModelImplCopyWith<$Res>
       String? remarks,
       DateTime? disconnectionDate,
       DateTime? disconnectedDate,
+      String? disconnectedTime,
       int? zoneNo,
       int? bookNo,
       bool? isConnected,
       bool? isPayed,
       int? status,
+      int? seqNo,
       Team? disconnectionTeam,
       List<ProofOfDisconnection>? proofOfDisconnection});
 
@@ -268,11 +284,13 @@ class __$$ConsumerModelImplCopyWithImpl<$Res>
     Object? remarks = freezed,
     Object? disconnectionDate = freezed,
     Object? disconnectedDate = freezed,
+    Object? disconnectedTime = freezed,
     Object? zoneNo = freezed,
     Object? bookNo = freezed,
     Object? isConnected = freezed,
     Object? isPayed = freezed,
     Object? status = freezed,
+    Object? seqNo = freezed,
     Object? disconnectionTeam = freezed,
     Object? proofOfDisconnection = freezed,
   }) {
@@ -329,6 +347,10 @@ class __$$ConsumerModelImplCopyWithImpl<$Res>
           ? _value.disconnectedDate
           : disconnectedDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      disconnectedTime: freezed == disconnectedTime
+          ? _value.disconnectedTime
+          : disconnectedTime // ignore: cast_nullable_to_non_nullable
+              as String?,
       zoneNo: freezed == zoneNo
           ? _value.zoneNo
           : zoneNo // ignore: cast_nullable_to_non_nullable
@@ -348,6 +370,10 @@ class __$$ConsumerModelImplCopyWithImpl<$Res>
       status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
+              as int?,
+      seqNo: freezed == seqNo
+          ? _value.seqNo
+          : seqNo // ignore: cast_nullable_to_non_nullable
               as int?,
       disconnectionTeam: freezed == disconnectionTeam
           ? _value.disconnectionTeam
@@ -378,11 +404,13 @@ class _$ConsumerModelImpl implements _ConsumerModel {
       required this.remarks,
       required this.disconnectionDate,
       required this.disconnectedDate,
+      required this.disconnectedTime,
       required this.zoneNo,
       required this.bookNo,
       required this.isConnected,
       required this.isPayed,
       required this.status,
+      required this.seqNo,
       required this.disconnectionTeam,
       required final List<ProofOfDisconnection>? proofOfDisconnection})
       : _proofOfDisconnection = proofOfDisconnection;
@@ -417,6 +445,8 @@ class _$ConsumerModelImpl implements _ConsumerModel {
   @override
   final DateTime? disconnectedDate;
   @override
+  final String? disconnectedTime;
+  @override
   final int? zoneNo;
   @override
   final int? bookNo;
@@ -426,6 +456,8 @@ class _$ConsumerModelImpl implements _ConsumerModel {
   final bool? isPayed;
   @override
   final int? status;
+  @override
+  final int? seqNo;
   @override
   final Team? disconnectionTeam;
   final List<ProofOfDisconnection>? _proofOfDisconnection;
@@ -441,7 +473,7 @@ class _$ConsumerModelImpl implements _ConsumerModel {
 
   @override
   String toString() {
-    return 'ConsumerModel(disconnectionId: $disconnectionId, accountNo: $accountNo, prevAccountNo: $prevAccountNo, consumerName: $consumerName, address: $address, meterNo: $meterNo, billAmount: $billAmount, noOfMonths: $noOfMonths, lastReading: $lastReading, currentReading: $currentReading, remarks: $remarks, disconnectionDate: $disconnectionDate, disconnectedDate: $disconnectedDate, zoneNo: $zoneNo, bookNo: $bookNo, isConnected: $isConnected, isPayed: $isPayed, status: $status, disconnectionTeam: $disconnectionTeam, proofOfDisconnection: $proofOfDisconnection)';
+    return 'ConsumerModel(disconnectionId: $disconnectionId, accountNo: $accountNo, prevAccountNo: $prevAccountNo, consumerName: $consumerName, address: $address, meterNo: $meterNo, billAmount: $billAmount, noOfMonths: $noOfMonths, lastReading: $lastReading, currentReading: $currentReading, remarks: $remarks, disconnectionDate: $disconnectionDate, disconnectedDate: $disconnectedDate, disconnectedTime: $disconnectedTime, zoneNo: $zoneNo, bookNo: $bookNo, isConnected: $isConnected, isPayed: $isPayed, status: $status, seqNo: $seqNo, disconnectionTeam: $disconnectionTeam, proofOfDisconnection: $proofOfDisconnection)';
   }
 
   @override
@@ -472,12 +504,15 @@ class _$ConsumerModelImpl implements _ConsumerModel {
                 other.disconnectionDate == disconnectionDate) &&
             (identical(other.disconnectedDate, disconnectedDate) ||
                 other.disconnectedDate == disconnectedDate) &&
+            (identical(other.disconnectedTime, disconnectedTime) ||
+                other.disconnectedTime == disconnectedTime) &&
             (identical(other.zoneNo, zoneNo) || other.zoneNo == zoneNo) &&
             (identical(other.bookNo, bookNo) || other.bookNo == bookNo) &&
             (identical(other.isConnected, isConnected) ||
                 other.isConnected == isConnected) &&
             (identical(other.isPayed, isPayed) || other.isPayed == isPayed) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.seqNo, seqNo) || other.seqNo == seqNo) &&
             (identical(other.disconnectionTeam, disconnectionTeam) ||
                 other.disconnectionTeam == disconnectionTeam) &&
             const DeepCollectionEquality()
@@ -501,11 +536,13 @@ class _$ConsumerModelImpl implements _ConsumerModel {
         remarks,
         disconnectionDate,
         disconnectedDate,
+        disconnectedTime,
         zoneNo,
         bookNo,
         isConnected,
         isPayed,
         status,
+        seqNo,
         disconnectionTeam,
         const DeepCollectionEquality().hash(_proofOfDisconnection)
       ]);
@@ -539,11 +576,13 @@ abstract class _ConsumerModel implements ConsumerModel {
           required final String? remarks,
           required final DateTime? disconnectionDate,
           required final DateTime? disconnectedDate,
+          required final String? disconnectedTime,
           required final int? zoneNo,
           required final int? bookNo,
           required final bool? isConnected,
           required final bool? isPayed,
           required final int? status,
+          required final int? seqNo,
           required final Team? disconnectionTeam,
           required final List<ProofOfDisconnection>? proofOfDisconnection}) =
       _$ConsumerModelImpl;
@@ -578,6 +617,8 @@ abstract class _ConsumerModel implements ConsumerModel {
   @override
   DateTime? get disconnectedDate;
   @override
+  String? get disconnectedTime;
+  @override
   int? get zoneNo;
   @override
   int? get bookNo;
@@ -587,6 +628,8 @@ abstract class _ConsumerModel implements ConsumerModel {
   bool? get isPayed;
   @override
   int? get status;
+  @override
+  int? get seqNo;
   @override
   Team? get disconnectionTeam;
   @override

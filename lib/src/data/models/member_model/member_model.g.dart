@@ -10,6 +10,7 @@ _$MemberImpl _$$MemberImplFromJson(Map<String, dynamic> json) => _$MemberImpl(
       memberId: json['memberId'] as String?,
       companyId: json['companyId'] as String?,
       memberName: json['memberName'] as String?,
+      disconnectorCode: json['disconnectorCode'] as int?,
     );
 
 Map<String, dynamic> _$$MemberImplToJson(_$MemberImpl instance) =>
@@ -17,4 +18,5 @@ Map<String, dynamic> _$$MemberImplToJson(_$MemberImpl instance) =>
       'memberId': instance.memberId,
       'companyId': instance.companyId,
       'memberName': instance.memberName,
+      'disconnectorCode': instance.disconnectorCode,
     };

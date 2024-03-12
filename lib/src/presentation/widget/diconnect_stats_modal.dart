@@ -26,8 +26,8 @@ class _DisconnectStatusModalState extends State<DisconnectStatusModal> {
             const Icon(FontAwesomeIcons.users),
             Text(disconStats.teamAssigned),
             const Text("Date&Time:"),
-            Text(DateFormat('yyyy-MM-dd hh:mm a')
-                .format(disconStats.dateTimeDisconnect))
+            Text(
+                '${DateFormat('yyyy-MM-dd').format(disconStats.dateDisconnect)} ${disconStats.timeDisconnect}')
           ],
         ),
       ),

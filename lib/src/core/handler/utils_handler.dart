@@ -1,4 +1,5 @@
 import 'package:diconnection/src/data/models/zone_model.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UtilsHandler {
@@ -6,4 +7,6 @@ class UtilsHandler {
   static List<ZoneModel> zones = [];
   static List<XFile>? mediaFileList = [];
   static String apiLink = "";
+  final TextEditingController userText = TextEditingController();
+  final TextEditingController passText = TextEditingController();
 }

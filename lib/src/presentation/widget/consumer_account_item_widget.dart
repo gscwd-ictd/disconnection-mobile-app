@@ -28,6 +28,7 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
   @override
   Widget build(BuildContext context) {
     ConsumerModel consumerData = widget.consumerData;
+    String consumerName = fixText(consumerData.consumerName!, limit: 20);
     bool stats = consumerData.isConnected ?? false;
     return GestureDetector(
       onTap: () {
@@ -55,19 +56,18 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
                       children: [
                         const Text("Consumer Name: "),
                         Text(
-                          consumerData.consumerName ?? "",
+                          consumerName,
                           softWrap: true,
                           style: TextStyle(
-                              fontSize: consumerData.consumerName!.length >= 22
-                                  ? 12.sp
-                                  : 14.sp,
+                              fontSize:
+                                  consumerName.length >= 22 ? 12.sp : 14.sp,
                               fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
                       ],
                     ),
                     SizedBox(
-                      width: 14.w,
+                      width: consumerName.length >= 22 ? 10.w : 12.w,
                     ),
                     Column(
                       children: [
@@ -77,7 +77,21 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.redAccent,
-                              fontSize: 14.sp,
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const Text("SeqNo: "),
+                        Text(
+                          consumerData.seqNo.toString(),
+                          softWrap: true,
+                          style: TextStyle(
+                              color: Colors.redAccent,
+                              fontSize: 13.sp,
                               fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),

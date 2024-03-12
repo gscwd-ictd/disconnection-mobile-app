@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -17,6 +18,9 @@ Future<void> main() async {
   const permission = Permission.location;
   if (await permission.isDenied) {
     await permission.request();
+    if (await permission.isDenied) {
+      exit(0);
+    }
   }
   Hive.registerAdapter(SuperUserHiveAdapter());
   // Hive.registerAdapter(CategoryAdapter());

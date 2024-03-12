@@ -1,5 +1,9 @@
-class DisconnectModel{
-  final DateTime dateTimeDisconnect;
+class DisconnectModel {
+  final DateTime dateDisconnect;
+  final String timeDisconnect;
   final String teamAssigned;
-  const DisconnectModel({required this.dateTimeDisconnect, required this.teamAssigned});
+  const DisconnectModel(
+      {required this.dateDisconnect,
+      required this.teamAssigned,
+      required this.timeDisconnect});
 }

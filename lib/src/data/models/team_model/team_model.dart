@@ -11,6 +11,7 @@ class Team with _$Team {
       required String? teamName,
       required String? teamLeader,
       required bool? status,
+      required int? jobCode,
       required List<Member>? disconnectionMember}) = _Team;
 
   factory Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);

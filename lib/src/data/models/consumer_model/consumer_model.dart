@@ -22,11 +22,13 @@ class ConsumerModel with _$ConsumerModel {
           required String? remarks,
           required DateTime? disconnectionDate,
           required DateTime? disconnectedDate,
+          required String? disconnectedTime,
           required int? zoneNo,
           required int? bookNo,
           required bool? isConnected,
           required bool? isPayed,
           required int? status,
+          required int? seqNo,
           required Team? disconnectionTeam,
           required List<ProofOfDisconnection>? proofOfDisconnection}) =
       _ConsumerModel;

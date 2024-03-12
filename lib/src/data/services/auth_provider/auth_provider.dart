@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/core/messages/warning_message/warning_message.dart';
+import 'package:diconnection/src/core/shared_preferences/delete_preferences.dart';
 import 'package:diconnection/src/core/shared_preferences/get_preferences.dart';
 import 'package:diconnection/src/core/shared_preferences/store_preferences.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
@@ -25,12 +26,15 @@ class AsyncAuth extends _$AsyncAuth {
     //2020-04-01Z
     String token = await GetPreferences().getStoredAccessToken() ?? "";
     try {
-      final json =
-          await http.get(Uri.https(hostAPI, 'user/protected'), headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      }).timeout(const Duration(seconds: 60));
+      final json = await http.get(
+          isHttp
+              ? Uri.http(hostAPI, 'user/protected')
+              : Uri.https(hostAPI, 'user/protected'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          }).timeout(const Duration(seconds: 60));
       if (json.statusCode == 200 || json.statusCode == 201) {
         authCode = 1;
       } else {
@@ -44,6 +48,14 @@ class AsyncAuth extends _$AsyncAuth {
     return authCode;
   }
 
+  Future<void> isExpired() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() {
+      DeletePreferences().deleteAccessToken();
+      return _fetchUser();
+    });
+  }
+
   Future<void> login(
       LoginM input, StreamController<int> events, BuildContext context) async {
     state = await AsyncValue.guard(() async {
@@ -55,7 +67,10 @@ class AsyncAuth extends _$AsyncAuth {
           team: null, userId: "", username: "", accessToken: "");
       try {
         final json = await http
-            .post(Uri.https(hostAPI, 'user/login'),
+            .post(
+                isHttp
+                    ? Uri.http(hostAPI, 'user/login')
+                    : Uri.https(hostAPI, 'user/login'),
                 headers: {
                   'Content-Type': 'application/json',
                   'Accept': 'application/json',
@@ -67,6 +82,7 @@ class AsyncAuth extends _$AsyncAuth {
               Map<String, dynamic>.from(jsonDecode(json.body)));
           StorePreferences().storeAccessToken(user.accessToken!);
           events.add(1);
+          UtilsHandler().passText.clear();
           return _fetchUser();
         } else {
           events.add(2);

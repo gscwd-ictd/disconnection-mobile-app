@@ -13,7 +13,8 @@ import 'package:video_player/video_player.dart';
 
 class ImagePickerWidget extends StatefulWidget {
   final Function onChanged;
-  const ImagePickerWidget({Key? key, required this.onChanged}) : super(key: key);
+  const ImagePickerWidget({Key? key, required this.onChanged})
+      : super(key: key);
 
   @override
   State<ImagePickerWidget> createState() => _ImagePickerWidgetState();
@@ -32,7 +33,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   final TextEditingController qualityController = TextEditingController();
 
   void _setImageFileListFromFile(XFile? value) {
-    if(value != null){
+    if (value != null) {
       UtilsHandler.mediaFileList = <XFile>[value];
     }
     widget.onChanged();
@@ -72,8 +73,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   }
 
   Widget _buildInlineVideoPlayer(int index) {
-    final VideoPlayerController controller =
-        VideoPlayerController.file(File(UtilsHandler.mediaFileList![index].path));
+    final VideoPlayerController controller = VideoPlayerController.file(
+        File(UtilsHandler.mediaFileList![index].path));
     const double volume = kIsWeb ? 0.0 : 1.0;
     controller.setVolume(volume);
     controller.initialize();
@@ -110,14 +111,14 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                       child: Icon(Icons.image_outlined),
                     );
                   case ConnectionState.done:
-                    return UtilsHandler.mediaFileList!.isEmpty 
-                    ? const Padding(
-                          padding: EdgeInsets.all(33.0),
-                          child: Icon(Icons.image_outlined))
-                    : SizedBox(
-                        height: 88,
-                        width: 88,
-                        child: Center(child: _handlePreview()));
+                    return UtilsHandler.mediaFileList!.isEmpty
+                        ? const Padding(
+                            padding: EdgeInsets.all(33.0),
+                            child: Icon(Icons.image_outlined))
+                        : SizedBox(
+                            height: 88,
+                            width: 88,
+                            child: Center(child: _handlePreview()));
                   case ConnectionState.active:
                     if (snapshot.hasError) {
                       return const Padding(
@@ -133,20 +134,24 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
               },
             ))), //_onImageButtonPressed(ImageSource.camera, context: context);
         IconButton(
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    content: SizedBox(
-                      height: 40.h,
-                      width: 100.w,
-                      child: InteractiveViewer(child: _handlePreview()),
-                    ),
-                    actions: [],
-                  );
-                });
-          },
+          color:
+              UtilsHandler.mediaFileList!.isEmpty ? Colors.grey : Colors.black,
+          onPressed: UtilsHandler.mediaFileList!.isEmpty
+              ? () {}
+              : () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          content: SizedBox(
+                            height: 40.h,
+                            width: 100.w,
+                            child: InteractiveViewer(child: _handlePreview()),
+                          ),
+                          actions: [],
+                        );
+                      });
+                },
           icon: const Icon(FontAwesomeIcons.magnifyingGlass),
         ),
         IconButton(
@@ -189,7 +194,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     imageQuality: quality,
                   );
             setState(() {
-              if(pickedFileList.isNotEmpty){
+              if (pickedFileList.isNotEmpty) {
                 UtilsHandler.mediaFileList = pickedFileList;
               }
             });
@@ -212,7 +217,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             if (media != null) {
               pickedFileList.add(media);
               setState(() {
-                if(pickedFileList.isNotEmpty){
+                if (pickedFileList.isNotEmpty) {
                   UtilsHandler.mediaFileList = pickedFileList;
                 }
               });
@@ -276,8 +281,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
   Future<void> _displayPickImageDialog(
       BuildContext context, OnPickImageCallback onPick) async {
-        //onPick(width, height, quality);
-      onPick(null, null, 10);
+    //onPick(width, height, quality);
+    onPick(null, null, 10);
     // return showDialog(
     //     context: context,
     //     builder: (BuildContext context) {
@@ -350,7 +355,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
           if (response.files == null) {
             _setImageFileListFromFile(response.file);
           } else {
-            if(response.files != null){
+            if (response.files != null) {
               UtilsHandler.mediaFileList = response.files;
             }
           }
@@ -374,15 +379,18 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         child: ListView.builder(
           key: UniqueKey(),
           itemBuilder: (BuildContext context, int index) {
-            final String? mime = lookupMimeType(UtilsHandler.mediaFileList![index].path);
+            final String? mime =
+                lookupMimeType(UtilsHandler.mediaFileList![index].path);
 
             // Why network for web?
             // See https://pub.dev/packages/image_picker_for_web#limitations-on-the-web-platform
             return Semantics(
               label: 'image_picker_example_picked_image',
               child: kIsWeb
-                  ? Image.network(UtilsHandler.mediaFileList![index].path,
-                  fit: BoxFit.fill,)
+                  ? Image.network(
+                      UtilsHandler.mediaFileList![index].path,
+                      fit: BoxFit.fill,
+                    )
                   : (mime == null || mime.startsWith('image/')
                       ? Image.file(
                           File(UtilsHandler.mediaFileList![index].path),

@@ -1,13 +1,16 @@
 import 'package:diconnection/src/core/enums/status/status_enum.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
+import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
 import 'package:diconnection/src/presentation/view/assigned_team_accounts/disconnected_screen.dart/disconnected_screen.dart';
 import 'package:diconnection/src/presentation/view/assigned_team_accounts/for_disconnect_screen.dart/for_disconnect_screen.dart';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
 
-class AssignedAccounts extends StatefulWidget {
+class AssignedAccounts extends ConsumerStatefulWidget {
   final String address;
   final List<ConsumerModel> consumerList;
   final int index;
@@ -19,14 +22,15 @@ class AssignedAccounts extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<AssignedAccounts> createState() => _AssignedAccountsState();
+  ConsumerState<AssignedAccounts> createState() => _AssignedAccountsState();
 }
 
-class _AssignedAccountsState extends State<AssignedAccounts> {
+class _AssignedAccountsState extends ConsumerState<AssignedAccounts> {
   TextEditingController txtSearch = TextEditingController();
   final PageController pageController = PageController();
   List<ConsumerModel> consumerList = [];
   bool isSecondPage = false;
+  late EasyRefreshController _controller;
 
   @override
   void initState() {
@@ -34,6 +38,10 @@ class _AssignedAccountsState extends State<AssignedAccounts> {
     isSecondPage = false;
     pageController.initialPage;
     consumerList = UtilsHandler.zones[widget.index].consumerList;
+    _controller = EasyRefreshController(
+      controlFinishRefresh: true,
+      controlFinishLoad: true,
+    );
     super.initState();
   }
 
@@ -101,27 +109,36 @@ class _AssignedAccountsState extends State<AssignedAccounts> {
               ],
             ),
           ),
-          SizedBox(
-              height: 70.h,
-              child: PageView(
-                scrollDirection: Axis.horizontal,
-                physics: const NeverScrollableScrollPhysics(),
-                controller: pageController,
-                children: [
-                  ForDisconnectScreen(
-                    consumerList: forDiscon,
-                    onPressedFunction: () {
-                      setState(() {});
-                    },
-                  ),
-                  DisconnectedScreen(
-                    consumerList: disconnected,
-                    onPressedFunction: () {
-                      setState(() {});
-                    },
-                  )
-                ],
-              )),
+          EasyRefresh(
+            controller: _controller,
+            header: const ClassicHeader(),
+            onRefresh: () async {
+              await ref.read(asyncDisconnectionProvider.notifier).refresh();
+              setState(() {});
+              _controller.finishRefresh();
+            },
+            child: SizedBox(
+                height: 70.h,
+                child: PageView(
+                  scrollDirection: Axis.horizontal,
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: pageController,
+                  children: [
+                    ForDisconnectScreen(
+                      consumerList: forDiscon,
+                      onPressedFunction: () {
+                        setState(() {});
+                      },
+                    ),
+                    DisconnectedScreen(
+                      consumerList: disconnected,
+                      onPressedFunction: () {
+                        setState(() {});
+                      },
+                    )
+                  ],
+                )),
+          ),
           Row(
             children: [
               GestureDetector(

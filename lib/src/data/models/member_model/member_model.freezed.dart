@@ -23,6 +23,7 @@ mixin _$Member {
   String? get memberId => throw _privateConstructorUsedError;
   String? get companyId => throw _privateConstructorUsedError;
   String? get memberName => throw _privateConstructorUsedError;
+  int? get disconnectorCode => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +35,11 @@ abstract class $MemberCopyWith<$Res> {
   factory $MemberCopyWith(Member value, $Res Function(Member) then) =
       _$MemberCopyWithImpl<$Res, Member>;
   @useResult
-  $Res call({String? memberId, String? companyId, String? memberName});
+  $Res call(
+      {String? memberId,
+      String? companyId,
+      String? memberName,
+      int? disconnectorCode});
 }
 
 /// @nodoc
@@ -53,6 +58,7 @@ class _$MemberCopyWithImpl<$Res, $Val extends Member>
     Object? memberId = freezed,
     Object? companyId = freezed,
     Object? memberName = freezed,
+    Object? disconnectorCode = freezed,
   }) {
     return _then(_value.copyWith(
       memberId: freezed == memberId
@@ -67,6 +73,10 @@ class _$MemberCopyWithImpl<$Res, $Val extends Member>
           ? _value.memberName
           : memberName // ignore: cast_nullable_to_non_nullable
               as String?,
+      disconnectorCode: freezed == disconnectorCode
+          ? _value.disconnectorCode
+          : disconnectorCode // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -78,7 +88,11 @@ abstract class _$$MemberImplCopyWith<$Res> implements $MemberCopyWith<$Res> {
       __$$MemberImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? memberId, String? companyId, String? memberName});
+  $Res call(
+      {String? memberId,
+      String? companyId,
+      String? memberName,
+      int? disconnectorCode});
 }
 
 /// @nodoc
@@ -95,6 +109,7 @@ class __$$MemberImplCopyWithImpl<$Res>
     Object? memberId = freezed,
     Object? companyId = freezed,
     Object? memberName = freezed,
+    Object? disconnectorCode = freezed,
   }) {
     return _then(_$MemberImpl(
       memberId: freezed == memberId
@@ -109,6 +124,10 @@ class __$$MemberImplCopyWithImpl<$Res>
           ? _value.memberName
           : memberName // ignore: cast_nullable_to_non_nullable
               as String?,
+      disconnectorCode: freezed == disconnectorCode
+          ? _value.disconnectorCode
+          : disconnectorCode // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -119,7 +138,8 @@ class _$MemberImpl implements _Member {
   const _$MemberImpl(
       {required this.memberId,
       required this.companyId,
-      required this.memberName});
+      required this.memberName,
+      required this.disconnectorCode});
 
   factory _$MemberImpl.fromJson(Map<String, dynamic> json) =>
       _$$MemberImplFromJson(json);
@@ -130,10 +150,12 @@ class _$MemberImpl implements _Member {
   final String? companyId;
   @override
   final String? memberName;
+  @override
+  final int? disconnectorCode;
 
   @override
   String toString() {
-    return 'Member(memberId: $memberId, companyId: $companyId, memberName: $memberName)';
+    return 'Member(memberId: $memberId, companyId: $companyId, memberName: $memberName, disconnectorCode: $disconnectorCode)';
   }
 
   @override
@@ -146,12 +168,15 @@ class _$MemberImpl implements _Member {
             (identical(other.companyId, companyId) ||
                 other.companyId == companyId) &&
             (identical(other.memberName, memberName) ||
-                other.memberName == memberName));
+                other.memberName == memberName) &&
+            (identical(other.disconnectorCode, disconnectorCode) ||
+                other.disconnectorCode == disconnectorCode));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, memberId, companyId, memberName);
+  int get hashCode => Object.hash(
+      runtimeType, memberId, companyId, memberName, disconnectorCode);
 
   @JsonKey(ignore: true)
   @override
@@ -171,7 +196,8 @@ abstract class _Member implements Member {
   const factory _Member(
       {required final String? memberId,
       required final String? companyId,
-      required final String? memberName}) = _$MemberImpl;
+      required final String? memberName,
+      required final int? disconnectorCode}) = _$MemberImpl;
 
   factory _Member.fromJson(Map<String, dynamic> json) = _$MemberImpl.fromJson;
 
@@ -181,6 +207,8 @@ abstract class _Member implements Member {
   String? get companyId;
   @override
   String? get memberName;
+  @override
+  int? get disconnectorCode;
   @override
   @JsonKey(ignore: true)
   _$$MemberImplCopyWith<_$MemberImpl> get copyWith =>

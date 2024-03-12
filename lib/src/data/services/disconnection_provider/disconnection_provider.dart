@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:diconnection/src/core/handler/utils_handler.dart';
+import 'package:diconnection/src/core/shared_preferences/get_preferences.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
+import 'package:diconnection/src/data/models/disconnection_handler_model/disconnection_handler_model.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,18 +17,28 @@ part 'disconnection_provider.g.dart';
 @riverpod
 class AsyncDisconnection extends _$AsyncDisconnection {
   Future<List<ZoneModel>> _fetchGetDisconnection() async {
+    String token = await GetPreferences().getStoredAccessToken() ?? "";
+    kToken = token;
     String hostAPI = UtilsHandler.apiLink == "" ? kHost : UtilsHandler.apiLink;
     //2020-04-01Z
     List<ZoneModel> zoneList = [];
     try {
-      final json = await http
-          .get(Uri.https(hostAPI, '/disconnection'))
-          .timeout(const Duration(seconds: 60));
+      final json = await http.get(
+          isHttp
+              ? Uri.http(hostAPI, '/disconnection')
+              : Uri.https(hostAPI, '/disconnection'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          }).timeout(const Duration(seconds: 60));
       if (json.statusCode == 200 || json.statusCode == 201) {
-        final todos = List<Map<String, dynamic>>.from(jsonDecode(json.body));
-        final consumerList = todos.map(ConsumerModel.fromJson).toList();
+        // final todos = Map<String, dynamic>.from(jsonDecode(json.body));
+        final disc = DisconnectionHandler.fromJson(jsonDecode(json.body));
+        final consumerList = disc.items!.toList();
+        // final consumerList = todos.map(DisconnectionHandler.fromJson).toList();
         //hunt for same zone and book
-        consumerList.forEach((a) {
+        consumerList!.forEach((a) {
           var res = zoneList
               .where(
                   (b) => b.bookNumber == a.bookNo && b.zoneNumber == a.zoneNo)
@@ -35,8 +47,11 @@ class AsyncDisconnection extends _$AsyncDisconnection {
             var consumerFiltered = consumerList
                 .where((c) => c.bookNo == a.bookNo && c.zoneNo == a.zoneNo)
                 .toList();
+            var zoneSel = disc.zoneList!
+                .toList()
+                .firstWhere((e) => e.zone_code!.contains(a.zoneNo.toString()));
             var zone = ZoneModel(
-                barangay: a.address ?? "",
+                barangay: "${zoneSel.description ?? ""} ,Book ${a.bookNo}",
                 bookNumber: a.bookNo ?? 0,
                 zoneNumber: a.zoneNo ?? 0,
                 totalCount: consumerFiltered.length,
@@ -45,8 +60,12 @@ class AsyncDisconnection extends _$AsyncDisconnection {
           }
         });
         //save zoneList
+        zoneList.sort((a, b) => a.zoneNumber.compareTo(b.zoneNumber));
         UtilsHandler.zones = zoneList;
       } else {
+        if (json.statusCode == 401) {
+          //TODO: Unauthorized
+        }
         throw Exception(
             'Error: ${json.statusCode} \n Failed to load Zones from API');
       }
@@ -56,11 +75,19 @@ class AsyncDisconnection extends _$AsyncDisconnection {
     }
   }
 
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      return _fetchGetDisconnection();
+    });
+  }
+
   Future<void> fetchUpdateDisconnection(
       ConsumerModel input, StreamController<int> events) async {
     String hostAPI = UtilsHandler.apiLink == "" ? kHost : UtilsHandler.apiLink;
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
+      String token = await GetPreferences().getStoredAccessToken() ?? "";
       Position currentPosition;
       double lat = 0, long = 0;
       try {
@@ -74,18 +101,30 @@ class AsyncDisconnection extends _$AsyncDisconnection {
         }).catchError((e) {
           // debugPrint(e);
         });
-        final verify = await http
-            .get(Uri.https(hostAPI, '/disconnection/getVerify', {
-              "accountNo": input.accountNo,
-              "disconnectionDate": input.disconnectionDate.toString()
-            }))
-            .timeout(const Duration(seconds: 60));
+        final verify = await http.get(
+            isHttp
+                ? Uri.http(hostAPI, '/disconnection/getVerify')
+                : Uri.https(hostAPI, '/disconnection/getVerify', {
+                    "accountNo": input.accountNo,
+                    "disconnectionDate": input.disconnectionDate.toString()
+                  }),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'Authorization': 'Bearer $token',
+            }).timeout(const Duration(seconds: 60));
         if (verify.statusCode == 200 || verify.statusCode == 201) {
           events.add(1);
           if (verify.body == "NotPayed") {
+            Map<String, String> headers = {"Authorization": "Bearer $token"};
             var inputs = '${input.disconnectionId}/$lat/$long';
-            final uploadPicture = http.MultipartRequest("POST",
-                Uri.https(hostAPI, '/disconnection/$inputs/upload-photo'));
+            final uploadPicture = http.MultipartRequest(
+                "POST",
+                isHttp
+                    ? Uri.http(hostAPI, '/disconnection/$inputs/upload-photo')
+                    : Uri.https(
+                        hostAPI, '/disconnection/$inputs/upload-photo'));
+            uploadPicture.headers.addAll(headers);
             var singlePhoto = UtilsHandler.mediaFileList![0];
             uploadPicture.files.add(http.MultipartFile.fromBytes(
                 'image', await singlePhoto.readAsBytes(),
@@ -99,12 +138,18 @@ class AsyncDisconnection extends _$AsyncDisconnection {
                 print("Uploaded!");
                 final response = await http
                     .patch(
-                        Uri.https(
-                            kHost, '/disconnection/${input.disconnectionId}'),
-                        headers: <String, String>{
-                          'Content-Type': 'application/json; charset=UTF-8',
-                        },
-                        body: jsonEncode(a))
+                      isHttp
+                          ? Uri.http(hostAPI,
+                              '/disconnection/${input.disconnectionId}')
+                          : Uri.https(
+                              kHost, '/disconnection/${input.disconnectionId}'),
+                      headers: <String, String>{
+                        'Content-Type': 'application/json; charset=UTF-8',
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer $token',
+                      },
+                      body: jsonEncode(a),
+                    )
                     .timeout(
                       const Duration(seconds: 60),
                     );
@@ -114,10 +159,20 @@ class AsyncDisconnection extends _$AsyncDisconnection {
                   events.add(3);
                   return _fetchGetDisconnection();
                 } else {
-                  events.add(502);
+                  if (response.statusCode == 401) {
+                    //TODO: Unauthorized
+                    events.add(401);
+                  } else {
+                    events.add(502);
+                  }
                 }
               } else {
-                events.add(501);
+                if (uploadResponse.statusCode == 401) {
+                  //TODO: Unauthorized
+                  events.add(401);
+                } else {
+                  events.add(501);
+                }
               }
             });
             return _fetchGetDisconnection();
@@ -129,7 +184,12 @@ class AsyncDisconnection extends _$AsyncDisconnection {
             }
           }
         } else {
-          events.add(500);
+          if (verify.statusCode == 401) {
+            //TODO: Unauthorized
+            events.add(401);
+          } else {
+            events.add(500);
+          }
         }
         return _fetchGetDisconnection();
       } catch (ex) {

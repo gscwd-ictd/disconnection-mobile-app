@@ -8,7 +8,8 @@ class Member with _$Member {
   const factory Member(
       {required String? memberId,
       required String? companyId,
-      required String? memberName}) = _Member;
+      required String? memberName,
+      required int? disconnectorCode}) = _Member;
 
   factory Member.fromJson(Map<String, dynamic> json) => _$MemberFromJson(json);
 }

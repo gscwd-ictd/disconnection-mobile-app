@@ -25,11 +25,13 @@ _$ConsumerModelImpl _$$ConsumerModelImplFromJson(Map<String, dynamic> json) =>
       disconnectedDate: json['disconnectedDate'] == null
           ? null
           : DateTime.parse(json['disconnectedDate'] as String),
+      disconnectedTime: json['disconnectedTime'] as String?,
       zoneNo: json['zoneNo'] as int?,
       bookNo: json['bookNo'] as int?,
       isConnected: json['isConnected'] as bool?,
       isPayed: json['isPayed'] as bool?,
       status: json['status'] as int?,
+      seqNo: json['seqNo'] as int?,
       disconnectionTeam: json['disconnectionTeam'] == null
           ? null
           : Team.fromJson(json['disconnectionTeam'] as Map<String, dynamic>),
@@ -53,11 +55,13 @@ Map<String, dynamic> _$$ConsumerModelImplToJson(_$ConsumerModelImpl instance) =>
       'remarks': instance.remarks,
       'disconnectionDate': instance.disconnectionDate?.toIso8601String(),
       'disconnectedDate': instance.disconnectedDate?.toIso8601String(),
+      'disconnectedTime': instance.disconnectedTime,
       'zoneNo': instance.zoneNo,
       'bookNo': instance.bookNo,
       'isConnected': instance.isConnected,
       'isPayed': instance.isPayed,
       'status': instance.status,
+      'seqNo': instance.seqNo,
       'disconnectionTeam': instance.disconnectionTeam,
       'proofOfDisconnection': instance.proofOfDisconnection,
     };

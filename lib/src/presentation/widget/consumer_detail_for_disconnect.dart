@@ -6,7 +6,9 @@ import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/core/messages/error_message/error_message.dart';
 import 'package:diconnection/src/core/messages/verifying_messgae/verifying_message.dart';
 import 'package:diconnection/src/core/messages/warning_message/warning_message.dart';
+import 'package:diconnection/src/core/shared_preferences/delete_preferences.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
+import 'package:diconnection/src/data/services/auth_provider/auth_provider.dart';
 import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
 import 'package:diconnection/src/presentation/widget/error_validation_widget.dart';
 import 'package:diconnection/src/presentation/widget/image_picker_widget.dart';
@@ -111,12 +113,17 @@ class _ConsumerDetailForDisconnectState
                           Text(
                             consumerData.accountNo ?? "",
                             style: TextStyle(
-                                fontSize: 12.0.sp, fontWeight: FontWeight.bold),
+                                fontSize: 10.0.sp, fontWeight: FontWeight.bold),
                           ),
-                          Text(
-                            consumerData.consumerName ?? "",
-                            style: TextStyle(
-                                fontSize: 12.0.sp, fontWeight: FontWeight.bold),
+                          SizedBox(
+                            width: 60.w,
+                            child: Text(
+                              consumerData.consumerName ?? "",
+                              // softWrap: true,
+                              style: TextStyle(
+                                  fontSize: 12.0.sp,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ],
                       ),
@@ -590,6 +597,20 @@ class _ConsumerDetailForDisconnectState
                                           Navigator.pop(context, 'refresh');
                                         },
                                       );
+                                    case 401: //Failed to Verify Please try again
+                                      return ErrorMessage(
+                                        title: 'Expired Session',
+                                        content: 'Please login again.',
+                                        onPressedFunction: () {
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          ref
+                                              .read(asyncAuthProvider.notifier)
+                                              .isExpired();
+                                        },
+                                      );
                                     case 500: //Failed to Verify Please try again
                                       return ErrorMessage(
                                         title: 'Please try again',
@@ -677,7 +698,9 @@ class _ConsumerDetailForDisconnectState
         isPayed: a.isPayed,
         disconnectionTeam: a.disconnectionTeam,
         status: isDisconnected ? 1 : 2,
-        proofOfDisconnection: a.proofOfDisconnection);
+        proofOfDisconnection: a.proofOfDisconnection,
+        seqNo: a.seqNo,
+        disconnectedTime: a.disconnectedTime);
     return b;
   }
 

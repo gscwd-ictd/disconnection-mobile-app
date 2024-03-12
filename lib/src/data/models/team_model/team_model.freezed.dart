@@ -24,6 +24,7 @@ mixin _$Team {
   String? get teamName => throw _privateConstructorUsedError;
   String? get teamLeader => throw _privateConstructorUsedError;
   bool? get status => throw _privateConstructorUsedError;
+  int? get jobCode => throw _privateConstructorUsedError;
   List<Member>? get disconnectionMember => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -41,6 +42,7 @@ abstract class $TeamCopyWith<$Res> {
       String? teamName,
       String? teamLeader,
       bool? status,
+      int? jobCode,
       List<Member>? disconnectionMember});
 }
 
@@ -61,6 +63,7 @@ class _$TeamCopyWithImpl<$Res, $Val extends Team>
     Object? teamName = freezed,
     Object? teamLeader = freezed,
     Object? status = freezed,
+    Object? jobCode = freezed,
     Object? disconnectionMember = freezed,
   }) {
     return _then(_value.copyWith(
@@ -80,6 +83,10 @@ class _$TeamCopyWithImpl<$Res, $Val extends Team>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as bool?,
+      jobCode: freezed == jobCode
+          ? _value.jobCode
+          : jobCode // ignore: cast_nullable_to_non_nullable
+              as int?,
       disconnectionMember: freezed == disconnectionMember
           ? _value.disconnectionMember
           : disconnectionMember // ignore: cast_nullable_to_non_nullable
@@ -100,6 +107,7 @@ abstract class _$$TeamImplCopyWith<$Res> implements $TeamCopyWith<$Res> {
       String? teamName,
       String? teamLeader,
       bool? status,
+      int? jobCode,
       List<Member>? disconnectionMember});
 }
 
@@ -117,6 +125,7 @@ class __$$TeamImplCopyWithImpl<$Res>
     Object? teamName = freezed,
     Object? teamLeader = freezed,
     Object? status = freezed,
+    Object? jobCode = freezed,
     Object? disconnectionMember = freezed,
   }) {
     return _then(_$TeamImpl(
@@ -136,6 +145,10 @@ class __$$TeamImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as bool?,
+      jobCode: freezed == jobCode
+          ? _value.jobCode
+          : jobCode // ignore: cast_nullable_to_non_nullable
+              as int?,
       disconnectionMember: freezed == disconnectionMember
           ? _value._disconnectionMember
           : disconnectionMember // ignore: cast_nullable_to_non_nullable
@@ -152,6 +165,7 @@ class _$TeamImpl implements _Team {
       required this.teamName,
       required this.teamLeader,
       required this.status,
+      required this.jobCode,
       required final List<Member>? disconnectionMember})
       : _disconnectionMember = disconnectionMember;
 
@@ -166,6 +180,8 @@ class _$TeamImpl implements _Team {
   final String? teamLeader;
   @override
   final bool? status;
+  @override
+  final int? jobCode;
   final List<Member>? _disconnectionMember;
   @override
   List<Member>? get disconnectionMember {
@@ -179,7 +195,7 @@ class _$TeamImpl implements _Team {
 
   @override
   String toString() {
-    return 'Team(teamId: $teamId, teamName: $teamName, teamLeader: $teamLeader, status: $status, disconnectionMember: $disconnectionMember)';
+    return 'Team(teamId: $teamId, teamName: $teamName, teamLeader: $teamLeader, status: $status, jobCode: $jobCode, disconnectionMember: $disconnectionMember)';
   }
 
   @override
@@ -193,14 +209,21 @@ class _$TeamImpl implements _Team {
             (identical(other.teamLeader, teamLeader) ||
                 other.teamLeader == teamLeader) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.jobCode, jobCode) || other.jobCode == jobCode) &&
             const DeepCollectionEquality()
                 .equals(other._disconnectionMember, _disconnectionMember));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, teamId, teamName, teamLeader,
-      status, const DeepCollectionEquality().hash(_disconnectionMember));
+  int get hashCode => Object.hash(
+      runtimeType,
+      teamId,
+      teamName,
+      teamLeader,
+      status,
+      jobCode,
+      const DeepCollectionEquality().hash(_disconnectionMember));
 
   @JsonKey(ignore: true)
   @override
@@ -222,6 +245,7 @@ abstract class _Team implements Team {
       required final String? teamName,
       required final String? teamLeader,
       required final bool? status,
+      required final int? jobCode,
       required final List<Member>? disconnectionMember}) = _$TeamImpl;
 
   factory _Team.fromJson(Map<String, dynamic> json) = _$TeamImpl.fromJson;
@@ -234,6 +258,8 @@ abstract class _Team implements Team {
   String? get teamLeader;
   @override
   bool? get status;
+  @override
+  int? get jobCode;
   @override
   List<Member>? get disconnectionMember;
   @override

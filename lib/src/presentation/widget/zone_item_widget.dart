@@ -26,6 +26,8 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
   @override
   Widget build(BuildContext context) {
     ZoneModel zoneData = widget.zoneData;
+    String barangay = fixText(zoneData.barangay, limit: 40);
+    bool notOverSize = (barangay.length <= 22);
     return GestureDetector(
       onTap: () {
         widget.onPressedFunction();
@@ -41,7 +43,7 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
             mainAxisSize: MainAxisSize.max,
             children: [
               SizedBox(
-                height: zoneData.barangay.length <= 12 ? 50 : 80,
+                height: notOverSize ? 50 : 65,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -49,12 +51,12 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
                       children: [
                         const Text("Address: "),
                         SizedBox(
-                          width: 60.w,
+                          width: 50.w,
                           child: Text(
-                            zoneData.barangay,
+                            barangay,
                             softWrap: true,
                             style: TextStyle(
-                                fontSize: 14.sp, fontWeight: FontWeight.bold),
+                                fontSize: 12.sp, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           ),
                         ),

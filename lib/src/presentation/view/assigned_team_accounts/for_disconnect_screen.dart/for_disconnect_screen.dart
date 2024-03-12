@@ -1,9 +1,12 @@
 import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
+import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
 import 'package:diconnection/src/presentation/widget/consumer_account_item_widget.dart';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
 
-class ForDisconnectScreen extends StatefulWidget {
+class ForDisconnectScreen extends ConsumerStatefulWidget {
   final Function onPressedFunction;
   final List<ConsumerModel> consumerList;
   const ForDisconnectScreen(
@@ -11,16 +14,22 @@ class ForDisconnectScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<ForDisconnectScreen> createState() => _ForDisconnectScreenState();
+  ConsumerState<ForDisconnectScreen> createState() =>
+      _ForDisconnectScreenState();
 }
 
-class _ForDisconnectScreenState extends State<ForDisconnectScreen> {
+class _ForDisconnectScreenState extends ConsumerState<ForDisconnectScreen> {
   TextEditingController txtSearch = TextEditingController();
   ScrollController _scrollController = ScrollController();
+  late EasyRefreshController _controller;
 
   @override
   void initState() {
     // TODO: implement initState
+    _controller = EasyRefreshController(
+      controlFinishRefresh: true,
+      controlFinishLoad: true,
+    );
     super.initState();
   }
 
