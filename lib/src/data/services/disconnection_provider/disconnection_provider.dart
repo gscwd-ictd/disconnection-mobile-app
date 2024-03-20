@@ -7,8 +7,10 @@ import 'package:diconnection/src/core/shared_preferences/get_preferences.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 import 'package:diconnection/src/data/models/disconnection_handler_model/disconnection_handler_model.dart';
+import 'package:diconnection/src/data/models/offline_disconnection_hive_model/offline_disconnection_hive_model.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hive/hive.dart';
 import 'package:native_exif/native_exif.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:http/http.dart' as http;
@@ -19,6 +21,7 @@ part 'disconnection_provider.g.dart';
 @riverpod
 class AsyncDisconnection extends _$AsyncDisconnection {
   Future<List<ZoneModel>> _fetchGetDisconnection() async {
+    final consumerBox = Hive.box('consumer');
     String token = await GetPreferences().getStoredAccessToken() ?? "";
     kToken = token;
     String hostAPI = UtilsHandler.apiLink == "" ? kHost : UtilsHandler.apiLink;
@@ -82,6 +85,13 @@ class AsyncDisconnection extends _$AsyncDisconnection {
     state = await AsyncValue.guard(() async {
       return _fetchGetDisconnection();
     });
+  }
+
+  Future<void> offlineMode(ConsumerModel input) async {
+    final offlineDiscBox = Hive.box('offlineDisconnection');
+    final offlineDisc =
+        OfflineDisconnectionHive(input, UtilsHandler.mediaFileList![0]);
+    offlineDiscBox.add(offlineDisc);
   }
 
   Future<void> verify(ConsumerModel input, StreamController<int> events) async {

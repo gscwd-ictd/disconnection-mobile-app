@@ -461,6 +461,9 @@ class _ConsumerDetailForDisconnectState
                                       context, consumerData, disconnection);
                                 }
                               } else {
+                                ref
+                                    .read(asyncDisconnectionProvider.notifier)
+                                    .offlineMode(consumerData);
                                 // ignore: use_build_context_synchronously
                                 showDialog(
                                     barrierDismissible: false,

@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
+import 'package:diconnection/src/data/models/consumer_model/consumer_hive_model.dart';
+import 'package:diconnection/src/data/models/offline_disconnection_hive_model/offline_disconnection_hive_model.dart';
 import 'package:diconnection/src/data/models/super_user_model/super_user_hive_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,9 +25,12 @@ Future<void> main() async {
     }
   }
   Hive.registerAdapter(SuperUserHiveAdapter());
-  // Hive.registerAdapter(CategoryAdapter());
+  Hive.registerAdapter(OfflineDisconnectionHiveAdapter());
+  Hive.registerAdapter(ConsumerHiveAdapter());
 
   await Hive.openBox('superUser');
+  await Hive.openBox('offlineDisconnection');
+  await Hive.openBox('consumer');
   runApp(const ProviderScope(child: MyApp()));
 }
 
