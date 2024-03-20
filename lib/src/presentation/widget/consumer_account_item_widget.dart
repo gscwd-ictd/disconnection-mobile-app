@@ -28,11 +28,27 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
   @override
   Widget build(BuildContext context) {
     ConsumerModel consumerData = widget.consumerData;
-    String consumerName = fixText(consumerData.consumerName!, limit: 20);
+    String accountNo = consumerData.accountNo.toString();
+    String consumerName = fixText(consumerData.consumerName!, limit: 16);
     bool stats = consumerData.isConnected ?? false;
     return GestureDetector(
-      onTap: () {
-        widget.onPressedFunction();
+      onTap: () async {
+        String? refresh = await Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => !stats
+                    ? ConsumerDetailDisconnected(
+                        consumerData: consumerData,
+                        index: widget.index,
+                        onPressedFunction: () {},
+                      )
+                    : ConsumerDetailForDisconnect(
+                        consumerData: consumerData,
+                        index: 0,
+                        onPressedFunction: () {},
+                      ))) ??
+            "";
+        if (refresh == 'refresh') {
+          widget.onPressedFunction();
+        }
       },
       child: Card(
         color: getStatus(consumerData.status!) == StatusEnum.cancelled
@@ -47,31 +63,57 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              SizedBox(
-                height: 50,
+              FittedBox(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Column(
-                      children: [
-                        const Text("Consumer Name: "),
-                        Text(
-                          consumerName,
-                          softWrap: true,
-                          style: TextStyle(
-                              fontSize:
-                                  consumerName.length >= 22 ? 12.sp : 14.sp,
-                              fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                    SizedBox(
+                      width: 70.w,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                accountNo,
+                                softWrap: true,
+                                style: TextStyle(
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red),
+                                textAlign: TextAlign.start,
+                              ),
+                              Text(
+                                ' $consumerName',
+                                softWrap: true,
+                                style: TextStyle(
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.start,
+                              ),
+                            ],
+                          ),
+                          Text(
+                            consumerData.address!,
+                            softWrap: true,
+                            style: TextStyle(
+                                fontSize: 13.sp, fontWeight: FontWeight.w300),
+                            textAlign: TextAlign.start,
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(
                       width: consumerName.length >= 22 ? 10.w : 12.w,
                     ),
+                    const Column(
+                      children: [
+                        Text("Unpaid: "),
+                        Text("SeqNo: "),
+                      ],
+                    ),
                     Column(
                       children: [
-                        const Text("Unpaid: "),
                         Text(
                           "P${consumerData.billAmount ?? 0.00}",
                           softWrap: true,
@@ -81,11 +123,6 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
                               fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        const Text("SeqNo: "),
                         Text(
                           consumerData.seqNo.toString(),
                           softWrap: true,

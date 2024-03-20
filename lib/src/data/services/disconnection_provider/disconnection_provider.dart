@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/core/shared_preferences/get_preferences.dart';
@@ -8,6 +9,7 @@ import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart'
 import 'package:diconnection/src/data/models/disconnection_handler_model/disconnection_handler_model.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:native_exif/native_exif.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -82,6 +84,43 @@ class AsyncDisconnection extends _$AsyncDisconnection {
     });
   }
 
+  Future<void> verify(ConsumerModel input, StreamController<int> events) async {
+    String hostAPI = UtilsHandler.apiLink == "" ? kHost : UtilsHandler.apiLink;
+    String token = await GetPreferences().getStoredAccessToken() ?? "";
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final verify = await http.get(
+          isHttp
+              ? Uri.http(hostAPI, '/disconnection/getVerify', {
+                  "accountNo": input.accountNo,
+                  "disconnectionDate":
+                      input.disconnectionDate!.toLocal().toIso8601String()
+                })
+              : Uri.https(hostAPI, '/disconnection/getVerify', {
+                  "accountNo": input.accountNo,
+                  "disconnectionDate":
+                      input.disconnectionDate!.toLocal().toIso8601String()
+                }),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          }).timeout(const Duration(seconds: 60));
+      if (verify.statusCode == 200 || verify.statusCode == 201) {
+        if (verify.body == "NotPayed") {
+          events.add(400);
+        }
+        if (verify.body == "Payed") {
+          events.add(400);
+        }
+        if (verify.body == "HasPNOrNotValidBill") {
+          events.add(400);
+        }
+      }
+      return _fetchGetDisconnection();
+    });
+  }
+
   Future<void> fetchUpdateDisconnection(
       ConsumerModel input, StreamController<int> events) async {
     String hostAPI = UtilsHandler.apiLink == "" ? kHost : UtilsHandler.apiLink;
@@ -103,10 +142,15 @@ class AsyncDisconnection extends _$AsyncDisconnection {
         });
         final verify = await http.get(
             isHttp
-                ? Uri.http(hostAPI, '/disconnection/getVerify')
+                ? Uri.http(hostAPI, '/disconnection/getVerify', {
+                    "accountNo": input.accountNo,
+                    "disconnectionDate":
+                        input.disconnectionDate!.toLocal().toIso8601String()
+                  })
                 : Uri.https(hostAPI, '/disconnection/getVerify', {
                     "accountNo": input.accountNo,
-                    "disconnectionDate": input.disconnectionDate.toString()
+                    "disconnectionDate":
+                        input.disconnectionDate!.toLocal().toIso8601String()
                   }),
             headers: {
               'Content-Type': 'application/json',
@@ -126,8 +170,18 @@ class AsyncDisconnection extends _$AsyncDisconnection {
                         hostAPI, '/disconnection/$inputs/upload-photo'));
             uploadPicture.headers.addAll(headers);
             var singlePhoto = UtilsHandler.mediaFileList![0];
+            var exif = await Exif.fromPath(singlePhoto.path);
+            await exif.writeAttributes({
+              "GPSLatitude": lat.toString(),
+              "GPSLongitude": long.toString()
+            });
+            final newFile = File(singlePhoto.path);
+            await newFile.writeAsBytes(await singlePhoto.readAsBytes());
+            var coord = await exif.getLatLong();
+            var attributes = await exif.getAttributes();
+            await exif.close();
             uploadPicture.files.add(http.MultipartFile.fromBytes(
-                'image', await singlePhoto.readAsBytes(),
+                'image', await newFile.readAsBytes(),
                 contentType: MediaType('image', 'jpg'),
                 filename: singlePhoto.name));
             await uploadPicture.send().then((uploadResponse) async {
@@ -176,12 +230,13 @@ class AsyncDisconnection extends _$AsyncDisconnection {
               }
             });
             return _fetchGetDisconnection();
-          } else {
-            if (verify.body == "NotPayed") {
-              events.add(400);
-            } else {
-              events.add(500);
-            }
+          }
+          if (verify.body == "Payed") {
+            events.add(400);
+          }
+
+          if (verify.body == "HasPNOrNotValidBill") {
+            events.add(400);
           }
         } else {
           if (verify.statusCode == 401) {

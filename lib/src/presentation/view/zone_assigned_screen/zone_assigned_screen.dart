@@ -99,8 +99,14 @@ class _ZoneAssignedScreenState extends ConsumerState<ZoneAssignedScreen> {
                     header: const ClassicHeader(),
                     onRefresh: () async {
                       await ref
-                          .read(asyncDisconnectionProvider.notifier)
-                          .refresh();
+                          .read(asyncAuthProvider.notifier)
+                          .refresh()
+                          .then((value) => () async {
+                                await ref
+                                    .read(asyncDisconnectionProvider.notifier)
+                                    .refresh();
+                              });
+                      // setState(() {});
                       _controller.finishRefresh();
                     },
                     child: SizedBox(

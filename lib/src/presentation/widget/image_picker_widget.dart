@@ -22,7 +22,7 @@ class ImagePickerWidget extends StatefulWidget {
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   final ImagePicker _picker = ImagePicker();
-  double compression = 0.2;
+  int photoQuality = 6;
   String? _retrieveDataError;
   dynamic _pickImageError;
   VideoPlayerController? _toBeDisposed;
@@ -176,7 +176,9 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     if (context.mounted) {
       if (isVideo) {
         final XFile? file = await _picker.pickVideo(
-            source: source, maxDuration: const Duration(seconds: 10));
+          source: source,
+          maxDuration: const Duration(seconds: 10),
+        );
         await _playVideo(file);
       } else if (isMultiImage) {
         await _displayPickImageDialog(context,
@@ -282,7 +284,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   Future<void> _displayPickImageDialog(
       BuildContext context, OnPickImageCallback onPick) async {
     //onPick(width, height, quality);
-    onPick(null, null, 10);
+    onPick(null, null, photoQuality);
     // return showDialog(
     //     context: context,
     //     builder: (BuildContext context) {

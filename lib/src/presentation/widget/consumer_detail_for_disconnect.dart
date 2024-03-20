@@ -51,8 +51,8 @@ class _ConsumerDetailForDisconnectState
     _imageWidget = ImagePickerWidget(onChanged: () {
       _checkValidation();
     });
-    super.initState();
     _events = StreamController<int>();
+    super.initState();
   }
 
   Size _textSize(String text, TextStyle style) {

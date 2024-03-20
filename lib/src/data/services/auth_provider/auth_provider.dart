@@ -28,8 +28,8 @@ class AsyncAuth extends _$AsyncAuth {
     try {
       final json = await http.get(
           isHttp
-              ? Uri.http(hostAPI, 'user/protected')
-              : Uri.https(hostAPI, 'user/protected'),
+              ? Uri.http(hostAPI, 'auth/protected')
+              : Uri.https(hostAPI, 'auth/protected'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -46,6 +46,13 @@ class AsyncAuth extends _$AsyncAuth {
       print(ex);
     }
     return authCode;
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() {
+      return _fetchUser();
+    });
   }
 
   Future<void> isExpired() async {
@@ -69,8 +76,8 @@ class AsyncAuth extends _$AsyncAuth {
         final json = await http
             .post(
                 isHttp
-                    ? Uri.http(hostAPI, 'user/login')
-                    : Uri.https(hostAPI, 'user/login'),
+                    ? Uri.http(hostAPI, 'auth/login')
+                    : Uri.https(hostAPI, 'auth/login'),
                 headers: {
                   'Content-Type': 'application/json',
                   'Accept': 'application/json',
