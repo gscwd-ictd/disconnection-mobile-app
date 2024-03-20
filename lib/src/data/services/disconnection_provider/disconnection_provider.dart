@@ -108,7 +108,7 @@ class AsyncDisconnection extends _$AsyncDisconnection {
           }).timeout(const Duration(seconds: 60));
       if (verify.statusCode == 200 || verify.statusCode == 201) {
         if (verify.body == "NotPayed") {
-          events.add(400);
+          events.add(200);
         }
         if (verify.body == "Payed") {
           events.add(400);
@@ -140,112 +140,70 @@ class AsyncDisconnection extends _$AsyncDisconnection {
         }).catchError((e) {
           // debugPrint(e);
         });
-        final verify = await http.get(
+        Map<String, String> headers = {"Authorization": "Bearer $token"};
+        var inputs = '${input.disconnectionId}/$lat/$long';
+        final uploadPicture = http.MultipartRequest(
+            "POST",
             isHttp
-                ? Uri.http(hostAPI, '/disconnection/getVerify', {
-                    "accountNo": input.accountNo,
-                    "disconnectionDate":
-                        input.disconnectionDate!.toLocal().toIso8601String()
-                  })
-                : Uri.https(hostAPI, '/disconnection/getVerify', {
-                    "accountNo": input.accountNo,
-                    "disconnectionDate":
-                        input.disconnectionDate!.toLocal().toIso8601String()
-                  }),
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'Authorization': 'Bearer $token',
-            }).timeout(const Duration(seconds: 60));
-        if (verify.statusCode == 200 || verify.statusCode == 201) {
-          events.add(1);
-          if (verify.body == "NotPayed") {
-            Map<String, String> headers = {"Authorization": "Bearer $token"};
-            var inputs = '${input.disconnectionId}/$lat/$long';
-            final uploadPicture = http.MultipartRequest(
-                "POST",
-                isHttp
-                    ? Uri.http(hostAPI, '/disconnection/$inputs/upload-photo')
-                    : Uri.https(
-                        hostAPI, '/disconnection/$inputs/upload-photo'));
-            uploadPicture.headers.addAll(headers);
-            var singlePhoto = UtilsHandler.mediaFileList![0];
-            var exif = await Exif.fromPath(singlePhoto.path);
-            await exif.writeAttributes({
-              "GPSLatitude": lat.toString(),
-              "GPSLongitude": long.toString()
-            });
-            final newFile = File(singlePhoto.path);
-            await newFile.writeAsBytes(await singlePhoto.readAsBytes());
-            var coord = await exif.getLatLong();
-            var attributes = await exif.getAttributes();
-            await exif.close();
-            uploadPicture.files.add(http.MultipartFile.fromBytes(
-                'image', await newFile.readAsBytes(),
-                contentType: MediaType('image', 'jpg'),
-                filename: singlePhoto.name));
-            await uploadPicture.send().then((uploadResponse) async {
-              if (uploadResponse.statusCode == 200 ||
-                  uploadResponse.statusCode == 201) {
-                events.add(2);
-                final a = input.toJson();
-                print("Uploaded!");
-                final response = await http
-                    .patch(
-                      isHttp
-                          ? Uri.http(hostAPI,
-                              '/disconnection/${input.disconnectionId}')
-                          : Uri.https(
-                              kHost, '/disconnection/${input.disconnectionId}'),
-                      headers: <String, String>{
-                        'Content-Type': 'application/json; charset=UTF-8',
-                        'Accept': 'application/json',
-                        'Authorization': 'Bearer $token',
-                      },
-                      body: jsonEncode(a),
-                    )
-                    .timeout(
-                      const Duration(seconds: 60),
-                    );
-                await Future.delayed(const Duration(seconds: 10));
-                if (response.statusCode == 200) {
-                  UtilsHandler.mediaFileList = [];
-                  events.add(3);
-                  return _fetchGetDisconnection();
-                } else {
-                  if (response.statusCode == 401) {
-                    //TODO: Unauthorized
-                    events.add(401);
-                  } else {
-                    events.add(502);
-                  }
-                }
+                ? Uri.http(hostAPI, '/disconnection/$inputs/upload-photo')
+                : Uri.https(hostAPI, '/disconnection/$inputs/upload-photo'));
+        uploadPicture.headers.addAll(headers);
+        var singlePhoto = UtilsHandler.mediaFileList![0];
+        var exif = await Exif.fromPath(singlePhoto.path);
+        await exif.writeAttributes(
+            {"GPSLatitude": lat.toString(), "GPSLongitude": long.toString()});
+        final newFile = File(singlePhoto.path);
+        await newFile.writeAsBytes(await singlePhoto.readAsBytes());
+        await exif.close();
+        uploadPicture.files.add(http.MultipartFile.fromBytes(
+            'image', await newFile.readAsBytes(),
+            contentType: MediaType('image', 'jpg'),
+            filename: singlePhoto.name));
+        await uploadPicture.send().then((uploadResponse) async {
+          if (uploadResponse.statusCode == 200 ||
+              uploadResponse.statusCode == 201) {
+            events.add(2);
+            final a = input.toJson();
+            print("Uploaded!");
+            final response = await http
+                .patch(
+                  isHttp
+                      ? Uri.http(
+                          hostAPI, '/disconnection/${input.disconnectionId}')
+                      : Uri.https(
+                          kHost, '/disconnection/${input.disconnectionId}'),
+                  headers: <String, String>{
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer $token',
+                  },
+                  body: jsonEncode(a),
+                )
+                .timeout(
+                  const Duration(seconds: 60),
+                );
+            await Future.delayed(const Duration(seconds: 10));
+            if (response.statusCode == 200) {
+              UtilsHandler.mediaFileList = [];
+              events.add(3);
+              return _fetchGetDisconnection();
+            } else {
+              if (response.statusCode == 401) {
+                //TODO: Unauthorized
+                events.add(401);
               } else {
-                if (uploadResponse.statusCode == 401) {
-                  //TODO: Unauthorized
-                  events.add(401);
-                } else {
-                  events.add(501);
-                }
+                events.add(502);
               }
-            });
-            return _fetchGetDisconnection();
-          }
-          if (verify.body == "Payed") {
-            events.add(400);
-          }
-
-          if (verify.body == "HasPNOrNotValidBill") {
-            events.add(400);
-          }
-        } else {
-          if (verify.statusCode == 401) {
-            //TODO: Unauthorized
-            events.add(401);
+            }
           } else {
-            events.add(500);
+            if (uploadResponse.statusCode == 401) {
+              //TODO: Unauthorized
+              events.add(401);
+            } else {
+              events.add(501);
+            }
           }
-        }
+        });
         return _fetchGetDisconnection();
       } catch (ex) {
         print(ex);

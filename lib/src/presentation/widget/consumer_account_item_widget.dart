@@ -1,12 +1,21 @@
+import 'dart:async';
+
 import 'package:diconnection/src/core/enums/status/status_enum.dart';
+import 'package:diconnection/src/core/messages/error_message/error_message.dart';
+import 'package:diconnection/src/core/messages/success_message/success_message.dart';
+import 'package:diconnection/src/core/messages/verifying_messgae/verifying_message.dart';
+import 'package:diconnection/src/core/messages/warning_message/proceed_message.dart';
+import 'package:diconnection/src/core/messages/warning_message/warning_message.dart';
+import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 import 'package:diconnection/src/presentation/widget/consumer_detail_for_disconnect.dart';
 import 'package:diconnection/src/presentation/widget/consumer_detail_disconnected.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
 
-class ConsumerAccountItemWidget extends StatefulWidget {
+class ConsumerAccountItemWidget extends ConsumerStatefulWidget {
   final int index;
   final ConsumerModel consumerData;
   final Function onPressedFunction;
@@ -20,34 +29,125 @@ class ConsumerAccountItemWidget extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<ConsumerAccountItemWidget> createState() =>
+  ConsumerState<ConsumerAccountItemWidget> createState() =>
       _ConsumerAccountItemWidgetState();
 }
 
-class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
+class _ConsumerAccountItemWidgetState
+    extends ConsumerState<ConsumerAccountItemWidget> {
+  late StreamController<int> _events;
+  @override
+  void initState() {
+    // TODO: implement initState
+    _events = StreamController<int>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     ConsumerModel consumerData = widget.consumerData;
     String accountNo = consumerData.accountNo.toString();
     String consumerName = fixText(consumerData.consumerName!, limit: 16);
     bool stats = consumerData.isConnected ?? false;
+    String refresh = '';
     return GestureDetector(
       onTap: () async {
-        String? refresh = await Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => !stats
-                    ? ConsumerDetailDisconnected(
-                        consumerData: consumerData,
-                        index: widget.index,
-                        onPressedFunction: () {},
-                      )
-                    : ConsumerDetailForDisconnect(
-                        consumerData: consumerData,
-                        index: 0,
-                        onPressedFunction: () {},
-                      ))) ??
-            "";
-        if (refresh == 'refresh') {
-          widget.onPressedFunction();
+        _events = StreamController<int>();
+        if (stats) {
+          ref
+              .read(asyncDisconnectionProvider.notifier)
+              .verify(consumerData, _events);
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => StreamBuilder<int>(
+                  initialData: 0,
+                  stream: _events.stream,
+                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                    switch (snapshot.data!) {
+                      case 0:
+                        return VerifyingMessage(
+                          content: 'Verifying:',
+                          onPressedFunction: () {},
+                          state: snapshot.data!,
+                          success: 1,
+                          title: '',
+                        );
+                      case 200:
+                        return ProceedMessage(
+                            title: 'Not Payed ',
+                            content: '${consumerName} has not payed yet',
+                            function: () async {
+                              Navigator.pop(context);
+                              refresh = await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ConsumerDetailForDisconnect(
+                                                consumerData: consumerData,
+                                                index: 0,
+                                                onPressedFunction: () {},
+                                              ))) ??
+                                  "";
+                              if (refresh == 'refresh') {
+                                widget.onPressedFunction();
+                              }
+                            });
+                      case 400:
+                        return SuccessMessage(
+                          title: "Already Payed",
+                          content:
+                              "Please abort disconnection the Consumer was already payed",
+                          onPressedFunction: () {
+                            Navigator.pop(context, 'refresh');
+                            setState(() {});
+                          },
+                        );
+                      case 401: //Failed to Verify Please try again
+                        return ErrorMessage(
+                          title: 'Expired Session',
+                          content: 'Please login again.',
+                          onPressedFunction: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        );
+                      case 500: //Failed to Verify Please try again
+                        return ErrorMessage(
+                          title: 'Please try again',
+                          content: 'Failed to Verify Please try again',
+                          onPressedFunction: () {
+                            Navigator.pop(context);
+                          },
+                        );
+                      default:
+                        return ErrorMessage(
+                          title: 'Please try again',
+                          content: 'There is error',
+                          onPressedFunction: () {
+                            Navigator.pop(context);
+                          },
+                        );
+                    }
+                  }));
+        } else {
+          refresh = await Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => !stats
+                      ? ConsumerDetailDisconnected(
+                          consumerData: consumerData,
+                          index: widget.index,
+                          onPressedFunction: () {},
+                        )
+                      : ConsumerDetailForDisconnect(
+                          consumerData: consumerData,
+                          index: 0,
+                          onPressedFunction: () {},
+                        ))) ??
+              "";
+          if (refresh == 'refresh') {
+            widget.onPressedFunction();
+          }
         }
       },
       child: Card(
@@ -140,43 +240,43 @@ class _ConsumerAccountItemWidgetState extends State<ConsumerAccountItemWidget> {
               SizedBox(
                 height: 1.h,
               ),
-              GestureDetector(
-                onTap: () async {
-                  String? refresh =
-                      await Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => !stats
-                                  ? ConsumerDetailDisconnected(
-                                      consumerData: consumerData,
-                                      index: widget.index,
-                                      onPressedFunction: () {},
-                                    )
-                                  : ConsumerDetailForDisconnect(
-                                      consumerData: consumerData,
-                                      index: 0,
-                                      onPressedFunction: () {},
-                                    ))) ??
-                          "";
-                  if (refresh == 'refresh') {
-                    widget.onPressedFunction();
-                  }
-                },
-                child: Container(
-                  width: 90.w,
-                  height: 3.h,
-                  child: Text(
-                    "Show more...",
-                    softWrap: true,
-                    style: TextStyle(
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.bold,
-                        color: getStatus(consumerData.status!) ==
-                                StatusEnum.cancelled
-                            ? kBackgroundColor
-                            : kLightBlue),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              )
+              // GestureDetector(
+              //   onTap: () async {
+              //     String? refresh =
+              //         await Navigator.of(context).push(MaterialPageRoute(
+              //                 builder: (context) => !stats
+              //                     ? ConsumerDetailDisconnected(
+              //                         consumerData: consumerData,
+              //                         index: widget.index,
+              //                         onPressedFunction: () {},
+              //                       )
+              //                     : ConsumerDetailForDisconnect(
+              //                         consumerData: consumerData,
+              //                         index: 0,
+              //                         onPressedFunction: () {},
+              //                       ))) ??
+              //             "";
+              //     if (refresh == 'refresh') {
+              //       widget.onPressedFunction();
+              //     }
+              //   },
+              //   child: Container(
+              //     width: 90.w,
+              //     height: 3.h,
+              //     child: Text(
+              //       "Show more...",
+              //       softWrap: true,
+              //       style: TextStyle(
+              //           fontSize: 10.sp,
+              //           fontWeight: FontWeight.bold,
+              //           color: getStatus(consumerData.status!) ==
+              //                   StatusEnum.cancelled
+              //               ? kBackgroundColor
+              //               : kLightBlue),
+              //       textAlign: TextAlign.center,
+              //     ),
+              //   ),
+              // )
             ],
           ),
         ),

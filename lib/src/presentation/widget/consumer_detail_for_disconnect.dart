@@ -450,6 +450,9 @@ class _ConsumerDetailForDisconnectState
                                               content:
                                                   'Current reading must be greater than the Previous Reading! $lastRead',
                                               title: 'Current Reading Error',
+                                              function: () {
+                                                Navigator.pop(context);
+                                              },
                                             ));
                                   }
                                 } else {
@@ -547,19 +550,11 @@ class _ConsumerDetailForDisconnectState
                             context: context,
                             barrierDismissible: false,
                             builder: (context) => StreamBuilder<int>(
-                                initialData: 0,
+                                initialData: 1,
                                 stream: _events.stream,
                                 builder: (BuildContext context,
                                     AsyncSnapshot<int> snapshot) {
                                   switch (snapshot.data!) {
-                                    case 0:
-                                      return VerifyingMessage(
-                                        content: 'Verifying:',
-                                        onPressedFunction: () {},
-                                        state: snapshot.data!,
-                                        success: 2,
-                                        title: '',
-                                      );
                                     case 1:
                                       return VerifyingMessage(
                                         content: 'Uploading:',

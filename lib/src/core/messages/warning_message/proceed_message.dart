@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class WarningMessage extends StatelessWidget {
+class ProceedMessage extends StatelessWidget {
   final String title;
   final String content;
   final Function function;
 
-  const WarningMessage(
+  const ProceedMessage(
       {Key? key,
       required this.title,
       required this.content,
@@ -17,7 +17,7 @@ class WarningMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        title,
+        title.toUpperCase(),
         style: GoogleFonts.lato(fontWeight: FontWeight.w900),
       ),
       content: SizedBox(
@@ -37,12 +37,13 @@ class WarningMessage extends StatelessWidget {
           ),
         ),
       ),
+      actionsAlignment: MainAxisAlignment.center,
       actions: [
         TextButton(
             onPressed: () {
               function();
             },
-            child: const Text('Close'))
+            child: const Text('PROCEED'))
       ],
     );
   }

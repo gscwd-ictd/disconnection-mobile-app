@@ -97,9 +97,12 @@ class AsyncAuth extends _$AsyncAuth {
           showDialog(
               barrierDismissible: false,
               context: context,
-              builder: (context) => const WarningMessage(
+              builder: (context) => WarningMessage(
                     content: 'invalid username or password',
                     title: 'Invalid Credential',
+                    function: () {
+                      Navigator.pop(context);
+                    },
                   ));
           throw Exception(
               'Error: ${json.statusCode} \n Failed to Login from API');
