@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/core/messages/warning_message/warning_message.dart';
 import 'package:diconnection/src/core/shared_preferences/delete_preferences.dart';
@@ -20,27 +21,35 @@ part 'auth_provider.g.dart';
 @riverpod
 class AsyncAuth extends _$AsyncAuth {
   Future<int> _fetchUser() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
     //empty
     String hostAPI = UtilsHandler.apiLink == "" ? kHost : UtilsHandler.apiLink;
     int authCode = 0;
     //2020-04-01Z
     String token = await GetPreferences().getStoredAccessToken() ?? "";
     try {
-      final json = await http.get(
-          isHttp
-              ? Uri.http(hostAPI, 'auth/protected')
-              : Uri.https(hostAPI, 'auth/protected'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer $token',
-          }).timeout(const Duration(seconds: 60));
-      if (json.statusCode == 200 || json.statusCode == 201) {
-        authCode = 1;
+      if (connectivityResult == ConnectivityResult.mobile ||
+          connectivityResult == ConnectivityResult.wifi) {
+        final json = await http.get(
+            isHttp
+                ? Uri.http(hostAPI, 'auth/protected')
+                : Uri.https(hostAPI, 'auth/protected'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'Authorization': 'Bearer $token',
+            }).timeout(const Duration(seconds: 60));
+        if (json.statusCode == 200 || json.statusCode == 201) {
+          authCode = 1;
+        } else {
+          //token expire need to login
+          throw Exception(
+              'Error: ${json.statusCode} \n Failed to Login from API');
+        }
       } else {
-        //token expire need to login
-        throw Exception(
-            'Error: ${json.statusCode} \n Failed to Login from API');
+        if (token.isNotEmpty) {
+          authCode = 1;
+        }
       }
     } catch (ex) {
       print(ex);

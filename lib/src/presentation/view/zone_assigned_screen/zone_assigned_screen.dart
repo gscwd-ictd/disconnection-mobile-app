@@ -3,7 +3,6 @@ import 'package:diconnection/src/data/mock/zones_mock.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
 import 'package:diconnection/src/data/services/auth_provider/auth_provider.dart';
 import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
-import 'package:diconnection/src/presentation/view/login_screen/authState.dart';
 import 'package:diconnection/src/presentation/widget/Zone_item_widget.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';

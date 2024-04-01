@@ -37,8 +37,8 @@ class ConsumerHiveAdapter extends TypeAdapter<ConsumerHive> {
       isPayed: fields[23] as bool?,
       status: fields[24] as int?,
       seqNo: fields[25] as int?,
-      disconnectionTeam: fields[26] as Team?,
-      proofOfDisconnection: (fields[27] as List?)?.cast<ProofOfDisconnection>(),
+      disconnectionTeamId: fields[26] as String?,
+      proofOfDisconnection: (fields[27] as List?)?.cast<String>(),
     );
   }
 
@@ -87,7 +87,7 @@ class ConsumerHiveAdapter extends TypeAdapter<ConsumerHive> {
       ..writeByte(25)
       ..write(obj.seqNo)
       ..writeByte(26)
-      ..write(obj.disconnectionTeam)
+      ..write(obj.disconnectionTeamId)
       ..writeByte(27)
       ..write(obj.proofOfDisconnection);
   }

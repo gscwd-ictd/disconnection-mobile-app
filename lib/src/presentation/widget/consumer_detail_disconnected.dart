@@ -1,11 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:diconnection/src/core/enums/status/status_enum.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 import 'package:diconnection/src/data/models/disconnect_model.dart';
-import 'package:diconnection/src/presentation/widget/consumer_location.dart';
 import 'package:diconnection/src/presentation/widget/diconnect_stats_modal.dart';
 import 'package:sizer/sizer.dart';
 
@@ -14,11 +12,10 @@ class ConsumerDetailDisconnected extends StatefulWidget {
   final ConsumerModel consumerData;
   final Function onPressedFunction;
   const ConsumerDetailDisconnected(
-      {Key? key,
+      {super.key,
       required this.consumerData,
       required this.onPressedFunction,
-      required this.index})
-      : super(key: key);
+      required this.index});
 
   @override
   State<ConsumerDetailDisconnected> createState() =>
@@ -32,6 +29,7 @@ class _ConsumerDetailDisconnectedState
   Widget build(BuildContext context) {
     ConsumerModel consumerData = widget.consumerData;
     bool stats = consumerData.isConnected ?? false;
+    double a = double.parse(consumerData.billAmount!);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kScaffoldColor,
@@ -84,7 +82,7 @@ class _ConsumerDetailDisconnectedState
                         value: consumerData.currentReading.toString(),
                         fontVal: fontDefault),
                     _menuItem("Unpaid Balance:",
-                        value: "P${consumerData.billAmount.toString()}",
+                        value: "P${a.toStringAsFixed(2)}",
                         fontVal: fontDefault),
                     Padding(
                       padding: EdgeInsets.only(left: stats ? 0 : 12.0.w),

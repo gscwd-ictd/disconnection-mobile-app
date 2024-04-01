@@ -69,10 +69,10 @@ class ConsumerHive {
   final int? seqNo;
 
   @HiveField(26)
-  final Team? disconnectionTeam;
+  final String? disconnectionTeamId;
 
   @HiveField(27)
-  final List<ProofOfDisconnection>? proofOfDisconnection;
+  final List<String>? proofOfDisconnection;
 
   ConsumerHive(
       {this.disconnectionId,
@@ -95,6 +95,6 @@ class ConsumerHive {
       this.isPayed,
       this.status,
       this.seqNo,
-      this.disconnectionTeam,
+      this.disconnectionTeamId,
       this.proofOfDisconnection});
 }

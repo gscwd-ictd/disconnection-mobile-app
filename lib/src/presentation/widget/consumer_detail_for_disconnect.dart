@@ -6,11 +6,9 @@ import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/core/messages/error_message/error_message.dart';
 import 'package:diconnection/src/core/messages/verifying_messgae/verifying_message.dart';
 import 'package:diconnection/src/core/messages/warning_message/warning_message.dart';
-import 'package:diconnection/src/core/shared_preferences/delete_preferences.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
 import 'package:diconnection/src/data/services/auth_provider/auth_provider.dart';
 import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
-import 'package:diconnection/src/presentation/widget/error_validation_widget.dart';
 import 'package:diconnection/src/presentation/widget/image_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,8 +17,8 @@ import 'package:diconnection/src/core/messages/success_message/success_message.d
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:sizer/sizer.dart';
-import 'dart:ui' as ui;
 
 class ConsumerDetailForDisconnect extends ConsumerStatefulWidget {
   final int index;
@@ -40,8 +38,14 @@ class ConsumerDetailForDisconnect extends ConsumerStatefulWidget {
 class _ConsumerDetailForDisconnectState
     extends ConsumerState<ConsumerDetailForDisconnect> {
   TextEditingController txtCurrentReader = TextEditingController();
-  TextEditingController txtRemarks = TextEditingController();
-  bool isFormValidate = false, isRead = true, isDisconnected = true;
+  TextEditingController txtCustomRemarks = TextEditingController();
+  TextEditingController txtSealNo = TextEditingController();
+  final MultiSelectController<String> controller = MultiSelectController();
+  String selectRemark = "";
+  bool isFormValidate = false,
+      isRead = true,
+      isDisconnected = true,
+      isCustom = false;
   late StreamController<int> _events;
   late Widget _imageWidget;
 
@@ -68,6 +72,7 @@ class _ConsumerDetailForDisconnectState
   Widget build(BuildContext context) {
     ConsumerModel consumerData = widget.consumerData;
     bool stats = consumerData.isConnected ?? false;
+    double a = double.parse(consumerData.billAmount!);
     final disconnection = ref.watch(asyncDisconnectionProvider);
     final TextStyle textStyle =
         TextStyle(fontSize: 12.0.sp, fontWeight: FontWeight.bold);
@@ -83,11 +88,11 @@ class _ConsumerDetailForDisconnectState
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            //Separate Account Number Consumer Name
+            //Separate Account Number UI
             Padding(
-              padding: const EdgeInsets.only(left: 16.0),
+              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 0, 2.0),
               child: SizedBox(
-                height: 10.h,
+                height: 4.h,
                 child: Row(
                   children: [
                     Column(
@@ -96,10 +101,6 @@ class _ConsumerDetailForDisconnectState
                       children: [
                         Text(
                           "Account Number:",
-                          style: TextStyle(fontSize: 12.0.sp),
-                        ),
-                        Text(
-                          "Consumer Name:",
                           style: TextStyle(fontSize: 12.0.sp),
                         ),
                       ],
@@ -113,8 +114,37 @@ class _ConsumerDetailForDisconnectState
                           Text(
                             consumerData.accountNo ?? "",
                             style: TextStyle(
-                                fontSize: 10.0.sp, fontWeight: FontWeight.bold),
+                                fontSize: 12.0.sp, fontWeight: FontWeight.bold),
                           ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            //Separate Account Number Consumer Name
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: FittedBox(
+                child: Row(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "Consumer Name:",
+                          style: TextStyle(fontSize: 12.0.sp),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           SizedBox(
                             width: 60.w,
                             child: Text(
@@ -213,7 +243,7 @@ class _ConsumerDetailForDisconnectState
                                 fontSize: 12.0.sp, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            "P${consumerData.billAmount}",
+                            "P${a.toStringAsFixed(2)}",
                             style: TextStyle(
                                 fontSize: 12.0.sp, fontWeight: FontWeight.bold),
                           ),
@@ -334,61 +364,194 @@ class _ConsumerDetailForDisconnectState
                 ],
               ),
             ),
+            //Separate Seal Number UI
+            SizedBox(
+              height: 10.h,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      height: 100,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 12.0),
+                        child: Text(
+                          "Seal Number:",
+                          style: TextStyle(fontSize: 12.0.sp),
+                        ),
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: SizedBox(
+                      height: 110.0,
+                      width: 50.0.w,
+                      child: Column(
+                        children: [
+                          !stats
+                              ? Text(consumerData.remarks ?? "")
+                              : TextField(
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true, signed: false),
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp('[0-9.,]')),
+                                  ], // Only numbers can be entered
+                                  controller: txtSealNo,
+                                  scrollPadding: EdgeInsets.symmetric(
+                                      vertical: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
+                                          5),
+                                  onChanged: (val) {
+                                    _checkValidation();
+                                  },
+                                  style: TextStyle(
+                                      fontSize: 12.0.sp, color: kWhiteColor),
+                                  decoration: InputDecoration(
+                                      border: const OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(16.0)),
+                                          borderSide: BorderSide(
+                                              color: Colors.black,
+                                              style: BorderStyle.solid)),
+                                      hintText: "Input Seal Number Here",
+                                      hintStyle: TextStyle(
+                                          fontSize: 12.0.sp,
+                                          color: kWhiteColor),
+                                      fillColor: isRead
+                                          ? kBackgroundColor
+                                          : Colors.grey,
+                                      filled: true),
+                                  enabled: isRead,
+                                ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             //Separate Remarks UI
             Padding(
-              padding: EdgeInsets.only(left: 6.w),
-              child: SizedBox(
-                height: 16.h,
+              padding: EdgeInsets.fromLTRB(6.w, 2.0, 0, 10.0),
+              child: FittedBox(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                        height: 100,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child: Text(
-                            "Remarks:",
-                            style: TextStyle(fontSize: 12.0.sp),
-                          ),
-                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12.0),
+                      child: Text(
+                        "Remarks:",
+                        style: TextStyle(fontSize: 12.0.sp),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: SizedBox(
-                        height: 110.0,
                         width: 50.0.w,
                         child: Column(
                           children: [
                             !stats
                                 ? Text(consumerData.remarks ?? "")
-                                : TextField(
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: 3,
-                                    controller: txtRemarks,
-                                    scrollPadding: EdgeInsets.symmetric(
-                                        vertical: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom +
-                                            5),
-                                    onChanged: (val) {
-                                      _checkValidation();
-                                    },
-                                    style: TextStyle(
-                                        fontSize: 12.0.sp, color: kWhiteColor),
-                                    decoration: InputDecoration(
-                                        border: const OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(16.0)),
-                                            borderSide: BorderSide(
-                                                color: Colors.black,
-                                                style: BorderStyle.solid)),
-                                        hintText: "Input Remarks Here",
-                                        hintStyle: TextStyle(
-                                            fontSize: 12.0.sp,
-                                            color: kWhiteColor),
-                                        fillColor: kBackgroundColor,
-                                        filled: true),
-                                    enabled: true,
+                                : Row(
+                                    children: [
+                                      Expanded(
+                                        child: MultiSelectDropDown<String>(
+                                          controller: controller,
+                                          maxItems: 3,
+                                          onOptionSelected: (List<ValueItem>
+                                              selectedOptions) {
+                                            if (selectedOptions.isNotEmpty) {
+                                              selectRemark =
+                                                  selectedOptions[0].label;
+                                            } else {
+                                              selectRemark = "";
+                                            }
+                                            _checkValidation();
+                                          },
+                                          options: const <ValueItem<String>>[
+                                            ValueItem(
+                                                label: 'Disconnect',
+                                                value: 'Disconnect'),
+                                            ValueItem(
+                                                label: 'Dog at meter',
+                                                value: 'Dog at meter'),
+                                            ValueItem(
+                                                label: 'Mayor daw kuno',
+                                                value: 'Mayor daw kuno'),
+                                            ValueItem(
+                                                label: 'Pahabol bayad',
+                                                value: 'Pahabol bayad'),
+                                            ValueItem(
+                                                label: 'Hangyo',
+                                                value: 'Hangyo'),
+                                            ValueItem(
+                                                label:
+                                                    'nasuko cla unya ingun daw kay nagbayad cla pero ngano putlan gihapon',
+                                                value:
+                                                    'nasuko cla unya ingun daw kay nagbayad cla pero ngano putlan gihapon'),
+                                            ValueItem(
+                                                label: 'Option 6',
+                                                value: 'Option 6'),
+                                          ],
+                                          selectionType: SelectionType.single,
+                                          chipConfig: const ChipConfig(
+                                              wrapType: WrapType.wrap),
+                                          dropdownHeight: 100,
+                                          optionTextStyle:
+                                              const TextStyle(fontSize: 16),
+                                          selectedOptionIcon:
+                                              const Icon(Icons.check_circle),
+                                        ),
+                                      ),
+                                      IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              isCustom = !isCustom;
+                                            });
+                                          },
+                                          icon: isCustom
+                                              ? const Icon(Icons.close)
+                                              : const Icon(Icons.add))
+                                    ],
                                   ),
+                            isCustom
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: TextField(
+                                      keyboardType: TextInputType.multiline,
+                                      maxLines: 3,
+                                      controller: txtCustomRemarks,
+                                      scrollPadding: EdgeInsets.symmetric(
+                                          vertical: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom +
+                                              5),
+                                      onChanged: (val) {
+                                        _checkValidation();
+                                      },
+                                      style: TextStyle(
+                                          fontSize: 12.0.sp,
+                                          color: kWhiteColor),
+                                      decoration: InputDecoration(
+                                          border: const OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(16.0)),
+                                              borderSide: BorderSide(
+                                                  color: Colors.black,
+                                                  style: BorderStyle.solid)),
+                                          hintText: "Input Custom Remarks Here",
+                                          hintStyle: TextStyle(
+                                              fontSize: 12.0.sp,
+                                              color: kWhiteColor),
+                                          fillColor: isRead
+                                              ? kBackgroundColor
+                                              : Colors.grey,
+                                          filled: true),
+                                      enabled: isRead,
+                                    ),
+                                  )
+                                : Container()
                           ],
                         ),
                       ),
@@ -461,21 +624,161 @@ class _ConsumerDetailForDisconnectState
                                       context, consumerData, disconnection);
                                 }
                               } else {
-                                ref
-                                    .read(asyncDisconnectionProvider.notifier)
-                                    .offlineMode(consumerData);
                                 // ignore: use_build_context_synchronously
                                 showDialog(
-                                    barrierDismissible: false,
                                     context: context,
-                                    builder: (context) => ErrorMessage(
-                                          content:
-                                              'Please connect to your wifi or mobile data',
-                                          onPressedFunction: () {
-                                            Navigator.pop(context);
-                                          },
-                                          title: 'No Internet Connection',
-                                        ));
+                                    barrierDismissible: false,
+                                    builder: (context) => ReminderMessage(
+                                            title: 'DISCONNECT ACCOUNT?',
+                                            content:
+                                                'Confirm Disconnection for ${consumerData.consumerName}?',
+                                            textButtons: [
+                                              TextButton(
+                                                  onPressed: () {
+                                                    ref
+                                                        .read(
+                                                            asyncDisconnectionProvider
+                                                                .notifier)
+                                                        .offlineMode(
+                                                            consumerData,
+                                                            _events);
+                                                    showDialog(
+                                                        context: context,
+                                                        barrierDismissible:
+                                                            false,
+                                                        builder: (context) =>
+                                                            StreamBuilder<int>(
+                                                                initialData: 1,
+                                                                stream: _events
+                                                                    .stream,
+                                                                builder: (BuildContext
+                                                                        context,
+                                                                    AsyncSnapshot<
+                                                                            int>
+                                                                        snapshot) {
+                                                                  switch (snapshot
+                                                                      .data!) {
+                                                                    case 300:
+                                                                      return SuccessMessage(
+                                                                        title:
+                                                                            "Success",
+                                                                        content:
+                                                                            "Saved Successfully and waiting for internet to sync to server",
+                                                                        onPressedFunction:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          Navigator.pop(
+                                                                              context,
+                                                                              'refresh');
+                                                                        },
+                                                                      );
+                                                                    case 400:
+                                                                      return SuccessMessage(
+                                                                        title:
+                                                                            "Already Paid",
+                                                                        content:
+                                                                            "Please abort disconnection the Consumer was already paid",
+                                                                        onPressedFunction:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          Navigator.pop(
+                                                                              context,
+                                                                              'refresh');
+                                                                        },
+                                                                      );
+                                                                    case 401: //Failed to Verify Please try again
+                                                                      return ErrorMessage(
+                                                                        title:
+                                                                            'Expired Session',
+                                                                        content:
+                                                                            'Please login again.',
+                                                                        onPressedFunction:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          ref
+                                                                              .read(asyncAuthProvider.notifier)
+                                                                              .isExpired();
+                                                                        },
+                                                                      );
+                                                                    case 500: //Failed to Verify Please try again
+                                                                      return ErrorMessage(
+                                                                        title:
+                                                                            'Please try again',
+                                                                        content:
+                                                                            'Failed to Verify Please try again',
+                                                                        onPressedFunction:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                      );
+                                                                    case 501: //Failed to upload from API
+                                                                      return ErrorMessage(
+                                                                        title:
+                                                                            'Please try again',
+                                                                        content:
+                                                                            'Failed to upload from API',
+                                                                        onPressedFunction:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                      );
+                                                                    case 502: //Failed to disconnect Consumers from API
+                                                                      return ErrorMessage(
+                                                                        title:
+                                                                            'Please try again',
+                                                                        content:
+                                                                            'Failed to disconnect Consumers from API',
+                                                                        onPressedFunction:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                      );
+                                                                    default:
+                                                                      return ErrorMessage(
+                                                                        title:
+                                                                            'Please try again',
+                                                                        content:
+                                                                            'There is error',
+                                                                        onPressedFunction:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                      );
+                                                                  }
+                                                                }));
+                                                  },
+                                                  child: Text(
+                                                    'Yes',
+                                                    style: TextStyle(
+                                                        fontSize: 16.0.sp),
+                                                  )),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text(
+                                                    'No',
+                                                    style: TextStyle(
+                                                        fontSize: 16.0.sp),
+                                                  ))
+                                            ]));
                               }
                             },
                       child: Card(
@@ -586,9 +889,9 @@ class _ConsumerDetailForDisconnectState
                                       );
                                     case 400:
                                       return SuccessMessage(
-                                        title: "Already Payed",
+                                        title: "Already Paid",
                                         content:
-                                            "Please abort disconnection the Consumer was already payed",
+                                            "Please abort disconnection the Consumer was already paid",
                                         onPressedFunction: () {
                                           Navigator.pop(context);
                                           Navigator.pop(context);
@@ -664,7 +967,9 @@ class _ConsumerDetailForDisconnectState
   void _checkValidation() {
     setState(() {
       bool cantRead = isRead ? txtCurrentReader.text.isNotEmpty : true;
-      if (txtRemarks.text.isNotEmpty &&
+      String finalRemarks = selectRemark + txtCustomRemarks.text;
+      if (finalRemarks.isNotEmpty &&
+          txtSealNo.text.isNotEmpty &&
           cantRead &&
           UtilsHandler.mediaFileList!.isNotEmpty) {
         isFormValidate = true;
@@ -687,7 +992,7 @@ class _ConsumerDetailForDisconnectState
         noOfMonths: a.noOfMonths,
         lastReading: a.lastReading,
         currentReading: isRead ? int.parse(txtCurrentReader.text) : null,
-        remarks: txtRemarks.text,
+        remarks: '${txtSealNo.text} $selectRemark ${txtCustomRemarks.text}',
         disconnectionDate: a.disconnectionDate,
         disconnectedDate: isDisconnected ? a.disconnectedDate : null,
         zoneNo: a.zoneNo,

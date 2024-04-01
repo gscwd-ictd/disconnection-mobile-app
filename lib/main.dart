@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_hive_model.dart';
+import 'package:diconnection/src/data/models/lib_zones_model/lib_zones_hive_model.dart';
 import 'package:diconnection/src/data/models/offline_disconnection_hive_model/offline_disconnection_hive_model.dart';
 import 'package:diconnection/src/data/models/super_user_model/super_user_hive_model.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +29,12 @@ Future<void> main() async {
   Hive.registerAdapter(SuperUserHiveAdapter());
   Hive.registerAdapter(OfflineDisconnectionHiveAdapter());
   Hive.registerAdapter(ConsumerHiveAdapter());
+  Hive.registerAdapter(LibZonesHiveAdapter());
 
   await Hive.openBox('superUser');
   await Hive.openBox('offlineDisconnection');
   await Hive.openBox('consumer');
+  await Hive.openBox('libZones');
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -43,18 +47,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
-  final GlobalKey<ScaffoldMessengerState> snackbarKey =
-      GlobalKey<ScaffoldMessengerState>();
-  bool initConState = false;
-  final snackBar = SnackBar(
-    content: const Text('Yay! A SnackBar!'),
-    action: SnackBarAction(
-      label: 'Undo',
-      onPressed: () {
-        // Some code to undo the change.
-      },
-    ),
-  );
   @override
   Widget build(BuildContext context) {
     //Prevent from Landscape mode
@@ -64,45 +56,19 @@ class _MyAppState extends State<MyApp> {
     ]);
     return Sizer(
       builder: (context, orientation, deviceType) {
-        return StreamBuilder<Object>(
-            initialData: Connectivity().checkConnectivity(),
-            stream: Connectivity().onConnectivityChanged,
-            builder: (context, snapshot) {
-              final connectivityResult = snapshot.data;
-              if (connectivityResult == ConnectivityResult.none ||
-                  connectivityResult == null) {
-                const SnackBar snackBar =
-                    SnackBar(content: Text("No Internet Connection"));
-                snackbarKey.currentState?.showSnackBar(snackBar);
-                UtilsHandler.hasConnection = false;
-                initConState = true;
-              } else {
-                if (initConState) {
-                  SnackBar snackBar = const SnackBar(
-                      backgroundColor: Colors.greenAccent,
-                      content: Text(
-                        "Connection Restored",
-                        style: TextStyle(color: Colors.black),
-                      ));
-                  snackbarKey.currentState?.showSnackBar(snackBar);
-                }
-                UtilsHandler.hasConnection = true;
-              }
-              return MaterialApp(
-                scaffoldMessengerKey: snackbarKey,
-                scrollBehavior: const MaterialScrollBehavior().copyWith(
-                  dragDevices: {
-                    PointerDeviceKind.mouse,
-                    PointerDeviceKind.touch,
-                    PointerDeviceKind.stylus,
-                    PointerDeviceKind.unknown
-                  },
-                ),
-                debugShowCheckedModeBanner: false,
-                home: const MyHomePage(title: 'Flutter Demo Home Page'),
-                title: kMaterialAppTitle,
-              );
-            });
+        return MaterialApp(
+          scrollBehavior: const MaterialScrollBehavior().copyWith(
+            dragDevices: {
+              PointerDeviceKind.mouse,
+              PointerDeviceKind.touch,
+              PointerDeviceKind.stylus,
+              PointerDeviceKind.unknown
+            },
+          ),
+          debugShowCheckedModeBanner: false,
+          home: const MyHomePage(title: 'Flutter Demo Home Page'),
+          title: kMaterialAppTitle,
+        );
       },
     );
   }
@@ -119,7 +85,6 @@ class MyHomePage extends StatefulWidget {
   // case the title) provided by the parent (in this case the App widget) and
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
-
   final String title;
 
   @override
@@ -127,6 +92,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -135,6 +102,52 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return const Login();
+
+    bool initConState = false;
+    final snackBar = SnackBar(
+      content: const Text('Yay! A SnackBar!'),
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () {
+          // Some code to undo the change.
+        },
+      ),
+    );
+
+    return SafeArea(
+      child: Scaffold(
+        key: _scaffoldKey,
+        body: StreamBuilder<Object>(
+            initialData: Connectivity().checkConnectivity(),
+            stream: Connectivity().onConnectivityChanged,
+            builder: (context, snapshot) {
+              final connectivityResult = snapshot.data;
+              if (connectivityResult == ConnectivityResult.none ||
+                  connectivityResult == null) {
+                const SnackBar snackBar =
+                    SnackBar(content: Text("No Internet Connection"));
+                Timer.run(() =>
+                    ScaffoldMessenger.of(_scaffoldKey.currentContext!)
+                        .showSnackBar(snackBar));
+                UtilsHandler.hasConnection = false;
+                initConState = true;
+              } else {
+                if (initConState) {
+                  SnackBar snackBar = const SnackBar(
+                      backgroundColor: Colors.greenAccent,
+                      content: Text(
+                        "Connection Restored",
+                        style: TextStyle(color: Colors.black),
+                      ));
+                  Timer.run(() =>
+                      ScaffoldMessenger.of(_scaffoldKey.currentContext!)
+                          .showSnackBar(snackBar));
+                }
+                UtilsHandler.hasConnection = true;
+              }
+              return const Login();
+            }),
+      ),
+    );
   }
 }

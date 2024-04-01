@@ -5,7 +5,6 @@ import 'package:diconnection/src/core/messages/error_message/error_message.dart'
 import 'package:diconnection/src/core/messages/success_message/success_message.dart';
 import 'package:diconnection/src/core/messages/verifying_messgae/verifying_message.dart';
 import 'package:diconnection/src/core/messages/warning_message/proceed_message.dart';
-import 'package:diconnection/src/core/messages/warning_message/warning_message.dart';
 import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
@@ -50,6 +49,7 @@ class _ConsumerAccountItemWidgetState
     String consumerName = fixText(consumerData.consumerName!, limit: 16);
     bool stats = consumerData.isConnected ?? false;
     String refresh = '';
+    double a = double.parse(consumerData.billAmount!);
     return GestureDetector(
       onTap: () async {
         _events = StreamController<int>();
@@ -57,9 +57,10 @@ class _ConsumerAccountItemWidgetState
           ref
               .read(asyncDisconnectionProvider.notifier)
               .verify(consumerData, _events);
+          // ignore: use_build_context_synchronously
           showDialog(
               context: context,
-              barrierDismissible: false,
+              barrierDismissible: true,
               builder: (context) => StreamBuilder<int>(
                   initialData: 0,
                   stream: _events.stream,
@@ -75,8 +76,28 @@ class _ConsumerAccountItemWidgetState
                         );
                       case 200:
                         return ProceedMessage(
-                            title: 'Not Payed ',
-                            content: '${consumerName} has not payed yet',
+                            title: 'Not Paid ',
+                            content: '${consumerName} has not paid yet',
+                            function: () async {
+                              Navigator.pop(context);
+                              refresh = await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ConsumerDetailForDisconnect(
+                                                consumerData: consumerData,
+                                                index: 0,
+                                                onPressedFunction: () {},
+                                              ))) ??
+                                  "";
+                              if (refresh == 'refresh') {
+                                widget.onPressedFunction();
+                              }
+                            });
+                      case 300:
+                        return ProceedMessage(
+                            title: 'No Internet ',
+                            content:
+                                '$consumerName not verified if paid or not. Please call to verify',
                             function: () async {
                               Navigator.pop(context);
                               refresh = await Navigator.of(context).push(
@@ -94,9 +115,9 @@ class _ConsumerAccountItemWidgetState
                             });
                       case 400:
                         return SuccessMessage(
-                          title: "Already Payed",
+                          title: "Already Paid",
                           content:
-                              "Please abort disconnection the Consumer was already payed",
+                              "Please abort disconnection the Consumer was already paid",
                           onPressedFunction: () {
                             Navigator.pop(context, 'refresh');
                             setState(() {});
@@ -215,7 +236,7 @@ class _ConsumerAccountItemWidgetState
                     Column(
                       children: [
                         Text(
-                          "P${consumerData.billAmount ?? 0.00}",
+                          "P${a.toStringAsFixed(2)}",
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.redAccent,
