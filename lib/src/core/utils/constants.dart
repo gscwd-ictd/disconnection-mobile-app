@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-const String kHost = "122.3.104.117:8991";
-// const String kHost = "172.20.10.23:3000";
+// const String kHost = "122.3.104.117:8991";
+const String kHost = "172.20.10.23:3000";
 const String kHostHttp = "https://172.20.10.23:3000";
 const bool isHttp = true;
 

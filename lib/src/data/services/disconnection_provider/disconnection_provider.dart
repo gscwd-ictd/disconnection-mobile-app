@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
@@ -15,7 +16,7 @@ import 'package:diconnection/src/data/models/offline_disconnection_hive_model/of
 import 'package:diconnection/src/data/models/proof_of_disconnection_model/proof_of_disconnection_model.dart';
 import 'package:diconnection/src/data/models/team_model/team_model.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
-import 'package:diconnection/src/presentation/widget/consumer_list.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive/hive.dart';
 import 'package:native_exif/native_exif.dart';
@@ -276,10 +277,10 @@ class AsyncDisconnection extends _$AsyncDisconnection {
               'Authorization': 'Bearer $token',
             }).timeout(const Duration(seconds: 60));
         if (verify.statusCode == 200 || verify.statusCode == 201) {
-          if (verify.body == "NotPayed") {
+          if (verify.body == "NotPaid") {
             events.add(200);
           }
-          if (verify.body == "Payed") {
+          if (verify.body == "Paid") {
             events.add(400);
           }
           if (verify.body == "HasPNOrNotValidBill") {
@@ -292,6 +293,12 @@ class AsyncDisconnection extends _$AsyncDisconnection {
         return _fetchGetDisconnection();
       }
     });
+  }
+
+  Future<Uint8List> testCompressFile(File file) async {
+    var result = await FlutterImageCompress.compressWithFile(file.path,
+        minWidth: 720, minHeight: 1280, quality: 25, keepExif: true);
+    return result!;
   }
 
   Future<void> fetchUpdateDisconnection(
@@ -328,8 +335,9 @@ class AsyncDisconnection extends _$AsyncDisconnection {
         final newFile = File(singlePhoto.path);
         await newFile.writeAsBytes(await singlePhoto.readAsBytes());
         await exif.close();
+        var compressFile = await testCompressFile(newFile);
         uploadPicture.files.add(http.MultipartFile.fromBytes(
-            'image', await newFile.readAsBytes(),
+            'image', compressFile,
             contentType: MediaType('image', 'jpg'),
             filename: singlePhoto.name));
         await uploadPicture.send().then((uploadResponse) async {

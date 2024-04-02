@@ -63,6 +63,7 @@ dependencies:
   easy_refresh: ^3.3.4
   native_exif: ^0.5.0
   multi_dropdown: ^2.1.4
+  flutter_image_compress: ^2.2.0
 
 dev_dependencies:
   flutter_test:
