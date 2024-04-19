@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:diconnection/main.dart';
+import 'package:diconnection/overlay.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/core/messages/error_message/error_message.dart';
 import 'package:diconnection/src/core/messages/success_message/success_message.dart';
@@ -17,7 +19,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
 class Login extends ConsumerStatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  const Login({super.key});
 
   @override
   ConsumerState<Login> createState() => _LoginState();
@@ -41,7 +43,7 @@ class _LoginState extends ConsumerState<Login> {
     super.initState();
   }
 
-  void _hidePass() {
+  void _hidePass(OverlayScreen overlay) {
     setState(() {
       if (_hidePassword) {
         _hidePassword = false;
@@ -189,7 +191,9 @@ class _LoginState extends ConsumerState<Login> {
                         borderRadius: BorderRadius.circular(10.0)),
                     suffixIcon: IconButton(
                       icon: Icon(Icons.remove_red_eye, color: _passwordStat),
-                      onPressed: _hidePass,
+                      onPressed: () {
+                        _hidePass(overlayScreen!);
+                      },
                     ),
                   ),
                   obscureText: _hidePassword,

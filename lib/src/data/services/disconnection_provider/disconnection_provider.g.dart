@@ -7,7 +7,7 @@ part of 'disconnection_provider.dart';
 // **************************************************************************
 
 String _$asyncDisconnectionHash() =>
-    r'be4647e9b80967f816f7cdf11af0e1f32e57004f';
+    r'a14042195a926089f7046697fac0ada0f4896379';
 
 /// See also [AsyncDisconnection].
 @ProviderFor(AsyncDisconnection)

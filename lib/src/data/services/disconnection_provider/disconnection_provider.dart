@@ -13,13 +13,15 @@ import 'package:diconnection/src/data/models/disconnection_handler_model/disconn
 import 'package:diconnection/src/data/models/lib_zones_model/lib_zones_hive_model.dart';
 import 'package:diconnection/src/data/models/lib_zones_model/lib_zones_model.dart';
 import 'package:diconnection/src/data/models/offline_disconnection_hive_model/offline_disconnection_hive_model.dart';
-import 'package:diconnection/src/data/models/proof_of_disconnection_model/proof_of_disconnection_model.dart';
-import 'package:diconnection/src/data/models/team_model/team_model.dart';
+import 'package:diconnection/src/data/models/proof_of_disconnection_model/proof_of_disconnection_transform.dart';
+import 'package:diconnection/src/data/models/team_model/team_transform_model.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive/hive.dart';
+import 'package:logger/logger.dart';
 import 'package:native_exif/native_exif.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -124,27 +126,6 @@ class AsyncDisconnection extends _$AsyncDisconnection {
     final consumerHiveList = consumerBox.values.toList();
     List<ConsumerModel> consumerList = [];
     for (var a in consumerHiveList) {
-      final b = a as ConsumerHive;
-      List<ProofOfDisconnection> proofList = [];
-      for (var x in a.proofOfDisconnection!) {
-        final proof = ProofOfDisconnection(
-            id: x,
-            fileName: null,
-            timestamptz: null,
-            disconnectionId: null,
-            teamId: b.disconnectionTeamId,
-            longitude: null,
-            latitude: null);
-        proofList.add(proof);
-      }
-      final team = Team(
-          teamId: b.disconnectionTeamId,
-          teamName: null,
-          teamLeader: null,
-          status: null,
-          jobCode: null,
-          disconnectionMember: null);
-
       final consumer = ConsumerModel(
           disconnectionId: a.disconnectionId,
           accountNo: a.accountNo,
@@ -166,8 +147,10 @@ class AsyncDisconnection extends _$AsyncDisconnection {
           isPayed: a.isPayed,
           status: a.status,
           seqNo: a.seqNo,
-          disconnectionTeam: team,
-          proofOfDisconnection: proofList);
+          disconnectionTeam:
+              TeamTransFormModel().hiveToModel(a.disconnectionTeam!),
+          proofOfDisconnection: ProofOfDisconnectionTransform()
+              .listHiveToListModel(a.proofOfDisconnection!));
       consumerList.add(consumer);
     }
     return consumerList;
@@ -188,12 +171,7 @@ class AsyncDisconnection extends _$AsyncDisconnection {
   saveToConsumerBox(List<ConsumerModel> inputs) async {
     final consumerBox = Hive.box('consumer');
     await consumerBox.clear();
-    List<ConsumerHive> consumerList = [];
     for (var a in inputs) {
-      List<String> proofIds = [];
-      for (var x in a.proofOfDisconnection!) {
-        proofIds.add(x.id!);
-      }
       final consumer = ConsumerHive(
         accountNo: a.accountNo,
         address: a.address,
@@ -205,22 +183,23 @@ class AsyncDisconnection extends _$AsyncDisconnection {
         disconnectedTime: a.disconnectedTime,
         disconnectionDate: a.disconnectionDate,
         disconnectionId: a.disconnectionId,
-        disconnectionTeamId: a.disconnectionTeam!.teamId,
+        disconnectionTeam:
+            TeamTransFormModel().modeltoHive(a.disconnectionTeam!),
         isConnected: a.isConnected,
         isPayed: a.isPayed,
         lastReading: a.lastReading,
         meterNo: a.meterNo,
         noOfMonths: a.noOfMonths,
         prevAccountNo: a.prevAccountNo,
-        proofOfDisconnection: proofIds,
+        proofOfDisconnection: ProofOfDisconnectionTransform()
+            .listModelToListHive(a.proofOfDisconnection!),
         remarks: a.remarks,
         seqNo: a.seqNo,
         status: a.status,
         zoneNo: a.zoneNo,
       );
-      consumerList.add(consumer);
+      await consumerBox.put(a.disconnectionId, consumer);
     }
-    await consumerBox.addAll(consumerList);
   }
 
   Future<void> refresh() async {
@@ -237,15 +216,51 @@ class AsyncDisconnection extends _$AsyncDisconnection {
       final consumerBox = Hive.box('consumer');
       final consumerList = consumerBox.values.toList();
       final offlineDiscBox = Hive.box('offlineDisconnection');
-      final offlineDisc =
-          OfflineDisconnectionHive(input, UtilsHandler.mediaFileList![0]);
-      offlineDiscBox.add(offlineDisc);
+      List<String> proofs = [];
+      if (input.proofOfDisconnection != null) {
+        for (var a in input.proofOfDisconnection!) {
+          proofs.add(a.id!);
+        }
+      }
+      final consumerHive = ConsumerHive(
+          accountNo: input.accountNo,
+          address: input.address,
+          billAmount: input.billAmount,
+          bookNo: input.bookNo,
+          consumerName: input.consumerName,
+          currentReading: input.currentReading,
+          disconnectedDate: input.disconnectedDate,
+          disconnectedTime: input.disconnectedTime,
+          disconnectionDate: input.disconnectionDate,
+          disconnectionId: input.disconnectionId,
+          disconnectionTeam:
+              TeamTransFormModel().modeltoHive(input.disconnectionTeam!),
+          isConnected: input.isConnected,
+          isPayed: input.isPayed,
+          lastReading: input.lastReading,
+          meterNo: input.meterNo,
+          noOfMonths: input.noOfMonths,
+          prevAccountNo: input.prevAccountNo,
+          proofOfDisconnection: ProofOfDisconnectionTransform()
+              .listModelToListHive(input.proofOfDisconnection!),
+          remarks: input.remarks,
+          seqNo: input.seqNo,
+          status: input.status,
+          zoneNo: input.zoneNo);
+      final singlePhoto = await compressAndGet(UtilsHandler.mediaFileList![0]);
+      var base64Image = base64.encode(singlePhoto);
+      final offlineDisc = OfflineDisconnectionHive(consumerHive, base64Image);
+      offlineDiscBox.put(consumerHive.disconnectionId, offlineDisc);
       for (int i = 0; i < consumerList.length; i++) {
         var b = consumerList[i] as ConsumerHive;
         if (b.accountNo!.contains(input.accountNo!)) {
-          consumerBox.deleteAt(i);
+          await consumerBox.deleteAt(i);
         }
       }
+      final disconnectionList = offlineDiscBox.values.toList();
+      int length = disconnectionList.length;
+      UtilsHandler.loadingPanel = "Synching Available: $length disconnection";
+      UtilsHandler.isAvailableToSync = true;
       events.add(300);
       return _fetchGetDisconnection();
     });
@@ -284,7 +299,7 @@ class AsyncDisconnection extends _$AsyncDisconnection {
             events.add(400);
           }
           if (verify.body == "HasPNOrNotValidBill") {
-            events.add(400);
+            events.add(410);
           }
         }
         return _fetchGetDisconnection();
@@ -299,6 +314,132 @@ class AsyncDisconnection extends _$AsyncDisconnection {
     var result = await FlutterImageCompress.compressWithFile(file.path,
         minWidth: 720, minHeight: 1280, quality: 25, keepExif: true);
     return result!;
+  }
+
+  Future<Uint8List> compressAndGet(XFile file) async {
+    // var name = file.name;
+    // Directory tempDir = await getTemporaryDirectory();
+    // String tempPath = '${tempDir.path}/${name}1';
+    var result = await FlutterImageCompress.compressWithFile(file.path,
+        minWidth: 720, minHeight: 1280, quality: 25, keepExif: true);
+    return result!;
+  }
+
+  ConsumerModel consumerHiveToModel(ConsumerHive a) {
+    final consumerModel = ConsumerModel(
+        accountNo: a.accountNo,
+        address: a.address,
+        billAmount: a.billAmount,
+        bookNo: a.bookNo,
+        consumerName: a.consumerName,
+        currentReading: a.currentReading,
+        disconnectedDate: a.disconnectedDate,
+        disconnectedTime: a.disconnectedTime,
+        disconnectionDate: a.disconnectionDate,
+        disconnectionId: a.disconnectionId,
+        disconnectionTeam:
+            TeamTransFormModel().hiveToModel(a.disconnectionTeam!),
+        isConnected: a.isConnected,
+        isPayed: a.isPayed,
+        lastReading: a.lastReading,
+        meterNo: a.meterNo,
+        noOfMonths: a.noOfMonths,
+        prevAccountNo: a.prevAccountNo,
+        proofOfDisconnection: ProofOfDisconnectionTransform()
+            .listHiveToListModel(a.proofOfDisconnection!),
+        remarks: a.remarks,
+        seqNo: a.seqNo,
+        status: a.status,
+        zoneNo: a.zoneNo);
+    return consumerModel;
+  }
+
+  Future<void> syncAll() async {
+    String hostAPI = UtilsHandler.apiLink == "" ? kHost : UtilsHandler.apiLink;
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      String token = await GetPreferences().getStoredAccessToken() ?? "";
+      Position currentPosition;
+      double lat = 0, long = 0;
+      final offlineDiscBox = Hive.box('offlineDisconnection');
+      final disconnectionList = offlineDiscBox.values.toList();
+      Logger logger = Logger();
+      try {
+        await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high)
+            .then((Position position) {
+          currentPosition = position;
+          lat = position.latitude;
+          long = position.longitude;
+          // _getAddressFromLatLng(_currentPosition!);
+        }).catchError((e) {
+          // debugPrint(e);
+        });
+        int count = 0;
+        for (OfflineDisconnectionHive a in disconnectionList) {
+          print('${count + 1}/${disconnectionList.length}');
+          Map<String, String> headers = {"Authorization": "Bearer $token"};
+          var inputs = '${a.consumer.disconnectionId}/$lat/$long';
+          final uploadPicture = http.MultipartRequest(
+              "POST",
+              isHttp
+                  ? Uri.http(hostAPI, '/disconnection/$inputs/upload-photo')
+                  : Uri.https(hostAPI, '/disconnection/$inputs/upload-photo'));
+          uploadPicture.headers.addAll(headers);
+          // Get temporary directory
+          final dir = await getTemporaryDirectory();
+          var fileName = DateTime.now().millisecondsSinceEpoch.toString();
+          var pathAndName = '${dir.path}/$fileName.jpg';
+          Uint8List decodedbytes = base64.decode(a.photoPath);
+          File decodedimgfile =
+              await File(pathAndName).writeAsBytes(decodedbytes);
+          String decodedpath = decodedimgfile.path;
+          var exif = await Exif.fromPath(decodedpath);
+          await exif.writeAttributes(
+              {"GPSLatitude": lat.toString(), "GPSLongitude": long.toString()});
+          uploadPicture.files.add(http.MultipartFile.fromBytes(
+              'image', decodedimgfile.readAsBytesSync(),
+              contentType: MediaType('image', 'jpg'),
+              filename: '$fileName.jpg'));
+          await uploadPicture.send().then((uploadResponse) async {
+            if (uploadResponse.statusCode == 200 ||
+                uploadResponse.statusCode == 201) {
+              final b = consumerHiveToModel(a.consumer).toJson();
+              print("Uploaded!");
+              final response = await http
+                  .patch(
+                    isHttp
+                        ? Uri.http(hostAPI,
+                            '/disconnection/${a.consumer.disconnectionId}')
+                        : Uri.https(kHost,
+                            '/disconnection/${a.consumer.disconnectionId}'),
+                    headers: <String, String>{
+                      'Content-Type': 'application/json; charset=UTF-8',
+                      'Accept': 'application/json',
+                      'Authorization': 'Bearer $token',
+                    },
+                    body: jsonEncode(b),
+                  )
+                  .timeout(
+                    const Duration(seconds: 60),
+                  );
+              await Future.delayed(const Duration(seconds: 10));
+              if (response.statusCode == 200) {
+                UtilsHandler.mediaFileList = [];
+                return _fetchGetDisconnection();
+              } else {
+                if (response.statusCode == 401) {
+                  //TODO: Unauthorized
+                } else {}
+              }
+            }
+          });
+          offlineDiscBox.deleteAt(count);
+          count++;
+        }
+      } catch (ex) {}
+      return _fetchGetDisconnection();
+    });
   }
 
   Future<void> fetchUpdateDisconnection(
@@ -370,7 +511,6 @@ class AsyncDisconnection extends _$AsyncDisconnection {
               return _fetchGetDisconnection();
             } else {
               if (response.statusCode == 401) {
-                //TODO: Unauthorized
                 events.add(401);
               } else {
                 events.add(502);
@@ -378,7 +518,6 @@ class AsyncDisconnection extends _$AsyncDisconnection {
             }
           } else {
             if (uploadResponse.statusCode == 401) {
-              //TODO: Unauthorized
               events.add(401);
             } else {
               events.add(501);

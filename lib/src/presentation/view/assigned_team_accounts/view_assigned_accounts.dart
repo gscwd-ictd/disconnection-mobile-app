@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:diconnection/src/core/enums/status/status_enum.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
+import 'package:diconnection/src/data/models/offline_disconnection_hive_model/offline_disconnection_hive_model.dart';
 import 'package:diconnection/src/data/services/auth_provider/auth_provider.dart';
 import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
 import 'package:diconnection/src/presentation/view/assigned_team_accounts/disconnected_screen.dart/disconnected_screen.dart';
@@ -9,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
+import 'package:logger/logger.dart';
 import 'package:sizer/sizer.dart';
 
 class AssignedAccounts extends ConsumerStatefulWidget {
@@ -103,6 +108,27 @@ class _AssignedAccountsState extends ConsumerState<AssignedAccounts> {
                     enabled: true,
                   ),
                 ),
+                IconButton(
+                    onPressed: () async {
+                      final offlineDiscBox = Hive.box('offlineDisconnection');
+                      final disconnectionList = offlineDiscBox.values.toList();
+                      Logger logger = Logger();
+                      String base64String = "";
+                      for (OfflineDisconnectionHive a in disconnectionList) {
+                        base64String = a.photoPath;
+                        logger.i(a.photoPath);
+                      }
+                      // showDialog(
+                      //     context: context,
+                      //     builder: (context) => AlertDialog(
+                      //           content:
+                      //               Image.memory(base64Decode(base64String)),
+                      //         ));
+                      await ref
+                          .read(asyncDisconnectionProvider.notifier)
+                          .syncAll();
+                    },
+                    icon: const Icon(Icons.sync))
               ],
             ),
           ),

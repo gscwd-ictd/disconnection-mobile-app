@@ -1,5 +1,7 @@
 import 'package:diconnection/src/data/models/member_model/member_model.dart';
+import 'package:diconnection/src/data/models/proof_of_disconnection_model/proof_of_disconnection_hive_model.dart';
 import 'package:diconnection/src/data/models/proof_of_disconnection_model/proof_of_disconnection_model.dart';
+import 'package:diconnection/src/data/models/team_model/team_hive_model.dart';
 import 'package:diconnection/src/data/models/team_model/team_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
@@ -69,10 +71,10 @@ class ConsumerHive {
   final int? seqNo;
 
   @HiveField(26)
-  final String? disconnectionTeamId;
+  final TeamHive? disconnectionTeam;
 
   @HiveField(27)
-  final List<String>? proofOfDisconnection;
+  final List<ProofOfDisconnectionHive>? proofOfDisconnection;
 
   ConsumerHive(
       {this.disconnectionId,
@@ -95,6 +97,6 @@ class ConsumerHive {
       this.isPayed,
       this.status,
       this.seqNo,
-      this.disconnectionTeamId,
+      this.disconnectionTeam,
       this.proofOfDisconnection});
 }

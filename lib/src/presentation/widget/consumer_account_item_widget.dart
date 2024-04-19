@@ -123,6 +123,16 @@ class _ConsumerAccountItemWidgetState
                             setState(() {});
                           },
                         );
+                      case 410:
+                        return SuccessMessage(
+                          title: "Bill was not valid",
+                          content:
+                              "Please abort disconnection for $consumerName",
+                          onPressedFunction: () {
+                            Navigator.pop(context, 'refresh');
+                            setState(() {});
+                          },
+                        );
                       case 401: //Failed to Verify Please try again
                         return ErrorMessage(
                           title: 'Expired Session',

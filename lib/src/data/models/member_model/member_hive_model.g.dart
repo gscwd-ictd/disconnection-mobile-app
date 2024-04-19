@@ -1,36 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'offline_disconnection_hive_model.dart';
+part of 'member_hive_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class OfflineDisconnectionHiveAdapter
-    extends TypeAdapter<OfflineDisconnectionHive> {
+class MemberHiveAdapter extends TypeAdapter<MemberHive> {
   @override
-  final int typeId = 1;
+  final int typeId = 4;
 
   @override
-  OfflineDisconnectionHive read(BinaryReader reader) {
+  MemberHive read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return OfflineDisconnectionHive(
-      fields[4] as ConsumerHive,
-      fields[5] as String,
+    return MemberHive(
+      memberId: fields[33] as String?,
+      companyId: fields[34] as String?,
+      memberName: fields[35] as String?,
+      disconnectorCode: fields[36] as int?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, OfflineDisconnectionHive obj) {
+  void write(BinaryWriter writer, MemberHive obj) {
     writer
-      ..writeByte(2)
       ..writeByte(4)
-      ..write(obj.consumer)
-      ..writeByte(5)
-      ..write(obj.photoPath);
+      ..writeByte(33)
+      ..write(obj.memberId)
+      ..writeByte(34)
+      ..write(obj.companyId)
+      ..writeByte(35)
+      ..write(obj.memberName)
+      ..writeByte(36)
+      ..write(obj.disconnectorCode);
   }
 
   @override
@@ -39,7 +44,7 @@ class OfflineDisconnectionHiveAdapter
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is OfflineDisconnectionHiveAdapter &&
+      other is MemberHiveAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

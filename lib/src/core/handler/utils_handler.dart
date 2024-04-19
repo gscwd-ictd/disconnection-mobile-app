@@ -9,4 +9,7 @@ class UtilsHandler {
   static String apiLink = "";
   final TextEditingController userText = TextEditingController();
   final TextEditingController passText = TextEditingController();
+  static bool doneSync = false;
+  static bool isAvailableToSync = false;
+  static String loadingPanel = "0/0";
 }

@@ -634,14 +634,15 @@ class _ConsumerDetailForDisconnectState
                                                 'Confirm Disconnection for ${consumerData.consumerName}?',
                                             textButtons: [
                                               TextButton(
+                                                  //OFFLINE REGION
                                                   onPressed: () {
+                                                    final input = formUpdate();
                                                     ref
                                                         .read(
                                                             asyncDisconnectionProvider
                                                                 .notifier)
                                                         .offlineMode(
-                                                            consumerData,
-                                                            _events);
+                                                            input, _events);
                                                     showDialog(
                                                         context: context,
                                                         barrierDismissible:
