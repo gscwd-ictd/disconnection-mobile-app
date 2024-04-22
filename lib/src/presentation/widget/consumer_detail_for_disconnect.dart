@@ -22,13 +22,15 @@ import 'package:sizer/sizer.dart';
 
 class ConsumerDetailForDisconnect extends ConsumerStatefulWidget {
   final int index;
+  final bool last;
   final ConsumerModel consumerData;
   final Function onPressedFunction;
   const ConsumerDetailForDisconnect(
       {super.key,
       required this.consumerData,
       required this.onPressedFunction,
-      required this.index});
+      required this.index,
+      required this.last});
 
   @override
   ConsumerState<ConsumerDetailForDisconnect> createState() =>
@@ -674,6 +676,11 @@ class _ConsumerDetailForDisconnectState
                                                                           Navigator.pop(
                                                                               context,
                                                                               'refresh');
+                                                                          if (widget
+                                                                              .last) {
+                                                                            Navigator.pop(context,
+                                                                                'refresh');
+                                                                          }
                                                                         },
                                                                       );
                                                                     case 400:

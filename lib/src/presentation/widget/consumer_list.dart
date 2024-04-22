@@ -12,13 +12,11 @@ import 'package:sizer/sizer.dart';
 
 class ConsumerList extends StatefulWidget {
   final AuthLevel auth;
-  const ConsumerList(
-      {Key? key,
-      required this.auth})
+  final bool last;
+  const ConsumerList({Key? key, required this.auth, required this.last})
       : super(key: key);
   @override
-  State<ConsumerList> createState() =>
-      _ConsumerListState();
+  State<ConsumerList> createState() => _ConsumerListState();
 }
 
 class _ConsumerListState extends State<ConsumerList> {
@@ -54,7 +52,8 @@ class _ConsumerListState extends State<ConsumerList> {
                   context: context,
                   builder: (context) => AlertDialog(
                         title: Text(
-                          "CHOOSE TEAM TO DEPLOY", textAlign: TextAlign.center,
+                          "CHOOSE TEAM TO DEPLOY",
+                          textAlign: TextAlign.center,
                           style: GoogleFonts.lato(fontWeight: FontWeight.w900),
                         ),
                         actions: [
@@ -183,13 +182,13 @@ class _ConsumerListState extends State<ConsumerList> {
                           : filterList.length,
                       itemBuilder: (context, index) {
                         return ConsumerAccountItemWidget(
-                          consumerData: txtSearch.text == ""
-                              ? consumerList[index]
-                              : filterList[index],
-                          index: index,
-                          onPressedFunction: () {},
-                          isDiconnected: false
-                        );
+                            last: widget.last,
+                            consumerData: txtSearch.text == ""
+                                ? consumerList[index]
+                                : filterList[index],
+                            index: index,
+                            onPressedFunction: () {},
+                            isDiconnected: false);
                       },
                     ),
                   ),

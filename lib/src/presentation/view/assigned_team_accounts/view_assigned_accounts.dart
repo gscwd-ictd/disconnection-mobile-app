@@ -57,7 +57,13 @@ class _AssignedAccountsState extends ConsumerState<AssignedAccounts> {
 
   @override
   Widget build(BuildContext context) {
-    consumerList = UtilsHandler.zones[widget.index].consumerList;
+    if (UtilsHandler.zones.isEmpty) {
+      Navigator.pop(context, 'refresh');
+    } else {
+      consumerList = UtilsHandler.zones.isNotEmpty
+          ? UtilsHandler.zones[widget.index].consumerList
+          : [];
+    }
     var forDiscon = consumerList
         .where((c) =>
             c.isConnected == true &&
@@ -136,15 +142,20 @@ class _AssignedAccountsState extends ConsumerState<AssignedAccounts> {
             controller: _controller,
             header: const ClassicHeader(),
             onRefresh: () async {
-              await ref
-                  .read(asyncAuthProvider.notifier)
-                  .refresh()
-                  .then((value) => () async {
-                        await ref
-                            .read(asyncDisconnectionProvider.notifier)
-                            .refresh();
-                      });
-              setState(() {});
+              if (UtilsHandler.isAvailableToSync || !UtilsHandler.doneSync) {
+                print('you cant refresh');
+              } else {
+                print('refreshing');
+                await ref
+                    .read(asyncAuthProvider.notifier)
+                    .refresh()
+                    .then((value) => () async {
+                          await ref
+                              .read(asyncDisconnectionProvider.notifier)
+                              .refresh();
+                        });
+                setState(() {});
+              }
               _controller.finishRefresh();
             },
             child: SizedBox(

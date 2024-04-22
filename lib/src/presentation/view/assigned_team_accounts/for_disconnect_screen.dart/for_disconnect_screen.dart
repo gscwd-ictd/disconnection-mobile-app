@@ -57,6 +57,7 @@ class _ForDisconnectScreenState extends ConsumerState<ForDisconnectScreen> {
   }
 
   Padding _forDisconnect(List<ConsumerModel> consumerList) {
+    bool last = consumerList.length <= 1;
     return Padding(
       padding: const EdgeInsets.only(top: 12.0),
       child: SizedBox(
@@ -84,6 +85,7 @@ class _ForDisconnectScreenState extends ConsumerState<ForDisconnectScreen> {
                               : consumerList.length,
                           itemBuilder: (context, index) {
                             return ConsumerAccountItemWidget(
+                              last: last,
                               consumerData: txtSearch.text == ""
                                   ? consumerList[index]
                                   : consumerList[index],

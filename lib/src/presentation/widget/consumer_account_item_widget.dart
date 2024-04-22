@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:diconnection/src/core/enums/status/status_enum.dart';
+import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/core/messages/error_message/error_message.dart';
 import 'package:diconnection/src/core/messages/success_message/success_message.dart';
 import 'package:diconnection/src/core/messages/verifying_messgae/verifying_message.dart';
@@ -16,6 +17,7 @@ import 'package:sizer/sizer.dart';
 
 class ConsumerAccountItemWidget extends ConsumerStatefulWidget {
   final int index;
+  final bool last;
   final ConsumerModel consumerData;
   final Function onPressedFunction;
   final bool isDiconnected;
@@ -24,7 +26,8 @@ class ConsumerAccountItemWidget extends ConsumerStatefulWidget {
       required this.consumerData,
       required this.onPressedFunction,
       required this.index,
-      required this.isDiconnected})
+      required this.isDiconnected,
+      required this.last})
       : super(key: key);
 
   @override
@@ -84,6 +87,7 @@ class _ConsumerAccountItemWidgetState
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               ConsumerDetailForDisconnect(
+                                                last: widget.last,
                                                 consumerData: consumerData,
                                                 index: 0,
                                                 onPressedFunction: () {},
@@ -104,6 +108,7 @@ class _ConsumerAccountItemWidgetState
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               ConsumerDetailForDisconnect(
+                                                last: widget.last,
                                                 consumerData: consumerData,
                                                 index: 0,
                                                 onPressedFunction: () {},
@@ -171,6 +176,7 @@ class _ConsumerAccountItemWidgetState
                           onPressedFunction: () {},
                         )
                       : ConsumerDetailForDisconnect(
+                          last: widget.last,
                           consumerData: consumerData,
                           index: 0,
                           onPressedFunction: () {},

@@ -13,8 +13,7 @@ class TeamAssignmentScreen extends StatefulWidget {
   const TeamAssignmentScreen({super.key});
 
   @override
-  State<TeamAssignmentScreen> createState() =>
-      _TeamAssignmentScreenState();
+  State<TeamAssignmentScreen> createState() => _TeamAssignmentScreenState();
 }
 
 class _TeamAssignmentScreenState extends State<TeamAssignmentScreen> {
@@ -50,7 +49,8 @@ class _TeamAssignmentScreenState extends State<TeamAssignmentScreen> {
                   context: context,
                   builder: (context) => AlertDialog(
                         title: Text(
-                          "RE-ASSIGN TEAM TO DEPLOY", textAlign: TextAlign.center,
+                          "RE-ASSIGN TEAM TO DEPLOY",
+                          textAlign: TextAlign.center,
                           style: GoogleFonts.lato(fontWeight: FontWeight.w900),
                         ),
                         actions: [
@@ -179,13 +179,13 @@ class _TeamAssignmentScreenState extends State<TeamAssignmentScreen> {
                           : filterList.length,
                       itemBuilder: (context, index) {
                         return ConsumerAccountItemWidget(
-                          consumerData: txtSearch.text == ""
-                              ? consumerList[index]
-                              : filterList[index],
-                          index: index,
-                          onPressedFunction: () {},
-                          isDiconnected: false
-                        );
+                            last: false,
+                            consumerData: txtSearch.text == ""
+                                ? consumerList[index]
+                                : filterList[index],
+                            index: index,
+                            onPressedFunction: () {},
+                            isDiconnected: false);
                       },
                     ),
                   ),

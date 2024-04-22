@@ -28,6 +28,7 @@ class _DisconnectedScreenState extends ConsumerState<DisconnectedScreen> {
   @override
   Widget build(BuildContext context) {
     var consumerList = widget.consumerList;
+    bool last = consumerList.length <= 1;
     return Padding(
       padding: const EdgeInsets.only(top: 12.0),
       child: SizedBox(
@@ -55,6 +56,7 @@ class _DisconnectedScreenState extends ConsumerState<DisconnectedScreen> {
                               : consumerList.length,
                           itemBuilder: (context, index) {
                             return ConsumerAccountItemWidget(
+                              last: last,
                               consumerData: txtSearch.text == ""
                                   ? consumerList[index]
                                   : consumerList[index],

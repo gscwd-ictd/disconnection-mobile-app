@@ -183,6 +183,7 @@ class _DispatchAccountScreenState extends State<DispatchAccountScreen> {
                           : filterList.length,
                       itemBuilder: (context, index) {
                         return ConsumerAccountItemWidget(
+                          last: false,
                           consumerData: txtSearch.text == ""
                               ? consumerList[index]
                               : filterList[index],

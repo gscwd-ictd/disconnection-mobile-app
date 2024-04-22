@@ -39,6 +39,7 @@ class AsyncSync extends _$AsyncSync {
     } catch (ex) {
       print(ex);
     }
+    UtilsHandler.executed = false;
     return length;
   }
 
@@ -50,97 +51,110 @@ class AsyncSync extends _$AsyncSync {
   }
 
   Future<void> syncAll() async {
-    UtilsHandler.loadingPanel = "Synching Start ";
-    UtilsHandler.doneSync = false;
-    String hostAPI = UtilsHandler.apiLink == "" ? kHost : UtilsHandler.apiLink;
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      String token = await GetPreferences().getStoredAccessToken() ?? "";
-      Position currentPosition;
-      double lat = 0, long = 0;
-      final offlineDiscBox = Hive.box('offlineDisconnection');
-      final disconnectionList = offlineDiscBox.values.toList();
-      Logger logger = Logger();
-      try {
-        await Geolocator.getCurrentPosition(
-                desiredAccuracy: LocationAccuracy.high)
-            .then((Position position) {
-          currentPosition = position;
-          lat = position.latitude;
-          long = position.longitude;
-          // _getAddressFromLatLng(_currentPosition!);
-        }).catchError((e) {
-          // debugPrint(e);
-        });
-        int count = 0;
-        for (OfflineDisconnectionHive a in disconnectionList) {
-          UtilsHandler.loadingPanel =
-              'Synching: ${count + 1}/${disconnectionList.length} ';
-          Map<String, String> headers = {"Authorization": "Bearer $token"};
-          var inputs = '${a.consumer.disconnectionId}/$lat/$long';
-          final uploadPicture = http.MultipartRequest(
-              "POST",
-              isHttp
-                  ? Uri.http(hostAPI, '/disconnection/$inputs/upload-photo')
-                  : Uri.https(hostAPI, '/disconnection/$inputs/upload-photo'));
-          uploadPicture.headers.addAll(headers);
-          // Get temporary directory
-          final dir = await getTemporaryDirectory();
-          var fileName = DateTime.now().millisecondsSinceEpoch.toString();
-          var pathAndName = '${dir.path}/$fileName.jpg';
-          Uint8List decodedbytes = base64.decode(a.photoPath);
-          File decodedimgfile =
-              await File(pathAndName).writeAsBytes(decodedbytes);
-          String decodedpath = decodedimgfile.path;
-          var exif = await Exif.fromPath(decodedpath);
-          await exif.writeAttributes(
-              {"GPSLatitude": lat.toString(), "GPSLongitude": long.toString()});
-          uploadPicture.files.add(http.MultipartFile.fromBytes(
-              'image', decodedimgfile.readAsBytesSync(),
-              contentType: MediaType('image', 'jpg'),
-              filename: '$fileName.jpg'));
-          await uploadPicture.send().then((uploadResponse) async {
-            if (uploadResponse.statusCode == 200 ||
-                uploadResponse.statusCode == 201) {
-              final b =
-                  ConsumerTransform().consumerHiveToModel(a.consumer).toJson();
-              print("Uploaded!");
-              final response = await http
-                  .patch(
-                    isHttp
-                        ? Uri.http(hostAPI,
-                            '/disconnection/${a.consumer.disconnectionId}')
-                        : Uri.https(kHost,
-                            '/disconnection/${a.consumer.disconnectionId}'),
-                    headers: <String, String>{
-                      'Content-Type': 'application/json; charset=UTF-8',
-                      'Accept': 'application/json',
-                      'Authorization': 'Bearer $token',
-                    },
-                    body: jsonEncode(b),
-                  )
-                  .timeout(
-                    const Duration(seconds: 60),
-                  );
-              await Future.delayed(const Duration(seconds: 10));
-              if (response.statusCode == 200) {
-                UtilsHandler.mediaFileList = [];
-                return _fetchSyncData();
-              } else {
-                if (response.statusCode == 401) {
-                  //TODO: Unauthorized
-                } else {}
-              }
-            }
+    if (!UtilsHandler.executed) {
+      UtilsHandler.executed = true;
+      UtilsHandler.loadingPanel = "Synching Start ";
+      print("Synching Start ");
+      UtilsHandler.doneSync = false;
+      String hostAPI =
+          UtilsHandler.apiLink == "" ? kHost : UtilsHandler.apiLink;
+      state = const AsyncValue.loading();
+      state = await AsyncValue.guard(() async {
+        String token = await GetPreferences().getStoredAccessToken() ?? "";
+        Position currentPosition;
+        double lat = 0, long = 0;
+        final offlineDiscBox = Hive.box('offlineDisconnection');
+        final disconnectionList = offlineDiscBox.values.toList();
+        Logger logger = Logger();
+        try {
+          await Geolocator.getCurrentPosition(
+                  desiredAccuracy: LocationAccuracy.high)
+              .then((Position position) {
+            currentPosition = position;
+            lat = position.latitude;
+            long = position.longitude;
+            // _getAddressFromLatLng(_currentPosition!);
+          }).catchError((e) {
+            // debugPrint(e);
           });
-          await offlineDiscBox.delete(a.consumer.disconnectionId);
-        }
-        UtilsHandler.loadingPanel = "Synching Done";
-        UtilsHandler.isAvailableToSync = false;
-        UtilsHandler.doneSync = true;
-      } catch (ex) {}
-      return _fetchSyncData();
-    });
+          int count = 0;
+          for (OfflineDisconnectionHive a in disconnectionList) {
+            print('Synching: ${count + 1}/${disconnectionList.length} ');
+            UtilsHandler.loadingPanel =
+                'Synching: ${count + 1}/${disconnectionList.length} ';
+            Map<String, String> headers = {"Authorization": "Bearer $token"};
+            var inputs = '${a.consumer.disconnectionId}/$lat/$long';
+            final uploadPicture = http.MultipartRequest(
+                "POST",
+                isHttp
+                    ? Uri.http(hostAPI, '/disconnection/$inputs/upload-photo')
+                    : Uri.https(
+                        hostAPI, '/disconnection/$inputs/upload-photo'));
+            uploadPicture.headers.addAll(headers);
+            // Get temporary directory
+            final dir = await getTemporaryDirectory();
+            var fileName = DateTime.now().millisecondsSinceEpoch.toString();
+            var pathAndName = '${dir.path}/$fileName.jpg';
+            Uint8List decodedbytes = base64.decode(a.photoPath);
+            File decodedimgfile =
+                await File(pathAndName).writeAsBytes(decodedbytes);
+            String decodedpath = decodedimgfile.path;
+            var exif = await Exif.fromPath(decodedpath);
+            await exif.writeAttributes({
+              "GPSLatitude": lat.toString(),
+              "GPSLongitude": long.toString()
+            });
+            uploadPicture.files.add(http.MultipartFile.fromBytes(
+                'image', decodedimgfile.readAsBytesSync(),
+                contentType: MediaType('image', 'jpg'),
+                filename: '$fileName.jpg'));
+            await uploadPicture.send().then((uploadResponse) async {
+              if (uploadResponse.statusCode == 200 ||
+                  uploadResponse.statusCode == 201) {
+                final b = ConsumerTransform()
+                    .consumerHiveToModel(a.consumer)
+                    .toJson();
+                print("Uploaded!");
+                final response = await http
+                    .patch(
+                      isHttp
+                          ? Uri.http(hostAPI,
+                              '/disconnection/${a.consumer.disconnectionId}')
+                          : Uri.https(kHost,
+                              '/disconnection/${a.consumer.disconnectionId}'),
+                      headers: <String, String>{
+                        'Content-Type': 'application/json; charset=UTF-8',
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer $token',
+                      },
+                      body: jsonEncode(b),
+                    )
+                    .timeout(
+                      const Duration(seconds: 60),
+                    );
+                await Future.delayed(const Duration(seconds: 10));
+                if (response.statusCode == 200) {
+                  UtilsHandler.mediaFileList = [];
+                  // return _fetchSyncData();
+                } else {
+                  if (response.statusCode == 401) {
+                    //TODO: Unauthorized
+                  } else {}
+                }
+              }
+            });
+            await offlineDiscBox.delete(a.consumer.disconnectionId);
+            count++;
+          }
+          UtilsHandler.loadingPanel = "Synching Done";
+          print('Synching Done');
+          UtilsHandler.doneSync = true;
+          await Future.delayed(const Duration(seconds: 4));
+          UtilsHandler.isAvailableToSync = false;
+        } catch (ex) {}
+        return _fetchSyncData();
+      });
+    }
   }
 
   @override

@@ -11,5 +11,7 @@ class UtilsHandler {
   final TextEditingController passText = TextEditingController();
   static bool doneSync = false;
   static bool isAvailableToSync = false;
+  static bool executed = false;
+  static bool isInitialized = false;
   static String loadingPanel = "0/0";
 }

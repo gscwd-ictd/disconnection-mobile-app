@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/mock/zones_mock.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
@@ -104,14 +105,20 @@ class _ZoneAssignedScreenState extends ConsumerState<ZoneAssignedScreen> {
                     controller: _controller,
                     header: const ClassicHeader(),
                     onRefresh: () async {
-                      await ref
-                          .read(asyncAuthProvider.notifier)
-                          .refresh()
-                          .then((value) => () async {
-                                await ref
-                                    .read(asyncDisconnectionProvider.notifier)
-                                    .refresh();
-                              });
+                      if (UtilsHandler.isAvailableToSync ||
+                          !UtilsHandler.doneSync) {
+                        print('you cant refresh');
+                      } else {
+                        print('refreshing');
+                        await ref
+                            .read(asyncAuthProvider.notifier)
+                            .refresh()
+                            .then((value) => () async {
+                                  await ref
+                                      .read(asyncDisconnectionProvider.notifier)
+                                      .refresh();
+                                });
+                      }
                       // setState(() {});
                       _controller.finishRefresh();
                     },

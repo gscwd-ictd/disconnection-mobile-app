@@ -112,20 +112,21 @@ class _DisconnectedAccountScreenState
                   child: SizedBox(
                     height: 77.h,
                     child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: txtSearch.text == ""
-                                ? consumerList.length
-                                : filterList.length,
-                            itemBuilder: (context, index) {
-                              return ConsumerAccountItemWidget(
-                                  consumerData: txtSearch.text == ""
-                                      ? consumerList[index]
-                                      : filterList[index],
-                                  index: index,
-                                  onPressedFunction: () {},
-                                  isDiconnected: true);
-                            },
-                          ),
+                      shrinkWrap: true,
+                      itemCount: txtSearch.text == ""
+                          ? consumerList.length
+                          : filterList.length,
+                      itemBuilder: (context, index) {
+                        return ConsumerAccountItemWidget(
+                            last: false,
+                            consumerData: txtSearch.text == ""
+                                ? consumerList[index]
+                                : filterList[index],
+                            index: index,
+                            onPressedFunction: () {},
+                            isDiconnected: true);
+                      },
+                    ),
                   ),
                 ),
               ),

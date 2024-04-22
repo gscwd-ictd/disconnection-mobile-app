@@ -130,7 +130,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         },
       ),
     );
-    Timer.run(() => showOverlay(context));
+    if (!UtilsHandler.isInitialized) {
+      Timer.run(() => showOverlay(context));
+      UtilsHandler.isInitialized = true;
+    } else {
+      print('overlay is already running');
+    }
     final synchingWatch = ref.watch(asyncSyncProvider);
     return SafeArea(
       child: Scaffold(

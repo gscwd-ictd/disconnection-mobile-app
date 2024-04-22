@@ -49,7 +49,6 @@ class _CircularButtonState extends State<CircularButton> {
         child: TextButton(
           onPressed: () => widget.function!(),
           style: TextButton.styleFrom(
-            primary: Colors.white,
             backgroundColor: widget.buttonColor,
           ),
           child: Text(
