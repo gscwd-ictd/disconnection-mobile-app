@@ -50,6 +50,41 @@ class AsyncSync extends _$AsyncSync {
     });
   }
 
+  Future<bool> verify(String accountNo, DateTime disconnectionDate) async {
+    String hostAPI = UtilsHandler.apiLink == "" ? kHost : UtilsHandler.apiLink;
+    String token = await GetPreferences().getStoredAccessToken() ?? "";
+    bool notPaid = false;
+    final verify = await http.get(
+        isHttp
+            ? Uri.http(hostAPI, '/disconnection/getVerify', {
+                "accountNo": accountNo,
+                "disconnectionDate":
+                    disconnectionDate!.toLocal().toIso8601String()
+              })
+            : Uri.https(hostAPI, '/disconnection/getVerify', {
+                "accountNo": accountNo,
+                "disconnectionDate":
+                    disconnectionDate.toLocal().toIso8601String()
+              }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        }).timeout(const Duration(seconds: 60));
+    if (verify.statusCode == 200 || verify.statusCode == 201) {
+      if (verify.body == "NotPaid") {
+        notPaid = true;
+      }
+      if (verify.body == "Paid") {
+        notPaid = false;
+      }
+      if (verify.body == "HasPNOrNotValidBill") {
+        notPaid = false;
+      }
+    }
+    return notPaid;
+  }
+
   Future<void> syncAll() async {
     if (!UtilsHandler.executed) {
       UtilsHandler.executed = true;
@@ -82,6 +117,12 @@ class AsyncSync extends _$AsyncSync {
             print('Synching: ${count + 1}/${disconnectionList.length} ');
             UtilsHandler.loadingPanel =
                 'Synching: ${count + 1}/${disconnectionList.length} ';
+            if (await verify(
+                a.consumer.accountNo!, a.consumer.disconnectionDate!)) {
+              //IF NOT PAID
+            } else {
+              print('skipped');
+            }
             Map<String, String> headers = {"Authorization": "Bearer $token"};
             var inputs = '${a.consumer.disconnectionId}/$lat/$long';
             final uploadPicture = http.MultipartRequest(

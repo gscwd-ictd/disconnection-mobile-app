@@ -28,11 +28,15 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
     ZoneModel zoneData = widget.zoneData;
     String barangay = fixText(zoneData.barangay, limit: 40);
     bool notOverSize = (barangay.length <= 22);
+    bool isDisconnected = zoneData.consumerList
+        .where((element) => element.isConnected == true)
+        .isEmpty;
     return GestureDetector(
       onTap: () {
         widget.onPressedFunction();
       },
       child: Card(
+        color: isDisconnected ? Colors.greenAccent : null,
         elevation: 12.0,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(12.0))),
@@ -103,7 +107,7 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
                     style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.bold,
-                        color: kLightBlue),
+                        color: isDisconnected ? Colors.black : kLightBlue),
                     textAlign: TextAlign.center,
                   ),
                 ),
