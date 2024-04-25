@@ -60,7 +60,7 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
                             barangay,
                             softWrap: true,
                             style: TextStyle(
-                                fontSize: 12.sp, fontWeight: FontWeight.bold),
+                                fontSize: 11.sp, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           ),
                         ),
