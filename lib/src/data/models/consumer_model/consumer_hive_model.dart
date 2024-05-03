@@ -76,6 +76,9 @@ class ConsumerHive {
   @HiveField(27)
   final List<ProofOfDisconnectionHive>? proofOfDisconnection;
 
+  @HiveField(44)
+  final int? jobCode;
+
   ConsumerHive(
       {this.disconnectionId,
       this.accountNo,
@@ -98,5 +101,6 @@ class ConsumerHive {
       this.status,
       this.seqNo,
       this.disconnectionTeam,
-      this.proofOfDisconnection});
+      this.proofOfDisconnection,
+      this.jobCode});
 }

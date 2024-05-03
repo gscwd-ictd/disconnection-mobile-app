@@ -10,11 +10,9 @@ import 'package:diconnection/src/core/shared_preferences/store_preferences.dart'
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/login_model/login_model.dart';
 import 'package:diconnection/src/data/models/super_user_model/super_user_model.dart';
-import 'package:diconnection/src/data/models/user_model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'auth_provider.g.dart';
 

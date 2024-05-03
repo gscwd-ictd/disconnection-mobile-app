@@ -12,7 +12,7 @@ part of 'consumer_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 ConsumerModel _$ConsumerModelFromJson(Map<String, dynamic> json) {
   return _ConsumerModel.fromJson(json);
@@ -40,6 +40,7 @@ mixin _$ConsumerModel {
   bool? get isPayed => throw _privateConstructorUsedError;
   int? get status => throw _privateConstructorUsedError;
   int? get seqNo => throw _privateConstructorUsedError;
+  int? get jobCode => throw _privateConstructorUsedError;
   Team? get disconnectionTeam => throw _privateConstructorUsedError;
   List<ProofOfDisconnection>? get proofOfDisconnection =>
       throw _privateConstructorUsedError;
@@ -77,6 +78,7 @@ abstract class $ConsumerModelCopyWith<$Res> {
       bool? isPayed,
       int? status,
       int? seqNo,
+      int? jobCode,
       Team? disconnectionTeam,
       List<ProofOfDisconnection>? proofOfDisconnection});
 
@@ -116,6 +118,7 @@ class _$ConsumerModelCopyWithImpl<$Res, $Val extends ConsumerModel>
     Object? isPayed = freezed,
     Object? status = freezed,
     Object? seqNo = freezed,
+    Object? jobCode = freezed,
     Object? disconnectionTeam = freezed,
     Object? proofOfDisconnection = freezed,
   }) {
@@ -200,6 +203,10 @@ class _$ConsumerModelCopyWithImpl<$Res, $Val extends ConsumerModel>
           ? _value.seqNo
           : seqNo // ignore: cast_nullable_to_non_nullable
               as int?,
+      jobCode: freezed == jobCode
+          ? _value.jobCode
+          : jobCode // ignore: cast_nullable_to_non_nullable
+              as int?,
       disconnectionTeam: freezed == disconnectionTeam
           ? _value.disconnectionTeam
           : disconnectionTeam // ignore: cast_nullable_to_non_nullable
@@ -253,6 +260,7 @@ abstract class _$$ConsumerModelImplCopyWith<$Res>
       bool? isPayed,
       int? status,
       int? seqNo,
+      int? jobCode,
       Team? disconnectionTeam,
       List<ProofOfDisconnection>? proofOfDisconnection});
 
@@ -291,6 +299,7 @@ class __$$ConsumerModelImplCopyWithImpl<$Res>
     Object? isPayed = freezed,
     Object? status = freezed,
     Object? seqNo = freezed,
+    Object? jobCode = freezed,
     Object? disconnectionTeam = freezed,
     Object? proofOfDisconnection = freezed,
   }) {
@@ -375,6 +384,10 @@ class __$$ConsumerModelImplCopyWithImpl<$Res>
           ? _value.seqNo
           : seqNo // ignore: cast_nullable_to_non_nullable
               as int?,
+      jobCode: freezed == jobCode
+          ? _value.jobCode
+          : jobCode // ignore: cast_nullable_to_non_nullable
+              as int?,
       disconnectionTeam: freezed == disconnectionTeam
           ? _value.disconnectionTeam
           : disconnectionTeam // ignore: cast_nullable_to_non_nullable
@@ -411,6 +424,7 @@ class _$ConsumerModelImpl implements _ConsumerModel {
       required this.isPayed,
       required this.status,
       required this.seqNo,
+      required this.jobCode,
       required this.disconnectionTeam,
       required final List<ProofOfDisconnection>? proofOfDisconnection})
       : _proofOfDisconnection = proofOfDisconnection;
@@ -459,6 +473,8 @@ class _$ConsumerModelImpl implements _ConsumerModel {
   @override
   final int? seqNo;
   @override
+  final int? jobCode;
+  @override
   final Team? disconnectionTeam;
   final List<ProofOfDisconnection>? _proofOfDisconnection;
   @override
@@ -473,7 +489,7 @@ class _$ConsumerModelImpl implements _ConsumerModel {
 
   @override
   String toString() {
-    return 'ConsumerModel(disconnectionId: $disconnectionId, accountNo: $accountNo, prevAccountNo: $prevAccountNo, consumerName: $consumerName, address: $address, meterNo: $meterNo, billAmount: $billAmount, noOfMonths: $noOfMonths, lastReading: $lastReading, currentReading: $currentReading, remarks: $remarks, disconnectionDate: $disconnectionDate, disconnectedDate: $disconnectedDate, disconnectedTime: $disconnectedTime, zoneNo: $zoneNo, bookNo: $bookNo, isConnected: $isConnected, isPayed: $isPayed, status: $status, seqNo: $seqNo, disconnectionTeam: $disconnectionTeam, proofOfDisconnection: $proofOfDisconnection)';
+    return 'ConsumerModel(disconnectionId: $disconnectionId, accountNo: $accountNo, prevAccountNo: $prevAccountNo, consumerName: $consumerName, address: $address, meterNo: $meterNo, billAmount: $billAmount, noOfMonths: $noOfMonths, lastReading: $lastReading, currentReading: $currentReading, remarks: $remarks, disconnectionDate: $disconnectionDate, disconnectedDate: $disconnectedDate, disconnectedTime: $disconnectedTime, zoneNo: $zoneNo, bookNo: $bookNo, isConnected: $isConnected, isPayed: $isPayed, status: $status, seqNo: $seqNo, jobCode: $jobCode, disconnectionTeam: $disconnectionTeam, proofOfDisconnection: $proofOfDisconnection)';
   }
 
   @override
@@ -513,6 +529,7 @@ class _$ConsumerModelImpl implements _ConsumerModel {
             (identical(other.isPayed, isPayed) || other.isPayed == isPayed) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.seqNo, seqNo) || other.seqNo == seqNo) &&
+            (identical(other.jobCode, jobCode) || other.jobCode == jobCode) &&
             (identical(other.disconnectionTeam, disconnectionTeam) ||
                 other.disconnectionTeam == disconnectionTeam) &&
             const DeepCollectionEquality()
@@ -543,6 +560,7 @@ class _$ConsumerModelImpl implements _ConsumerModel {
         isPayed,
         status,
         seqNo,
+        jobCode,
         disconnectionTeam,
         const DeepCollectionEquality().hash(_proofOfDisconnection)
       ]);
@@ -583,6 +601,7 @@ abstract class _ConsumerModel implements ConsumerModel {
           required final bool? isPayed,
           required final int? status,
           required final int? seqNo,
+          required final int? jobCode,
           required final Team? disconnectionTeam,
           required final List<ProofOfDisconnection>? proofOfDisconnection}) =
       _$ConsumerModelImpl;
@@ -630,6 +649,8 @@ abstract class _ConsumerModel implements ConsumerModel {
   int? get status;
   @override
   int? get seqNo;
+  @override
+  int? get jobCode;
   @override
   Team? get disconnectionTeam;
   @override

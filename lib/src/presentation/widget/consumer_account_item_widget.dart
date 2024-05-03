@@ -333,6 +333,8 @@ class _ConsumerAccountItemWidgetState
         return StatusEnum.mlOngoing;
       case 4:
         return StatusEnum.mlDone;
+      case 5:
+        return StatusEnum.transferredML;
       default:
         return StatusEnum.ongoing;
     }

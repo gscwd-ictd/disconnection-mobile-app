@@ -1,4 +1,4 @@
-enum StatusEnum { ongoing, done, cancelled, mlOngoing, mlDone }
+enum StatusEnum { ongoing, done, cancelled, mlOngoing, mlDone, transferredML }
 
 class StatusClass {
   StatusEnum getStatus(int input) {
@@ -13,6 +13,8 @@ class StatusClass {
         return StatusEnum.mlOngoing;
       case 4:
         return StatusEnum.mlDone;
+      case 5:
+        return StatusEnum.transferredML;
       default:
         return StatusEnum.ongoing;
     }
@@ -32,6 +34,8 @@ extension StatusExtension on StatusEnum {
         return 3;
       case StatusEnum.mlDone:
         return 4;
+      case StatusEnum.transferredML:
+        return 5;
       default:
         return 0;
     }
@@ -49,6 +53,8 @@ extension StatusExtension on StatusEnum {
         return 'MainLine Ongoing';
       case StatusEnum.mlDone:
         return 'Mainline Done';
+      case StatusEnum.transferredML:
+        return 'Transferred';
       default:
         return 'Error';
     }

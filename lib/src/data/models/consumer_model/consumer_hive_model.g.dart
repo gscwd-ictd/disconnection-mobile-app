@@ -40,13 +40,14 @@ class ConsumerHiveAdapter extends TypeAdapter<ConsumerHive> {
       disconnectionTeam: fields[26] as TeamHive?,
       proofOfDisconnection:
           (fields[27] as List?)?.cast<ProofOfDisconnectionHive>(),
+      jobCode: fields[44] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ConsumerHive obj) {
     writer
-      ..writeByte(22)
+      ..writeByte(23)
       ..writeByte(6)
       ..write(obj.disconnectionId)
       ..writeByte(7)
@@ -90,7 +91,9 @@ class ConsumerHiveAdapter extends TypeAdapter<ConsumerHive> {
       ..writeByte(26)
       ..write(obj.disconnectionTeam)
       ..writeByte(27)
-      ..write(obj.proofOfDisconnection);
+      ..write(obj.proofOfDisconnection)
+      ..writeByte(44)
+      ..write(obj.jobCode);
   }
 
   @override

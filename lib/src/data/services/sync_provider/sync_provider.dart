@@ -124,7 +124,8 @@ class AsyncSync extends _$AsyncSync {
               print('skipped');
             }
             Map<String, String> headers = {"Authorization": "Bearer $token"};
-            var inputs = '${a.consumer.disconnectionId}/$lat/$long';
+            var inputs =
+                '${a.consumer.disconnectionId}/$lat/$long/${a.consumer.remarks}';
             final uploadPicture = http.MultipartRequest(
                 "POST",
                 isHttp

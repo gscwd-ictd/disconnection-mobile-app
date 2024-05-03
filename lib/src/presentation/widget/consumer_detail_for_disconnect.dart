@@ -989,6 +989,10 @@ class _ConsumerDetailForDisconnectState
 
   ConsumerModel formUpdate() {
     final a = widget.consumerData;
+    int stats = a.jobCode == 33
+        ? StatusEnum.mlDone.getIntVal
+        : StatusEnum.done.getIntVal;
+    stats = isDisconnected ? stats : StatusEnum.cancelled.getIntVal;
     final b = ConsumerModel(
         disconnectionId: a.disconnectionId,
         accountNo: a.accountNo,
@@ -1008,10 +1012,11 @@ class _ConsumerDetailForDisconnectState
         isConnected: !isDisconnected,
         isPayed: a.isPayed,
         disconnectionTeam: a.disconnectionTeam,
-        status: isDisconnected ? 1 : 2,
+        status: stats,
         proofOfDisconnection: a.proofOfDisconnection,
         seqNo: a.seqNo,
-        disconnectedTime: a.disconnectedTime);
+        disconnectedTime: a.disconnectedTime,
+        jobCode: a.jobCode);
     return b;
   }
 

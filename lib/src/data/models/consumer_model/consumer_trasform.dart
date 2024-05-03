@@ -29,7 +29,8 @@ class ConsumerTransform {
         remarks: a.remarks,
         seqNo: a.seqNo,
         status: a.status,
-        zoneNo: a.zoneNo);
+        zoneNo: a.zoneNo,
+        jobCode: a.jobCode);
     return consumerModel;
   }
 }

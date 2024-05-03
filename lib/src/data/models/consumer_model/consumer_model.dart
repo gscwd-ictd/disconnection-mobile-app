@@ -29,6 +29,7 @@ class ConsumerModel with _$ConsumerModel {
           required bool? isPayed,
           required int? status,
           required int? seqNo,
+          required int? jobCode,
           required Team? disconnectionTeam,
           required List<ProofOfDisconnection>? proofOfDisconnection}) =
       _ConsumerModel;

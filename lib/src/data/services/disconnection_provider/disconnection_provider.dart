@@ -147,6 +147,7 @@ class AsyncDisconnection extends _$AsyncDisconnection {
           isPayed: a.isPayed,
           status: a.status,
           seqNo: a.seqNo,
+          jobCode: a.jobCode,
           disconnectionTeam:
               TeamTransFormModel().hiveToModel(a.disconnectionTeam!),
           proofOfDisconnection: ProofOfDisconnectionTransform()
@@ -350,7 +351,8 @@ class AsyncDisconnection extends _$AsyncDisconnection {
         remarks: a.remarks,
         seqNo: a.seqNo,
         status: a.status,
-        zoneNo: a.zoneNo);
+        zoneNo: a.zoneNo,
+        jobCode: a.jobCode);
     return consumerModel;
   }
 
@@ -462,7 +464,7 @@ class AsyncDisconnection extends _$AsyncDisconnection {
           // debugPrint(e);
         });
         Map<String, String> headers = {"Authorization": "Bearer $token"};
-        var inputs = '${input.disconnectionId}/$lat/$long';
+        var inputs = '${input.disconnectionId}/$lat/$long/${input.remarks}';
         final uploadPicture = http.MultipartRequest(
             "POST",
             isHttp
