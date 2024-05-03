@@ -130,7 +130,7 @@ class _ConsumerAccountItemWidgetState
                         );
                       case 410:
                         return SuccessMessage(
-                          title: "Bill was not valid",
+                          title: "Has Promissory Note/Bill was not valid",
                           content:
                               "Please abort disconnection for $consumerName",
                           onPressedFunction: () {
