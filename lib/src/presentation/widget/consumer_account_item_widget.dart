@@ -50,7 +50,8 @@ class _ConsumerAccountItemWidgetState
     ConsumerModel consumerData = widget.consumerData;
     String accountNo = consumerData.accountNo.toString();
     String consumerName = fixText(consumerData.consumerName!, limit: 16);
-    bool stats = consumerData.isConnected ?? false;
+    bool stats = !(consumerData.status == StatusEnum.mlDone.getIntVal ||
+        consumerData.status == StatusEnum.done.getIntVal);
     String refresh = '';
     double a = double.parse(consumerData.billAmount!);
     return GestureDetector(
@@ -243,10 +244,21 @@ class _ConsumerAccountItemWidgetState
                     SizedBox(
                       width: consumerName.length >= 22 ? 10.w : 12.w,
                     ),
-                    const Column(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text("Unpaid: "),
-                        Text("SeqNo: "),
+                        Text("Unpaid: ",
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                            )),
+                        Text("SeqNo: ",
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                            )),
+                        Text("JobCode: ",
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                            )),
                       ],
                     ),
                     Column(
@@ -265,6 +277,17 @@ class _ConsumerAccountItemWidgetState
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.redAccent,
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          consumerData.jobCode == 33 ? 'MAINLINE' : 'METER',
+                          softWrap: true,
+                          style: TextStyle(
+                              color: consumerData.jobCode == 33
+                                  ? Colors.redAccent
+                                  : Colors.lightBlue,
                               fontSize: 13.sp,
                               fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,

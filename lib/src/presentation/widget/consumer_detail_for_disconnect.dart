@@ -73,7 +73,8 @@ class _ConsumerDetailForDisconnectState
   @override
   Widget build(BuildContext context) {
     ConsumerModel consumerData = widget.consumerData;
-    bool stats = consumerData.isConnected ?? false;
+    bool stats = !(consumerData.status == StatusEnum.mlDone.getIntVal ||
+        consumerData.status == StatusEnum.done.getIntVal);
     double a = double.parse(consumerData.billAmount!);
     final disconnection = ref.watch(asyncDisconnectionProvider);
     final TextStyle textStyle =
