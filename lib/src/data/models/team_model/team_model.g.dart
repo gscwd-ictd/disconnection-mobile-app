@@ -11,7 +11,7 @@ _$TeamImpl _$$TeamImplFromJson(Map<String, dynamic> json) => _$TeamImpl(
       teamName: json['teamName'] as String?,
       teamLeader: json['teamLeader'] as String?,
       status: json['status'] as bool?,
-      jobCode: json['jobCode'] as int?,
+      jobCode: (json['jobCode'] as num?)?.toInt(),
       disconnectionMember: (json['disconnectionMember'] as List<dynamic>?)
           ?.map((e) => Member.fromJson(e as Map<String, dynamic>))
           .toList(),

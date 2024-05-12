@@ -80,6 +80,7 @@ class _ConsumerAccountItemWidgetState
                         );
                       case 200:
                         return ProceedMessage(
+                            hasWifi: true,
                             title: 'Not Paid ',
                             content: '${consumerName} has not paid yet',
                             function: () async {
@@ -100,6 +101,7 @@ class _ConsumerAccountItemWidgetState
                             });
                       case 300:
                         return ProceedMessage(
+                            hasWifi: false,
                             title: 'No Internet ',
                             content:
                                 '$consumerName not verified if paid or not. Please call to verify',

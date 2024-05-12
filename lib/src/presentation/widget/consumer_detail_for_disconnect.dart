@@ -42,7 +42,8 @@ class _ConsumerDetailForDisconnectState
   TextEditingController txtCurrentReader = TextEditingController();
   TextEditingController txtCustomRemarks = TextEditingController();
   TextEditingController txtSealNo = TextEditingController();
-  final MultiSelectController<String> controller = MultiSelectController();
+  final MultiSelectController<dynamic> controller = MultiSelectController();
+  final MultiSelectController<dynamic> itemController = MultiSelectController();
   String selectRemark = "";
   bool isFormValidate = false,
       isRead = true,
@@ -75,7 +76,9 @@ class _ConsumerDetailForDisconnectState
     ConsumerModel consumerData = widget.consumerData;
     bool stats = !(consumerData.status == StatusEnum.mlDone.getIntVal ||
         consumerData.status == StatusEnum.done.getIntVal);
+    bool isMainLine = consumerData.status == StatusEnum.mlOngoing.getIntVal;
     double a = double.parse(consumerData.billAmount!);
+    controller.setOptions(UtilsHandler.remarks);
     final disconnection = ref.watch(asyncDisconnectionProvider);
     final TextStyle textStyle =
         TextStyle(fontSize: 12.0.sp, fontWeight: FontWeight.bold);
@@ -434,6 +437,122 @@ class _ConsumerDetailForDisconnectState
                 ],
               ),
             ),
+            //Separate Items UI
+            !isMainLine
+                ? Container()
+                : Padding(
+                    padding: EdgeInsets.fromLTRB(6.w, 2.0, 0, 10.0),
+                    child: FittedBox(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 12.0),
+                            child: Text(
+                              "Items:",
+                              style: TextStyle(fontSize: 12.0.sp),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: SizedBox(
+                                width: 50.0.w,
+                                child: Column(
+                                  children: [
+                                    !stats
+                                        ? Text(consumerData.remarks ?? "")
+                                        : Row(
+                                            children: [
+                                              Expanded(
+                                                child: MultiSelectDropDown<
+                                                    dynamic>(
+                                                  controller: itemController,
+                                                  onOptionSelected:
+                                                      (List<ValueItem>
+                                                          selectedOptions) {
+                                                    if (selectedOptions
+                                                        .isNotEmpty) {
+                                                      selectRemark =
+                                                          selectedOptions[0]
+                                                              .label;
+                                                    } else {
+                                                      selectRemark = "";
+                                                    }
+                                                    _checkValidation();
+                                                  },
+                                                  options: UtilsHandler.itemsML,
+                                                  selectionType:
+                                                      SelectionType.multi,
+                                                  chipConfig: const ChipConfig(
+                                                      wrapType: WrapType.wrap),
+                                                  dropdownHeight: 100,
+                                                  optionTextStyle:
+                                                      const TextStyle(
+                                                          fontSize: 16),
+                                                  selectedOptionIcon:
+                                                      const Icon(
+                                                          Icons.check_circle),
+                                                ),
+                                              ),
+                                              isCustom
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 8.0),
+                                                      child: TextField(
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .multiline,
+                                                        maxLines: 3,
+                                                        controller:
+                                                            txtCustomRemarks,
+                                                        scrollPadding: EdgeInsets.symmetric(
+                                                            vertical: MediaQuery.of(
+                                                                        context)
+                                                                    .viewInsets
+                                                                    .bottom +
+                                                                5),
+                                                        onChanged: (val) {
+                                                          _checkValidation();
+                                                        },
+                                                        style: TextStyle(
+                                                            fontSize: 12.0.sp,
+                                                            color: kWhiteColor),
+                                                        decoration: InputDecoration(
+                                                            border: const OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius.all(
+                                                                        Radius.circular(
+                                                                            16.0)),
+                                                                borderSide: BorderSide(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    style: BorderStyle
+                                                                        .solid)),
+                                                            hintText:
+                                                                "Input Custom Remarks Here",
+                                                            hintStyle: TextStyle(
+                                                                fontSize:
+                                                                    12.0.sp,
+                                                                color:
+                                                                    kWhiteColor),
+                                                            fillColor: isRead
+                                                                ? kBackgroundColor
+                                                                : Colors.grey,
+                                                            filled: true),
+                                                        enabled: isRead,
+                                                      ),
+                                                    )
+                                                  : Container()
+                                            ],
+                                          )
+                                  ],
+                                )),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
             //Separate Remarks UI
             Padding(
               padding: EdgeInsets.fromLTRB(6.w, 2.0, 0, 10.0),
@@ -459,7 +578,7 @@ class _ConsumerDetailForDisconnectState
                                 : Row(
                                     children: [
                                       Expanded(
-                                        child: MultiSelectDropDown<String>(
+                                        child: MultiSelectDropDown<dynamic>(
                                           controller: controller,
                                           maxItems: 3,
                                           onOptionSelected: (List<ValueItem>
@@ -472,31 +591,7 @@ class _ConsumerDetailForDisconnectState
                                             }
                                             _checkValidation();
                                           },
-                                          options: const <ValueItem<String>>[
-                                            ValueItem(
-                                                label: 'Disconnect',
-                                                value: 'Disconnect'),
-                                            ValueItem(
-                                                label: 'Dog at meter',
-                                                value: 'Dog at meter'),
-                                            ValueItem(
-                                                label: 'Mayor daw kuno',
-                                                value: 'Mayor daw kuno'),
-                                            ValueItem(
-                                                label: 'Pahabol bayad',
-                                                value: 'Pahabol bayad'),
-                                            ValueItem(
-                                                label: 'Hangyo',
-                                                value: 'Hangyo'),
-                                            ValueItem(
-                                                label:
-                                                    'nasuko cla unya ingun daw kay nagbayad cla pero ngano putlan gihapon',
-                                                value:
-                                                    'nasuko cla unya ingun daw kay nagbayad cla pero ngano putlan gihapon'),
-                                            ValueItem(
-                                                label: 'Option 6',
-                                                value: 'Option 6'),
-                                          ],
+                                          options: UtilsHandler.remarks,
                                           selectionType: SelectionType.single,
                                           chipConfig: const ChipConfig(
                                               wrapType: WrapType.wrap),

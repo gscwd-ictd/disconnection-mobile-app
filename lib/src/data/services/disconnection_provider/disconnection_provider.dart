@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:diconnection/src/core/current_user_permission/current_user_permissions.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/core/shared_preferences/get_preferences.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
@@ -14,12 +15,14 @@ import 'package:diconnection/src/data/models/lib_zones_model/lib_zones_hive_mode
 import 'package:diconnection/src/data/models/lib_zones_model/lib_zones_model.dart';
 import 'package:diconnection/src/data/models/offline_disconnection_hive_model/offline_disconnection_hive_model.dart';
 import 'package:diconnection/src/data/models/proof_of_disconnection_model/proof_of_disconnection_transform.dart';
+import 'package:diconnection/src/data/models/remarks_model/remarks_model.dart';
 import 'package:diconnection/src/data/models/team_model/team_transform_model.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
+import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:native_exif/native_exif.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -41,6 +44,34 @@ class AsyncDisconnection extends _$AsyncDisconnection {
       List<LibZones> libZones = [];
       if (connectivityResult == ConnectivityResult.mobile ||
           connectivityResult == ConnectivityResult.wifi) {
+        final remarksJson = await http.get(
+            isHttp
+                ? Uri.http(hostAPI, '/remarks')
+                : Uri.https(hostAPI, '/remarks'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'Authorization': 'Bearer $token',
+            }).timeout(const Duration(seconds: 60));
+        if (remarksJson.statusCode == 200 || remarksJson.statusCode == 201) {
+          final listRemarks =
+              List<Map<String, dynamic>>.from(jsonDecode(remarksJson.body));
+          final remarksFromMap = listRemarks.map(Remarks.fromJson).toList();
+          final remarks = remarksFromMap.where((e) => e.isRemarks!).toList();
+          final itemsML = remarksFromMap.where((e) => !(e.isRemarks!)).toList();
+          List<ValueItem> remarksToValue = [];
+          List<ValueItem> itemsMLToValue = [];
+          for (var a in remarks) {
+            remarksToValue
+                .add(ValueItem(label: a.description!, value: a.description!));
+          }
+          for (var a in itemsML) {
+            itemsMLToValue
+                .add(ValueItem(label: a.description!, value: a.description!));
+          }
+          UtilsHandler.remarks = remarksToValue;
+          UtilsHandler.itemsML = itemsMLToValue;
+        }
         final json = await http.get(
             isHttp
                 ? Uri.http(hostAPI, '/disconnection')
@@ -124,8 +155,9 @@ class AsyncDisconnection extends _$AsyncDisconnection {
   List<ConsumerModel> offlineConsumerBox() {
     final consumerBox = Hive.box('consumer');
     final consumerHiveList = consumerBox.values.toList();
+    final consumerSorted = consumerHiveList..sort((a, b) => a.seqNo - b.seqNo);
     List<ConsumerModel> consumerList = [];
-    for (var a in consumerHiveList) {
+    for (var a in consumerSorted) {
       final consumer = ConsumerModel(
           disconnectionId: a.disconnectionId,
           accountNo: a.accountNo,

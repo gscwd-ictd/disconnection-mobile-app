@@ -5,12 +5,14 @@ class ProceedMessage extends StatelessWidget {
   final String title;
   final String content;
   final Function function;
+  final bool hasWifi;
 
   const ProceedMessage(
       {Key? key,
       required this.title,
       required this.content,
-      required this.function})
+      required this.function,
+      required this.hasWifi})
       : super(key: key);
 
   @override
@@ -25,8 +27,10 @@ class ProceedMessage extends StatelessWidget {
           child: Column(
             children: [
               Image.asset(
-                "assets/images/warning.png",
-                scale: 1.0,
+                hasWifi
+                    ? "assets/images/warning.png"
+                    : "assets/images/disconnected.png",
+                scale: hasWifi ? 1.0 : 0.4,
               ),
               const SizedBox(height: 20.0),
               Text(

@@ -15,9 +15,9 @@ _$ConsumerModelImpl _$$ConsumerModelImplFromJson(Map<String, dynamic> json) =>
       address: json['address'] as String?,
       meterNo: json['meterNo'] as String?,
       billAmount: json['billAmount'] as String?,
-      noOfMonths: json['noOfMonths'] as int?,
-      lastReading: json['lastReading'] as int?,
-      currentReading: json['currentReading'] as int?,
+      noOfMonths: (json['noOfMonths'] as num?)?.toInt(),
+      lastReading: (json['lastReading'] as num?)?.toInt(),
+      currentReading: (json['currentReading'] as num?)?.toInt(),
       remarks: json['remarks'] as String?,
       disconnectionDate: json['disconnectionDate'] == null
           ? null
@@ -26,13 +26,13 @@ _$ConsumerModelImpl _$$ConsumerModelImplFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['disconnectedDate'] as String),
       disconnectedTime: json['disconnectedTime'] as String?,
-      zoneNo: json['zoneNo'] as int?,
-      bookNo: json['bookNo'] as int?,
+      zoneNo: (json['zoneNo'] as num?)?.toInt(),
+      bookNo: (json['bookNo'] as num?)?.toInt(),
       isConnected: json['isConnected'] as bool?,
       isPayed: json['isPayed'] as bool?,
-      status: json['status'] as int?,
-      seqNo: json['seqNo'] as int?,
-      jobCode: json['jobCode'] as int?,
+      status: (json['status'] as num?)?.toInt(),
+      seqNo: (json['seqNo'] as num?)?.toInt(),
+      jobCode: (json['jobCode'] as num?)?.toInt(),
       disconnectionTeam: json['disconnectionTeam'] == null
           ? null
           : Team.fromJson(json['disconnectionTeam'] as Map<String, dynamic>),
