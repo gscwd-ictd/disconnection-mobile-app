@@ -8,6 +8,7 @@ import 'package:diconnection/src/core/shared_preferences/get_preferences.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_trasform.dart';
 import 'package:diconnection/src/data/models/offline_disconnection_hive_model/offline_disconnection_hive_model.dart';
+import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive/hive.dart';
 import 'package:http_parser/http_parser.dart';
@@ -39,6 +40,7 @@ class AsyncSync extends _$AsyncSync {
     } catch (ex) {
       print(ex);
     }
+    await ref.read(asyncDisconnectionProvider.notifier).refresh();
     UtilsHandler.executed = false;
     return length;
   }
@@ -102,16 +104,6 @@ class AsyncSync extends _$AsyncSync {
         final disconnectionList = offlineDiscBox.values.toList();
         Logger logger = Logger();
         try {
-          await Geolocator.getCurrentPosition(
-                  desiredAccuracy: LocationAccuracy.high)
-              .then((Position position) {
-            currentPosition = position;
-            lat = position.latitude;
-            long = position.longitude;
-            // _getAddressFromLatLng(_currentPosition!);
-          }).catchError((e) {
-            // debugPrint(e);
-          });
           int count = 0;
           for (OfflineDisconnectionHive a in disconnectionList) {
             print('Synching: ${count + 1}/${disconnectionList.length} ');
@@ -123,6 +115,16 @@ class AsyncSync extends _$AsyncSync {
             } else {
               print('skipped');
             }
+            await Geolocator.getCurrentPosition(
+                    desiredAccuracy: LocationAccuracy.high)
+                .then((Position position) {
+              currentPosition = position;
+              lat = position.latitude;
+              long = position.longitude;
+              // _getAddressFromLatLng(_currentPosition!);
+            }).catchError((e) {
+              // debugPrint(e);
+            });
             Map<String, String> headers = {"Authorization": "Bearer $token"};
             var inputs =
                 '${a.consumer.disconnectionId}/$lat/$long/${a.consumer.remarks}';

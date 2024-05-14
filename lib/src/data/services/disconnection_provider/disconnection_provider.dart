@@ -84,7 +84,13 @@ class AsyncDisconnection extends _$AsyncDisconnection {
         if (json.statusCode == 200 || json.statusCode == 201) {
           // final todos = Map<String, dynamic>.from(jsonDecode(json.body));
           final disc = DisconnectionHandler.fromJson(jsonDecode(json.body));
-          final consumerList = disc.items!.toList();
+          var consumerList = disc.items!.toList();
+          final offlineDiscBox = Hive.box('offlineDisconnection');
+          final disconnectionList = offlineDiscBox.values.toList();
+          for (OfflineDisconnectionHive c in disconnectionList) {
+            consumerList = consumerList
+              ..removeWhere((item) => item.accountNo == c.consumer.accountNo);
+          }
           consList = consumerList;
           libZones = disc.zoneList!;
           await saveToConsumerBox(consumerList);
@@ -121,11 +127,11 @@ class AsyncDisconnection extends _$AsyncDisconnection {
         var consumerFiltered = inputs
             .where((c) => c.bookNo == a.bookNo && c.zoneNo == a.zoneNo)
             .toList();
-        var zoneSel = libZones
-            .toList()
-            .firstWhere((e) => e.zone_code!.contains(a.zoneNo.toString()));
+        // var zoneSel = libZones
+        //     .toList()
+        //     .firstWhere((e) => e.zone_code!.contains(a.zoneNo.toString()));
         var zone = ZoneModel(
-            barangay: "${zoneSel.description ?? ""} ,Book ${a.bookNo}",
+            barangay: "Zone: ${a.zoneNo} ,Book ${a.bookNo}",
             bookNumber: a.bookNo ?? 0,
             zoneNumber: a.zoneNo ?? 0,
             totalCount: consumerFiltered.length,

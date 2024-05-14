@@ -9,6 +9,7 @@ import 'package:diconnection/src/core/messages/warning_message/warning_message.d
 import 'package:diconnection/src/data/models/zone_model.dart';
 import 'package:diconnection/src/data/services/auth_provider/auth_provider.dart';
 import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
+import 'package:diconnection/src/data/services/sync_provider/sync_provider.dart';
 import 'package:diconnection/src/presentation/widget/image_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -690,10 +691,14 @@ class _ConsumerDetailForDisconnectState
                           : () async {
                               var connectivityResult =
                                   await (Connectivity().checkConnectivity());
+                              bool hasInternet = connectivityResult ==
+                                      ConnectivityResult.mobile ||
+                                  connectivityResult == ConnectivityResult.wifi;
                               if (connectivityResult ==
                                       ConnectivityResult.mobile ||
                                   connectivityResult ==
-                                      ConnectivityResult.wifi) {
+                                          ConnectivityResult.wifi &&
+                                      false) {
                                 if (isRead) {
                                   int currentRead =
                                       int.parse(txtCurrentReader.text);
@@ -761,8 +766,9 @@ class _ConsumerDetailForDisconnectState
                                                                       return SuccessMessage(
                                                                         title:
                                                                             "Success",
-                                                                        content:
-                                                                            "Saved Successfully and waiting for internet to sync to server",
+                                                                        content: hasInternet
+                                                                            ? "Submitting. Please continue your disconnection"
+                                                                            : "Saved Successfully and waiting for internet to sync to server",
                                                                         onPressedFunction:
                                                                             () {
                                                                           Navigator.pop(
@@ -776,6 +782,11 @@ class _ConsumerDetailForDisconnectState
                                                                               .last) {
                                                                             Navigator.pop(context,
                                                                                 'refresh');
+                                                                          }
+                                                                          if (hasInternet &&
+                                                                              !UtilsHandler.executed) {
+                                                                            Timer.run(() =>
+                                                                                ref.read(asyncSyncProvider.notifier).syncAll());
                                                                           }
                                                                         },
                                                                       );
