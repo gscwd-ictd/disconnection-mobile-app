@@ -1,14 +1,23 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-const String kMaterialAppTitle = 'Putulin Mo';
-const String bingMapKey = "AhkEgNbLCfEkDksb2EQrhwYphgbfAbwcF6OR4Pexem68p8t_9nWeTeVAHOfC0eEd";
+const String kHost = "122.3.104.117:8991";
+// const String kHost = "172.20.10.23:3000";
+// const String kHost = "192.168.99.131:3000";
+// const String kHost = "192.168.50.165:3000";
+const String kHostHttp = "https://172.20.10.23:3000";
+const bool isHttp = true;
+
+const String kMaterialAppTitle = 'Disconnection App';
+const String bingMapKey =
+    "AhkEgNbLCfEkDksb2EQrhwYphgbfAbwcF6OR4Pexem68p8t_9nWeTeVAHOfC0eEd";
+const bool isDebug = false;
+String kToken = '';
 
 //Colors
-const Color kBackgroundColor = Color(0xFF398C97);
-const kScaffoldColor = Color(0xFF409DAA);
+const Color kBackgroundColor = Color(0xFF2879C1);
+const kScaffoldColor = Color(0xFF2879C1);
 const kWhiteColor = Color(0xFFFFFFFF);
-const kLightBlue = Color(0xFF66B0BB);
+const kLightBlue = Color(0xFF36CCF7);
 
 ///My Theme EDF6E5
 const Color primaryMat = Color(0xFFB5EAEA);
@@ -33,6 +42,29 @@ double getScreenSize(BuildContext context) {
 
   var result = fullScreenHeight - padding.top - (fullScreenHeight * 0.28);
   return result;
+}
+
+String fixText(String text, {required int limit}) {
+  List<String> txtArray = text.split(',');
+  bool isMultiArray = txtArray.length > 1;
+  String output = '';
+  int count = 0;
+  for (var a in txtArray) {
+    bool isEndArray = txtArray.length == count + 1;
+    if (count == 0) {
+      output = isMultiArray ? '$a,' : a;
+    } else {
+      if (!(a.substring(0, 0) == ' ')) {
+        output = !isEndArray ? '$output $a,' : '$output $a';
+      } else {
+        output = !isEndArray ? '$output$a,' : output + a;
+      }
+    }
+    count++;
+  }
+  output =
+      output.length >= limit ? ('${output.substring(0, limit)}...') : output;
+  return output;
 }
 
 const kAnimationDuration = Duration(milliseconds: 200);

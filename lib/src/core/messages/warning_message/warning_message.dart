@@ -4,8 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 class WarningMessage extends StatelessWidget {
   final String title;
   final String content;
+  final Function function;
 
-  const WarningMessage({Key? key, required this.title, required this.content}) : super(key: key);
+  const WarningMessage(
+      {Key? key,
+      required this.title,
+      required this.content,
+      required this.function})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +39,9 @@ class WarningMessage extends StatelessWidget {
       ),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              function();
+            },
             child: const Text('Close'))
       ],
     );

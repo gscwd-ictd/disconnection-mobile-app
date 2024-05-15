@@ -1,12 +1,11 @@
+import 'package:diconnection/src/presentation/view/zone_assigned_screen/zone_assigned_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:putulinmo/src/core/enums/auth/auth_level.dart';
-import 'package:putulinmo/src/core/utils/constants.dart';
-import 'package:putulinmo/src/presentation/view/assigned_team_accounts/assigned_team_accounts.dart';
-import 'package:putulinmo/src/presentation/view/disconnected_accounts_screen/disconnected_accounts_screen.dart';
-import 'package:putulinmo/src/presentation/view/dispatch_account_screen/dispatch_account_screen.dart';
-import 'package:putulinmo/src/presentation/view/monitor_dispatch_screen/monitor_dispatch_screen.dart';
-import 'package:putulinmo/src/presentation/widget/dashboard_item_widget.dart';
+import 'package:diconnection/src/core/utils/constants.dart';
+import 'package:diconnection/src/presentation/view/disconnected_accounts_screen/disconnected_accounts_screen.dart';
+import 'package:diconnection/src/presentation/view/dispatch_account_screen/dispatch_account_screen.dart';
+import 'package:diconnection/src/presentation/view/monitor_dispatch_screen/monitor_dispatch_screen.dart';
+import 'package:diconnection/src/presentation/widget/dashboard_item_widget.dart';
 import 'package:sizer/sizer.dart';
 
 class DashBoardScreen extends StatefulWidget {
@@ -41,7 +40,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     onPressedFunction: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
-                              const AssignedTeamAccounts(auth:  AuthLevel.Team1,)));
+                              const ZoneAssignedScreen()));
                     },
                   ),
                   SizedBox(height: 3.0.h),

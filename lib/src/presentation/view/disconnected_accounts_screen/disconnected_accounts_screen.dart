@@ -1,27 +1,23 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:putulinmo/src/core/enums/auth/auth_level.dart';
-import 'package:putulinmo/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
-import 'package:putulinmo/src/core/messages/reminder_message/reminder_message.dart';
-import 'package:putulinmo/src/core/utils/constants.dart';
-import 'package:putulinmo/src/data/mock/consumer_mock.dart';
-import 'package:putulinmo/src/data/models/consumer_model.dart';
-import 'package:putulinmo/src/presentation/widget/consumer_account_item_widget.dart';
-import 'package:putulinmo/src/presentation/widget/team_item_widget.dart';
+import 'package:diconnection/src/core/utils/constants.dart';
+import 'package:diconnection/src/data/mock/consumer_mock.dart';
+import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
+import 'package:diconnection/src/presentation/widget/consumer_account_item_widget.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
 
-class DisconnectedAccountScreen extends StatefulWidget {
+class DisconnectedAccountScreen extends ConsumerStatefulWidget {
   const DisconnectedAccountScreen({super.key});
 
   @override
-  State<DisconnectedAccountScreen> createState() =>
+  ConsumerState<DisconnectedAccountScreen> createState() =>
       _DisconnectedAccountScreenState();
 }
 
-class _DisconnectedAccountScreenState extends State<DisconnectedAccountScreen> {
-  List<ConsumerModel> consumerList = ConsumerMockData.consumerList;
+class _DisconnectedAccountScreenState
+    extends ConsumerState<DisconnectedAccountScreen> {
+  List<ConsumerModel> consumerList = ConsumerMockData.consumerListA;
   TextEditingController txtSearch = TextEditingController();
   List<ConsumerModel> filterList = [];
   final _scrollController = ScrollController();
@@ -29,7 +25,7 @@ class _DisconnectedAccountScreenState extends State<DisconnectedAccountScreen> {
   void _alterfilter(String query) {
     filterList = [];
     consumerList.forEach((item) {
-      if (item.zone == query) {
+      if (item.zoneNo == query) {
         filterList.add(item);
       }
     });
@@ -54,7 +50,6 @@ class _DisconnectedAccountScreenState extends State<DisconnectedAccountScreen> {
                   width: 50.0.w,
                   child: TextField(
                     onChanged: (val) {
-                      CheckBoxHandler.distributeSelected = [];
                       setState(() {
                         _alterfilter(val);
                       });
@@ -122,16 +117,14 @@ class _DisconnectedAccountScreenState extends State<DisconnectedAccountScreen> {
                           ? consumerList.length
                           : filterList.length,
                       itemBuilder: (context, index) {
-                        CheckBoxHandler.distributeSelected.add(false);
                         return ConsumerAccountItemWidget(
-                          consumerData: txtSearch.text == ""
-                              ? consumerList[index]
-                              : filterList[index],
-                          index: index,
-                          onPressedFunction: () {},
-                          isDiconnected: true,
-                          auth: AuthLevel.Admin,
-                        );
+                            last: false,
+                            consumerData: txtSearch.text == ""
+                                ? consumerList[index]
+                                : filterList[index],
+                            index: index,
+                            onPressedFunction: () {},
+                            isDiconnected: true);
                       },
                     ),
                   ),

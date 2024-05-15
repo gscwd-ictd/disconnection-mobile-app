@@ -2,28 +2,25 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:putulinmo/src/core/enums/auth/auth_level.dart';
-import 'package:putulinmo/src/core/handler/checkBoxHandler/checkBoxHandler.dart';
-import 'package:putulinmo/src/core/utils/constants.dart';
-import 'package:putulinmo/src/data/mock/consumer_mock.dart';
-import 'package:putulinmo/src/data/models/consumer_model.dart';
-import 'package:putulinmo/src/presentation/widget/consumer_account_item_widget.dart';
-import 'package:putulinmo/src/presentation/widget/team_item_widget.dart';
+import 'package:diconnection/src/core/enums/auth/auth_level.dart';
+import 'package:diconnection/src/core/utils/constants.dart';
+import 'package:diconnection/src/data/mock/consumer_mock.dart';
+import 'package:diconnection/src/data/models/consumer_model/consumer_model.dart';
+import 'package:diconnection/src/presentation/widget/consumer_account_item_widget.dart';
+import 'package:diconnection/src/presentation/widget/team_item_widget.dart';
 import 'package:sizer/sizer.dart';
 
 class ConsumerList extends StatefulWidget {
   final AuthLevel auth;
-  const ConsumerList(
-      {Key? key,
-      required this.auth})
+  final bool last;
+  const ConsumerList({Key? key, required this.auth, required this.last})
       : super(key: key);
   @override
-  State<ConsumerList> createState() =>
-      _ConsumerListState();
+  State<ConsumerList> createState() => _ConsumerListState();
 }
 
 class _ConsumerListState extends State<ConsumerList> {
-  List<ConsumerModel> consumerList = ConsumerMockData.consumerList;
+  List<ConsumerModel> consumerList = ConsumerMockData.consumerListA;
   TextEditingController txtSearch = TextEditingController();
   List<ConsumerModel> filterList = [];
   final _scrollController = ScrollController();
@@ -31,7 +28,7 @@ class _ConsumerListState extends State<ConsumerList> {
   void _alterfilter(String query) {
     filterList = [];
     consumerList.forEach((item) {
-      if (item.zone == query) {
+      if (item.zoneNo == int.parse(query)) {
         filterList.add(item);
       }
     });
@@ -55,7 +52,8 @@ class _ConsumerListState extends State<ConsumerList> {
                   context: context,
                   builder: (context) => AlertDialog(
                         title: Text(
-                          "CHOOSE TEAM TO DEPLOY", textAlign: TextAlign.center,
+                          "CHOOSE TEAM TO DEPLOY",
+                          textAlign: TextAlign.center,
                           style: GoogleFonts.lato(fontWeight: FontWeight.w900),
                         ),
                         actions: [
@@ -116,7 +114,6 @@ class _ConsumerListState extends State<ConsumerList> {
                   width: 50.0.w,
                   child: TextField(
                     onChanged: (val) {
-                      CheckBoxHandler.distributeSelected = [];
                       setState(() {
                         _alterfilter(val);
                       });
@@ -184,16 +181,14 @@ class _ConsumerListState extends State<ConsumerList> {
                           ? consumerList.length
                           : filterList.length,
                       itemBuilder: (context, index) {
-                        CheckBoxHandler.distributeSelected.add(false);
                         return ConsumerAccountItemWidget(
-                          consumerData: txtSearch.text == ""
-                              ? consumerList[index]
-                              : filterList[index],
-                          index: index,
-                          onPressedFunction: () {},
-                          isDiconnected: false,
-                          auth: AuthLevel.Admin,
-                        );
+                            last: widget.last,
+                            consumerData: txtSearch.text == ""
+                                ? consumerList[index]
+                                : filterList[index],
+                            index: index,
+                            onPressedFunction: () {},
+                            isDiconnected: false);
                       },
                     ),
                   ),

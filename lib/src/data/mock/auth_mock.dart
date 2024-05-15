@@ -1,13 +1,48 @@
-import 'package:putulinmo/src/data/models/user_model.dart';
+import 'package:diconnection/src/data/models/user_model/user_model.dart';
 
-class AuthMock{
-  static List<UserModel> authList = [
-    const UserModel(employeeId: "120", username: "ian", password: "123qwe", authLevel: 0),
-    const UserModel(employeeId: "121", username: "jane", password: "123qwe", authLevel: 0),
-    const UserModel(employeeId: "122", username: "borloloy", password: "123qwe", authLevel: 1),
-    const UserModel(employeeId: "123", username: "dodong", password: "123qwe", authLevel: 2),
-    const UserModel(employeeId: "124", username: "bemaks", password: "123qwe", authLevel: 3),
-    const UserModel(employeeId: "125", username: "jay", password: "123qwe", authLevel: 4),
-    const UserModel(employeeId: "126", username: "nicole", password: "123qwe", authLevel: 5)
+class AuthMock {
+  static List<User> authList = [
+    const User(
+        username: "ian",
+        password: "123qwe",
+        companyId: "da",
+        userId: "2222-3333-3333-4444",
+        token: ""),
+    const User(
+        username: "jane",
+        password: "123qwe",
+        companyId: "da",
+        userId: "2222-3333-3333-4444",
+        token: ""),
+    const User(
+        username: "borloloy",
+        password: "123qwe",
+        companyId: "da",
+        userId: "2222-3333-3333-4444",
+        token: ""),
+    const User(
+        username: "dodong",
+        password: "123qwe",
+        companyId: "da",
+        userId: "2222-3333-3333-4444",
+        token: ""),
+    const User(
+        username: "bemaks",
+        password: "123qwe",
+        companyId: "da",
+        userId: "2222-3333-3333-4444",
+        token: ""),
+    const User(
+        username: "jay",
+        password: "123qwe",
+        companyId: "da",
+        userId: "2222-3333-3333-4444",
+        token: ""),
+    const User(
+        username: "nicole",
+        password: "123qwe",
+        companyId: "da",
+        userId: "2222-3333-3333-4444",
+        token: "")
   ];
 }
