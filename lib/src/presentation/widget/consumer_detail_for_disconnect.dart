@@ -694,11 +694,7 @@ class _ConsumerDetailForDisconnectState
                               bool hasInternet = connectivityResult ==
                                       ConnectivityResult.mobile ||
                                   connectivityResult == ConnectivityResult.wifi;
-                              if (connectivityResult ==
-                                      ConnectivityResult.mobile ||
-                                  connectivityResult ==
-                                          ConnectivityResult.wifi &&
-                                      false) {
+                              if (false) {
                                 if (isRead) {
                                   int currentRead =
                                       int.parse(txtCurrentReader.text);
