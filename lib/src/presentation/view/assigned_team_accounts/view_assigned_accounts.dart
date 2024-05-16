@@ -66,14 +66,18 @@ class _AssignedAccountsState extends ConsumerState<AssignedAccounts> {
     }
     var forDiscon = consumerList
         .where((c) =>
-            c.accountNo!.toUpperCase().contains(txtSearch.text.toUpperCase()) &&
+            c.consumerName!
+                .toUpperCase()
+                .contains(txtSearch.text.toUpperCase()) &&
             (c.status == StatusEnum.ongoing.getIntVal ||
                 c.status == StatusEnum.cancelled.getIntVal ||
                 c.status == StatusEnum.mlOngoing.getIntVal))
         .toList();
     var disconnected = consumerList
         .where((c) =>
-            c.accountNo!.toUpperCase().contains(txtSearch.text.toUpperCase()) &&
+            c.consumerName!
+                .toUpperCase()
+                .contains(txtSearch.text.toUpperCase()) &&
             (c.status == StatusEnum.done.getIntVal ||
                 c.status == StatusEnum.mlDone.getIntVal))
         .toList();

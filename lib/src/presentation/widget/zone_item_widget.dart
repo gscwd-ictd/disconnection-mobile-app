@@ -33,7 +33,15 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
         .isEmpty;
     return GestureDetector(
       onTap: () {
-        widget.onPressedFunction();
+        // widget.onPressedFunction();
+        String address =
+            "${zoneData.barangay} Z${zoneData.zoneNumber} Book${zoneData.bookNumber}";
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => AssignedAccounts(
+                  consumerList: zoneData.consumerList,
+                  address: address,
+                  index: widget.index,
+                )));
       },
       child: Card(
         color: isDisconnected ? Colors.greenAccent : null,
@@ -46,71 +54,24 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              SizedBox(
-                height: notOverSize ? 50 : 65,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        const Text("Address: "),
-                        SizedBox(
-                          width: 50.w,
-                          child: Text(
-                            barangay,
-                            softWrap: true,
-                            style: TextStyle(
-                                fontSize: 11.sp, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Zone: ${zoneData.zoneNumber}"),
-                        Text("Book: ${zoneData.bookNumber}"),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const SizedBox(
-                            width: 40, child: Icon(FontAwesomeIcons.users)),
-                        Text(zoneData.totalCount.toString())
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 1.h,
-              ),
-              GestureDetector(
-                onTap: () {
-                  String address =
-                      "${zoneData.barangay} Z${zoneData.zoneNumber} Book${zoneData.bookNumber}";
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => AssignedAccounts(
-                            consumerList: zoneData.consumerList,
-                            address: address,
-                            index: widget.index,
-                          )));
-                },
-                child: Container(
-                  width: 90.w,
-                  height: 3.h,
+              ListTile(
+                leading: SizedBox(
                   child: Text(
-                    "Show more...",
-                    softWrap: true,
-                    style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.bold,
-                        color: isDisconnected ? Colors.black : kLightBlue),
-                    textAlign: TextAlign.center,
+                    zoneData.totalCount.toString(),
                   ),
                 ),
+                title: Text(barangay),
+                subtitle: Row(
+                  children: [
+                    Text("Zones : ${zoneData.zoneNumber}"),
+                    SizedBox(
+                      width: 2.w,
+                    ),
+                    // const Spacer(flex: ),
+                    Text("Book : ${zoneData.bookNumber}")
+                  ],
+                ),
+                trailing: const Icon(Icons.view_headline),
               )
             ],
           ),

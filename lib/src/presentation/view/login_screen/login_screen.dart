@@ -64,7 +64,7 @@ class _LoginState extends ConsumerState<Login> {
         child: Scaffold(
       appBar: null,
       resizeToAvoidBottomInset: false,
-      backgroundColor: kWhiteColor,
+      backgroundColor: Colors.lightBlue,
       floatingActionButton: !isDebug
           ? null
           : FloatingActionButton(
@@ -120,12 +120,13 @@ class _LoginState extends ConsumerState<Login> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              //GSCWD Logo
               Padding(
                 padding: const EdgeInsets.only(top: 35.0),
                 child: GestureDetector(
                   onTap: () {},
                   child: Container(
-                    height: 30.0.h,
+                    height: 28.0.h,
                     width: 100.0.w,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
@@ -138,8 +139,9 @@ class _LoginState extends ConsumerState<Login> {
                 ),
               ),
               SizedBox(
-                height: 10.h,
+                height: 5.h,
               ),
+
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.w),
                 child: TextFormField(
@@ -154,15 +156,21 @@ class _LoginState extends ConsumerState<Login> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   controller: userText,
                   decoration: InputDecoration(
+                      fillColor: kWhiteColor,
+                      filled: true,
                       prefixIcon: const Padding(
                         padding: EdgeInsets.all(12.0),
-                        child: FaIcon(FontAwesomeIcons.solidCircleUser),
+                        child: FaIcon(
+                          FontAwesomeIcons.solidCircleUser,
+                          // color: Colors.black54,
+                        ),
                       ),
                       prefixIconColor: kBackgroundColor,
                       hintText: "Username",
-                      hintStyle: TextStyle(color: Colors.grey[400]),
+                      // hintStyle: TextStyle(color: Colors.grey[400]),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0))),
+                        borderRadius: BorderRadius.circular(5.0),
+                      )),
                 ),
               ),
               const SizedBox(height: 20.0),
@@ -180,17 +188,19 @@ class _LoginState extends ConsumerState<Login> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   controller: passText,
                   decoration: InputDecoration(
+                    fillColor: kWhiteColor,
+                    filled: true,
                     prefixIcon: const Padding(
                       padding: EdgeInsets.all(12.0),
                       child: FaIcon(FontAwesomeIcons.lock),
                     ),
                     prefixIconColor: kBackgroundColor,
                     hintText: "Password",
-                    hintStyle: TextStyle(color: Colors.grey[400]),
+                    // hintStyle: TextStyle(color: Colors.grey[400]),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
+                        borderRadius: BorderRadius.circular(5.0)),
                     suffixIcon: IconButton(
-                      icon: Icon(Icons.remove_red_eye, color: _passwordStat),
+                      icon: Icon(Icons.remove_red_eye),
                       onPressed: () {
                         _hidePass(overlayScreen!);
                       },
@@ -221,42 +231,56 @@ class _LoginState extends ConsumerState<Login> {
 
   ElevatedButton loginButton(BuildContext context) {
     return ElevatedButton(
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(kLightBlue),
-            shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0)))),
-        onPressed: () async {
-          var connectivityResult = await (Connectivity().checkConnectivity());
-          if (connectivityResult == ConnectivityResult.mobile ||
-              connectivityResult == ConnectivityResult.wifi ||
-              connectivityResult == ConnectivityResult.ethernet) {
-            LoginM a = LoginM(password: passText.text, username: userText.text);
-            // ignore: use_build_context_synchronously
-            ref
-                .read(asyncAuthProvider.notifier)
-                .login(a, _events, context)
-                .then((c) => {passText.clear()});
-          } else {
-            // ignore: use_build_context_synchronously
-            showDialog(
-                barrierDismissible: false,
-                context: context,
-                builder: (context) => ErrorMessage(
-                      content: 'Please connect to your wifi or mobile data',
-                      onPressedFunction: () {
-                        Navigator.pop(context);
-                      },
-                      title: 'No Internet Connection',
-                    ));
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
-          child: Text('LOGIN',
-              style: TextStyle(
-                  color: kWhiteColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14.sp)),
-        ));
+      style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue[700],
+          shadowColor: Colors.black38,
+          elevation: 3,
+          minimumSize: const Size(305, 50),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0))),
+      // ButtonStyle(
+      //     backgroundColor: MaterialStateProperty.all(kLightBlue),
+      //     shape: MaterialStateProperty.all(RoundedRectangleBorder(
+      //         borderRadius: BorderRadius.circular(5.0)))),
+      onPressed: () async {
+        var connectivityResult = await (Connectivity().checkConnectivity());
+        if (connectivityResult == ConnectivityResult.mobile ||
+            connectivityResult == ConnectivityResult.wifi ||
+            connectivityResult == ConnectivityResult.ethernet) {
+          LoginM a = LoginM(password: passText.text, username: userText.text);
+          // ignore: use_build_context_synchronously
+          ref
+              .read(asyncAuthProvider.notifier)
+              .login(a, _events, context)
+              .then((c) => {passText.clear()});
+        } else {
+          // ignore: use_build_context_synchronously
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => ErrorMessage(
+                    content: 'Please connect to your wifi or mobile data',
+                    onPressedFunction: () {
+                      Navigator.pop(context);
+                    },
+                    title: 'No Internet Connection',
+                  ));
+        }
+      },
+      child: Text('LOGIN',
+          style: TextStyle(
+              color: kWhiteColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 12.sp)),
+    );
+    // child: Padding(
+    //   // padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
+    //   padding: EdgeInsets.symmetric(horizontal: 5.w),
+    //   child: Text('LOGIN',
+    //       style: TextStyle(
+    //           color: kWhiteColor,
+    //           fontWeight: FontWeight.bold,
+    //           fontSize: 14.sp)),
+    // ));
   }
 }
