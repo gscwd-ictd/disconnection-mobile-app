@@ -290,12 +290,7 @@ class AsyncDisconnection extends _$AsyncDisconnection {
       var base64Image = base64.encode(singlePhoto);
       final offlineDisc = OfflineDisconnectionHive(consumerHive, base64Image);
       offlineDiscBox.put(consumerHive.disconnectionId, offlineDisc);
-      for (int i = 0; i < consumerList.length; i++) {
-        var b = consumerList[i] as ConsumerHive;
-        if (b.accountNo!.contains(input.accountNo!)) {
-          await consumerBox.deleteAt(i);
-        }
-      }
+      consumerBox.delete(input.disconnectionId);
       final disconnectionList = offlineDiscBox.values.toList();
       int length = disconnectionList.length;
       UtilsHandler.loadingPanel = "Synching Available: $length disconnection";
