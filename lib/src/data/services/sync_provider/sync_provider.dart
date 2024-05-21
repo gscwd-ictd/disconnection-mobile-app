@@ -128,65 +128,90 @@ class AsyncSync extends _$AsyncSync {
             Map<String, String> headers = {"Authorization": "Bearer $token"};
             var inputs =
                 '${a.consumer.disconnectionId}/$lat/$long/${a.consumer.remarks}';
-            final uploadPicture = http.MultipartRequest(
-                "POST",
-                isHttp
-                    ? Uri.http(hostAPI, '/disconnection/$inputs/upload-photo')
-                    : Uri.https(
-                        hostAPI, '/disconnection/$inputs/upload-photo'));
-            uploadPicture.headers.addAll(headers);
-            // Get temporary directory
-            final dir = await getTemporaryDirectory();
-            var fileName = DateTime.now().millisecondsSinceEpoch.toString();
-            var pathAndName = '${dir.path}/$fileName.jpg';
-            Uint8List decodedbytes = base64.decode(a.photoPath);
-            File decodedimgfile =
-                await File(pathAndName).writeAsBytes(decodedbytes);
-            String decodedpath = decodedimgfile.path;
-            var exif = await Exif.fromPath(decodedpath);
-            await exif.writeAttributes({
-              "GPSLatitude": lat.toString(),
-              "GPSLongitude": long.toString()
-            });
-            uploadPicture.files.add(http.MultipartFile.fromBytes(
-                'image', decodedimgfile.readAsBytesSync(),
-                contentType: MediaType('image', 'jpg'),
-                filename: '$fileName.jpg'));
-            await uploadPicture.send().then((uploadResponse) async {
-              if (uploadResponse.statusCode == 200 ||
-                  uploadResponse.statusCode == 201) {
-                final b = ConsumerTransform()
-                    .consumerHiveToModel(a.consumer)
-                    .toJson();
-                print("Uploaded!");
-                final response = await http
-                    .patch(
-                      isHttp
-                          ? Uri.http(hostAPI,
-                              '/disconnection/${a.consumer.disconnectionId}')
-                          : Uri.https(kHost,
-                              '/disconnection/${a.consumer.disconnectionId}'),
-                      headers: <String, String>{
-                        'Content-Type': 'application/json; charset=UTF-8',
-                        'Accept': 'application/json',
-                        'Authorization': 'Bearer $token',
-                      },
-                      body: jsonEncode(b),
-                    )
-                    .timeout(
-                      const Duration(seconds: 60),
-                    );
-                await Future.delayed(const Duration(seconds: 10));
-                if (response.statusCode == 200) {
-                  UtilsHandler.mediaFileList = [];
-                  // return _fetchSyncData();
-                } else {
-                  if (response.statusCode == 401) {
-                    //TODO: Unauthorized
-                  } else {}
-                }
+            bool uploadDone = false;
+            while (!uploadDone) {
+              try {
+                final uploadPicture = http.MultipartRequest(
+                    "POST",
+                    isHttp
+                        ? Uri.http(
+                            hostAPI, '/disconnection/$inputs/upload-photo')
+                        : Uri.https(
+                            hostAPI, '/disconnection/$inputs/upload-photo'));
+                uploadPicture.headers.addAll(headers);
+                // Get temporary directory
+                final dir = await getTemporaryDirectory();
+                var fileName = DateTime.now().millisecondsSinceEpoch.toString();
+                var pathAndName = '${dir.path}/$fileName.jpg';
+                Uint8List decodedbytes = base64.decode(a.photoPath);
+                File decodedimgfile =
+                    await File(pathAndName).writeAsBytes(decodedbytes);
+                String decodedpath = decodedimgfile.path;
+                var exif = await Exif.fromPath(decodedpath);
+                await exif.writeAttributes({
+                  "UserComment": a.consumer.accountNo!,
+                  "GPSLatitude": lat.toString(),
+                  "GPSLongitude": long.toString()
+                });
+                uploadPicture.files.add(http.MultipartFile.fromBytes(
+                    'image', decodedimgfile.readAsBytesSync(),
+                    contentType: MediaType('image', 'jpg'),
+                    filename: '$fileName.jpg'));
+                await uploadPicture
+                    .send()
+                    .timeout(const Duration(seconds: 10))
+                    .then((uploadResponse) async {
+                  if (uploadResponse.statusCode == 200 ||
+                      uploadResponse.statusCode == 201) {
+                    final b = ConsumerTransform()
+                        .consumerHiveToModel(a.consumer)
+                        .toJson();
+                    print("Uploaded!");
+                    bool disconDone = false;
+                    while (!disconDone) {
+                      try {
+                        final response = await http
+                            .patch(
+                              isHttp
+                                  ? Uri.http(hostAPI,
+                                      '/disconnection/${a.consumer.disconnectionId}')
+                                  : Uri.https(kHost,
+                                      '/disconnection/${a.consumer.disconnectionId}'),
+                              headers: <String, String>{
+                                'Content-Type':
+                                    'application/json; charset=UTF-8',
+                                'Accept': 'application/json',
+                                'Authorization': 'Bearer $token',
+                              },
+                              body: jsonEncode(b),
+                            )
+                            .timeout(
+                              const Duration(seconds: 60),
+                            );
+                        if (response.statusCode == 200) {
+                          UtilsHandler.mediaFileList = [];
+                          // return _fetchSyncData();
+                        } else {
+                          if (response.statusCode == 401) {
+                            //TODO: Unauthorized
+                          } else {}
+                        }
+                        disconDone = true;
+                      } catch (ex) {
+                        print(
+                            "Retrying Disconnecting: Account Name: ${a.consumer.consumerName}");
+                      }
+                    }
+                  }
+                });
+                uploadDone = true;
+              } catch (ex) {
+                print(ex);
+                print(
+                    "Retrying Uploading: Account Name: ${a.consumer.consumerName}");
               }
-            });
+            }
+            await Future.delayed(const Duration(seconds: 10));
             await offlineDiscBox.delete(a.consumer.disconnectionId);
             count++;
           }

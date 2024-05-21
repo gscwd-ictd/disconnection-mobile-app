@@ -17,4 +17,5 @@ class UtilsHandler {
   static String loadingPanel = "0/0";
   static List<ValueItem> itemsML = [];
   static List<ValueItem> remarks = [];
+  static int ping = 1;
 }

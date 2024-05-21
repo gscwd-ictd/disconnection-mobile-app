@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dart_ping/dart_ping.dart';
 import 'package:diconnection/overlay.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
 import 'package:diconnection/src/data/models/consumer_model/consumer_hive_model.dart';
@@ -119,6 +120,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    final ping = Ping('122.3.104.117', timeout: 2, interval: 2);
+    // Begin ping process and listen for output
     Offset _offset = Offset.zero;
     bool initConState = false;
     final snackBar = SnackBar(
@@ -149,6 +152,19 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   connectivityResult == ConnectivityResult.wifi ||
                   connectivityResult == ConnectivityResult.ethernet) {
                 //ONLINE REGION
+                print('Running command: ${ping.command}');
+                try {
+                  ping.stream.listen((event) {
+                    try {
+                      UtilsHandler.ping = event.response!.time!.inMilliseconds;
+                    } catch (ex) {
+                      UtilsHandler.ping = 0;
+                    }
+                    print(event);
+                  });
+                } catch (e) {
+                  print(e);
+                }
                 if (UtilsHandler.isAvailableToSync) {
                   Timer.run(
                       () => ref.read(asyncSyncProvider.notifier).syncAll());
@@ -166,6 +182,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 }
                 UtilsHandler.hasConnection = true;
               } else {
+                UtilsHandler.ping = 0;
                 //OFLINE REGION
                 const SnackBar snackBar =
                     SnackBar(content: Text("No Internet Connection"));
@@ -193,33 +210,59 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           isTimer = true;
           print('Timer executed');
         }
-        return UtilsHandler.isAvailableToSync
-            ? Positioned(
-                top: 30,
-                right: 50,
-                child: Material(
-                  elevation: 4,
-                  child: Container(
-                    padding: const EdgeInsets.all(5),
-                    color: getColor(),
-                    child: Row(
-                      children: [
-                        Text(
-                          UtilsHandler.loadingPanel,
-                          style: TextStyle(fontSize: 8.sp),
-                        ),
-                        UtilsHandler.doneSync
-                            ? Container()
-                            : SizedBox(
-                                height: 2.0.h,
-                                width: 3.0.w,
-                                child: const CircularProgressIndicator())
-                      ],
+        return Stack(
+          children: [
+            Positioned(
+              top: 30,
+              left: 10,
+              child: Material(
+                color: Colors.transparent,
+                child: Row(
+                  children: [
+                    getPingIcon(),
+                    Text(
+                      UtilsHandler.ping == 0
+                          ? 'No Internet'
+                          : '${UtilsHandler.ping.toString()} ms',
+                      style: TextStyle(
+                          decorationThickness: 2.0,
+                          fontSize: 8.sp,
+                          color: getPingColor(),
+                          fontWeight: FontWeight.bold),
                     ),
-                  ),
+                  ],
                 ),
-              )
-            : Container();
+              ),
+            ),
+            UtilsHandler.isAvailableToSync
+                ? Positioned(
+                    top: 30,
+                    right: 50,
+                    child: Material(
+                      elevation: 4,
+                      child: Container(
+                        padding: const EdgeInsets.all(5),
+                        color: getSynchColor(),
+                        child: Row(
+                          children: [
+                            Text(
+                              UtilsHandler.loadingPanel,
+                              style: TextStyle(fontSize: 8.sp),
+                            ),
+                            UtilsHandler.doneSync
+                                ? Container()
+                                : SizedBox(
+                                    height: 2.0.h,
+                                    width: 3.0.w,
+                                    child: const CircularProgressIndicator())
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(),
+          ],
+        );
       }),
     );
 
@@ -231,7 +274,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     // });
   }
 
-  Color getColor() {
+  Color getSynchColor() {
     Color output = Colors.amber;
     bool hasAvailable = UtilsHandler.isAvailableToSync;
     bool doneSync = UtilsHandler.doneSync;
@@ -240,6 +283,60 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     }
     if (hasAvailable && !doneSync) {
       output = Colors.lightGreenAccent;
+    }
+    return output;
+  }
+
+  Color getPingColor() {
+    Color output = Colors.green;
+    int ping = UtilsHandler.ping;
+    if (ping > 0 && ping <= 120) {
+      output = Colors.green.shade200;
+    } else if (ping >= 121 && ping <= 200) {
+      output = Colors.yellow;
+    } else if (ping >= 201 && ping <= 320) {
+      output = Colors.amber;
+    } else if (ping >= 321 || ping == 0) {
+      output = Colors.red;
+    }
+    return output;
+  }
+
+  executePing() {
+    final ping = Ping('122.3.104.117', timeout: 2, interval: 2);
+    // [Optional]
+    // Preview command that will be run (helpful for debugging)
+    // Timer.periodic(const Duration(seconds: 5), (timer) {
+
+    // });
+    print('Running command: ${ping.command}');
+    // Begin ping process and listen for output
+    ping.stream.listen((event) {
+      try {
+        UtilsHandler.ping = event.response!.time!.inMilliseconds;
+      } catch (ex) {
+        UtilsHandler.ping = 0;
+      }
+      print(event);
+    });
+  }
+
+  Icon getPingIcon() {
+    double size = 12.0;
+    Icon output = Icon(Icons.signal_wifi_statusbar_4_bar_sharp,
+        color: Colors.green.shade200, size: size);
+    int ping = UtilsHandler.ping;
+    if (ping > 0 && ping <= 120) {
+      output = Icon(Icons.signal_wifi_statusbar_4_bar_sharp,
+          color: Colors.green.shade200, size: size);
+    } else if (ping >= 121 && ping <= 200) {
+      output = Icon(Icons.network_wifi_3_bar_sharp,
+          color: Colors.yellow, size: size);
+    } else if (ping >= 201 && ping <= 320) {
+      output =
+          Icon(Icons.network_wifi_2_bar_sharp, color: Colors.amber, size: size);
+    } else if (ping >= 321 || ping == 0) {
+      output = Icon(Icons.signal_wifi_bad_sharp, color: Colors.red, size: size);
     }
     return output;
   }
