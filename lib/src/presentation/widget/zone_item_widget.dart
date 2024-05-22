@@ -34,8 +34,10 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
     return GestureDetector(
       onTap: () {
         // widget.onPressedFunction();
+        // String address =
+        //     "${zoneData.barangay} Z${zoneData.zoneNumber} Book${zoneData.bookNumber}";
         String address =
-            "${zoneData.barangay} Z${zoneData.zoneNumber} Book${zoneData.bookNumber}";
+            "Zone ${zoneData.zoneNumber} Book ${zoneData.bookNumber}";
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => AssignedAccounts(
                   consumerList: zoneData.consumerList,
