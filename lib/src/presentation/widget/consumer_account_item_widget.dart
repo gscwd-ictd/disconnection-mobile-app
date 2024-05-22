@@ -49,7 +49,9 @@ class _ConsumerAccountItemWidgetState
   Widget build(BuildContext context) {
     ConsumerModel consumerData = widget.consumerData;
     String accountNo = consumerData.accountNo.toString();
-    String consumerName = fixText(consumerData.consumerName!, limit: 16);
+    String meterNo = consumerData.meterNo.toString();
+    // String consumerName = fixText(consumerData.consumerName!, limit: 16);
+    String consumerName = consumerData.consumerName.toString();
     bool stats = !(consumerData.status == StatusEnum.mlDone.getIntVal ||
         consumerData.status == StatusEnum.done.getIntVal);
     String refresh = '';
@@ -190,159 +192,69 @@ class _ConsumerAccountItemWidgetState
           }
         }
       },
-      child: Card(
-        color: getStatus(consumerData.status!) == StatusEnum.cancelled
-            ? Colors.red[100]
-            : null,
-        elevation: 12.0,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12.0))),
-        child: Padding(
-          padding: const EdgeInsets.only(
-              left: 8.0, right: 8.0, top: 18.0, bottom: 8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              FittedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(
-                      width: 70.w,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                accountNo,
-                                softWrap: true,
-                                style: TextStyle(
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red),
-                                textAlign: TextAlign.start,
-                              ),
-                              Text(
-                                ' $consumerName',
-                                softWrap: true,
-                                style: TextStyle(
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.start,
-                              ),
-                            ],
-                          ),
-                          Text(
-                            consumerData.address!,
-                            softWrap: true,
-                            style: TextStyle(
-                                fontSize: 13.sp, fontWeight: FontWeight.w300),
-                            textAlign: TextAlign.start,
-                          ),
-                        ],
+      child: Card.outlined(
+          color: getStatus(consumerData.status!) == StatusEnum.cancelled
+              ? Colors.red[100]
+              : null,
+          // elevation: 12.0,
+          // shape: const RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.all(Radius.circular(12.0))),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: Row(
+                    children: [
+                      Text(
+                        meterNo,
+                        style: const TextStyle(
+                            color: Colors.blue, fontWeight: FontWeight.bold),
                       ),
-                    ),
-                    SizedBox(
-                      width: consumerName.length >= 22 ? 10.w : 12.w,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text("Unpaid: ",
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                            )),
-                        Text("SeqNo: ",
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                            )),
-                        Text("JobCode: ",
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                            )),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          "P${a.toStringAsFixed(2)}",
-                          softWrap: true,
-                          style: TextStyle(
-                              color: Colors.redAccent,
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          consumerData.seqNo.toString(),
-                          softWrap: true,
-                          style: TextStyle(
-                              color: Colors.redAccent,
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          consumerData.jobCode == 33 ? 'MAINLINE' : 'METER',
-                          softWrap: true,
-                          style: TextStyle(
-                              color: consumerData.jobCode == 33
-                                  ? Colors.redAccent
-                                  : Colors.lightBlue,
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 1.h,
-              ),
-              // GestureDetector(
-              //   onTap: () async {
-              //     String? refresh =
-              //         await Navigator.of(context).push(MaterialPageRoute(
-              //                 builder: (context) => !stats
-              //                     ? ConsumerDetailDisconnected(
-              //                         consumerData: consumerData,
-              //                         index: widget.index,
-              //                         onPressedFunction: () {},
-              //                       )
-              //                     : ConsumerDetailForDisconnect(
-              //                         consumerData: consumerData,
-              //                         index: 0,
-              //                         onPressedFunction: () {},
-              //                       ))) ??
-              //             "";
-              //     if (refresh == 'refresh') {
-              //       widget.onPressedFunction();
-              //     }
-              //   },
-              //   child: Container(
-              //     width: 90.w,
-              //     height: 3.h,
-              //     child: Text(
-              //       "Show more...",
-              //       softWrap: true,
-              //       style: TextStyle(
-              //           fontSize: 10.sp,
-              //           fontWeight: FontWeight.bold,
-              //           color: getStatus(consumerData.status!) ==
-              //                   StatusEnum.cancelled
-              //               ? kBackgroundColor
-              //               : kLightBlue),
-              //       textAlign: TextAlign.center,
-              //     ),
-              //   ),
-              // )
-            ],
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                          child: Text(
+                        consumerName,
+                        overflow: TextOverflow.ellipsis,
+                      ))
+                    ],
+                  ),
+                  subtitle: Text(
+                    consumerData.address!,
+                    style: const TextStyle(fontSize: 13),
+                  ),
+                  trailing: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        consumerData.jobCode == 33 ? 'MAINLINE' : 'METER',
+                        style: const TextStyle(
+                            color: Colors.blue,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        a.toStringAsFixed(2),
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red[300]),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          )
+          // const Padding(
+          //     padding:
+          //         EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0, bottom: 8.0),
+          //     child: Text("data")),
           ),
-        ),
-      ),
     );
   }
 

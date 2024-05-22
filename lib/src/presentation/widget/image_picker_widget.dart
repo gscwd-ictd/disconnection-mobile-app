@@ -133,27 +133,27 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                 }
               },
             ))), //_onImageButtonPressed(ImageSource.camera, context: context);
-        IconButton(
-          color:
-              UtilsHandler.mediaFileList!.isEmpty ? Colors.grey : Colors.black,
-          onPressed: UtilsHandler.mediaFileList!.isEmpty
-              ? () {}
-              : () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          content: SizedBox(
-                            height: 40.h,
-                            width: 100.w,
-                            child: InteractiveViewer(child: _handlePreview()),
-                          ),
-                          actions: [],
-                        );
-                      });
-                },
-          icon: const Icon(FontAwesomeIcons.magnifyingGlass),
-        ),
+        // IconButton(
+        //   color:
+        //       UtilsHandler.mediaFileList!.isEmpty ? Colors.grey : Colors.black,
+        //   onPressed: UtilsHandler.mediaFileList!.isEmpty
+        //       ? () {}
+        //       : () {
+        //           showDialog(
+        //               context: context,
+        //               builder: (BuildContext context) {
+        //                 return AlertDialog(
+        //                   content: SizedBox(
+        //                     height: 40.h,
+        //                     width: 100.w,
+        //                     child: InteractiveViewer(child: _handlePreview()),
+        //                   ),
+        //                   actions: [],
+        //                 );
+        //               });
+        //         },
+        //   icon: const Icon(FontAwesomeIcons.magnifyingGlass),
+        // ),
         IconButton(
           icon: const Icon(Icons.camera_alt_outlined),
           onPressed: () {

@@ -90,831 +90,381 @@ class _ConsumerDetailForDisconnectState
       ),
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
-        padding: EdgeInsets.only(
-            top: 0, bottom: MediaQuery.of(context).viewInsets.bottom),
+        // padding: EdgeInsets.only(
+        //     top: 0, bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //Separate Account Number UI
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 0, 2.0),
-              child: SizedBox(
-                height: 4.h,
-                child: Row(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "Account Number:",
-                          style: TextStyle(fontSize: 12.0.sp),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            consumerData.accountNo ?? "",
-                            style: TextStyle(
-                                fontSize: 12.0.sp, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+            ListTile(
+              leading: Icon(
+                Icons.account_circle_sharp,
+                size: 35,
+                color: Colors.blue[600],
               ),
+              title: Text(consumerData.consumerName ?? ""),
+              subtitle: Text(consumerData.accountNo ?? ""),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.fromLTRB(16.0, 8.0, 0, 2.0),
+            //   child: SizedBox(
+            //     height: 4.h,
+            //     child: Row(
+            //       children: [
+            //         Column(
+            //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //           crossAxisAlignment: CrossAxisAlignment.end,
+            //           children: [
+            //             Text(
+            //               "Account Number:",
+            //               style: TextStyle(fontSize: 12.0.sp),
+            //             ),
+            //           ],
+            //         ),
+            //         Padding(
+            //           padding: const EdgeInsets.only(left: 8.0),
+            //           child: Column(
+            //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //             crossAxisAlignment: CrossAxisAlignment.start,
+            //             children: [
+            //               Text(
+            //                 consumerData.accountNo ?? "",
+            //                 style: TextStyle(
+            //                     fontSize: 12.0.sp, fontWeight: FontWeight.bold),
+            //               ),
+            //             ],
+            //           ),
+            //         )
+            //       ],
+            //     ),
+            //   ),
+            // ),
             //Separate Account Number Consumer Name
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: FittedBox(
-                child: Row(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "Consumer Name:",
-                          style: TextStyle(fontSize: 12.0.sp),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: 60.w,
-                            child: Text(
-                              consumerData.consumerName ?? "",
-                              // softWrap: true,
-                              style: TextStyle(
-                                  fontSize: 12.0.sp,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
+            Divider(
+              thickness: 1,
+              endIndent: 10,
+              indent: 10,
+              color: Colors.blue[50],
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 20.0.w),
-              child: SizedBox(
-                height: txtSize.width > 150 ? 6.h : null,
-                child: Row(
-                  children: [
-                    Text(
-                      "Address:",
-                      style: TextStyle(fontSize: 12.0.sp),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: SizedBox(
-                          width: 60.w,
-                          child: Text(
-                            consumerData.address!,
-                            softWrap: true,
-                            maxLines: 3,
-                            style: textStyle,
-                          )),
-                    )
-                  ],
-                ),
+            ListTile(
+              leading: Icon(
+                Icons.location_on_sharp,
+                size: 35,
+                color: Colors.blue[600],
               ),
+              title: Text(consumerData.address ?? ""),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: SizedBox(
-                height: 20.h,
-                child: Row(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "No. of Months:",
-                          style: TextStyle(fontSize: 12.0.sp),
-                        ),
-                        Text(
-                          "Meter Number:",
-                          style: TextStyle(fontSize: 12.0.sp),
-                        ),
-                        Text(
-                          "Previous Reading:",
-                          style: TextStyle(fontSize: 12.0.sp),
-                        ),
-                        Text(
-                          "Unpaid Balance:",
-                          style: TextStyle(fontSize: 12.0.sp),
-                        ),
-                        Text(
-                          "Status:",
-                          style: TextStyle(fontSize: 12.0.sp),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            consumerData.noOfMonths.toString(),
-                            style: TextStyle(
-                                fontSize: 12.0.sp,
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            consumerData.meterNo.toString(),
-                            style: TextStyle(
-                                fontSize: 12.0.sp, fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            consumerData.lastReading.toString(),
-                            style: TextStyle(
-                                fontSize: 12.0.sp, fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            "P${a.toStringAsFixed(2)}",
-                            style: TextStyle(
-                                fontSize: 12.0.sp, fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            // stats ? "ACTIVE" : "DISCONNECTED",
-                            getStatus(consumerData.status!).getStringVal,
-                            style: TextStyle(
-                                fontSize: 12.0.sp,
-                                fontWeight: FontWeight.bold,
-                                color: getStatus(consumerData.status!) ==
-                                        StatusEnum.cancelled
-                                    ? Colors.red
-                                    : null),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 16.0),
+            //   child: FittedBox(
+            //     child: Row(
+            //       children: [
+            //         Column(
+            //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //           crossAxisAlignment: CrossAxisAlignment.end,
+            //           children: [
+            //             Text(
+            //               "Consumer Name:",
+            //               style: TextStyle(fontSize: 12.0.sp),
+            //             ),
+            //           ],
+            //         ),
+            //         Padding(
+            //           padding: const EdgeInsets.only(left: 8.0),
+            //           child: Column(
+            //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //             crossAxisAlignment: CrossAxisAlignment.start,
+            //             children: [
+            //               SizedBox(
+            //                 width: 60.w,
+            //                 child: Text(
+            //                   consumerData.consumerName ?? "",
+            //                   // softWrap: true,
+            //                   style: TextStyle(
+            //                       fontSize: 12.0.sp,
+            //                       fontWeight: FontWeight.bold),
+            //                 ),
+            //               ),
+            //             ],
+            //           ),
+            //         )
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            // Padding(
+            //   padding: EdgeInsets.only(left: 20.0.w),
+            //   child: SizedBox(
+            //     height: txtSize.width > 150 ? 6.h : null,
+            //     child: Row(
+            //       children: [
+            //         Text(
+            //           "Address:",
+            //           style: TextStyle(fontSize: 12.0.sp),
+            //         ),
+            //         Padding(
+            //           padding: const EdgeInsets.only(left: 8.0),
+            //           child: SizedBox(
+            //               width: 60.w,
+            //               child: Text(
+            //                 consumerData.address!,
+            //                 softWrap: true,
+            //                 maxLines: 3,
+            //                 style: textStyle,
+            //               )),
+            //         )
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            Divider(
+              thickness: 1,
+              endIndent: 10,
+              indent: 10,
+              color: Colors.blue[50],
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.electric_meter_rounded,
+                size: 35,
+                color: Colors.blue[600],
               ),
-            ),
-            //Separate checkbox for cant disconnect
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Row(
+              title: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Meter No.", style: TextStyle(fontSize: 14)),
+                  Text("Previous Reading", style: TextStyle(fontSize: 14))
+                ],
+              ),
+              // Text(consumerData.meterNo ?? ""),
+              subtitle: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Can't disconnect?",
-                    style: TextStyle(fontSize: 12.0.sp),
+                    consumerData.meterNo ?? "",
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  Checkbox(
-                      value: !isDisconnected,
-                      onChanged: (val) {
-                        isDisconnected = !isDisconnected;
-                        _checkValidation();
-                      })
-                ],
-              ),
-            ),
-            //Separate Current Reading
-            SizedBox(
-              height: 8.h,
-              width: 88.w,
-              child: Row(
-                children: [
-                  SizedBox(
-                      height: !stats ? null : 50,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 12.0),
-                        child: Text(
-                          "Current Reading:",
-                          style: TextStyle(fontSize: 12.0.sp),
-                        ),
-                      )),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: SizedBox(
-                      height: !stats ? null : 50,
-                      width: 50.0.w,
-                      child: !stats
-                          ? Text(consumerData.currentReading.toString())
-                          : TextField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true, signed: false),
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.allow(
-                                    RegExp('[0-9.,]')),
-                              ], // Only numbers can be entered
-                              controller: txtCurrentReader,
-                              scrollPadding: EdgeInsets.symmetric(
-                                  vertical:
-                                      MediaQuery.of(context).viewInsets.bottom +
-                                          5),
-                              onChanged: (val) {
-                                _checkValidation();
-                              },
-                              style: TextStyle(
-                                  fontSize: 12.0.sp, color: kWhiteColor),
-                              decoration: InputDecoration(
-                                  border: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(16.0)),
-                                      borderSide: BorderSide(
-                                          color: Colors.black,
-                                          style: BorderStyle.solid)),
-                                  hintText: isRead
-                                      ? "Input Reading Here"
-                                      : "Not Available",
-                                  hintStyle: TextStyle(
-                                      fontSize: 12.0.sp, color: kWhiteColor),
-                                  fillColor:
-                                      isRead ? kBackgroundColor : Colors.grey,
-                                  filled: true),
-                              enabled: isRead,
-                            ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            //Separate checkbox for cant read meter
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Row(
-                children: [
                   Text(
-                    "Can't read meter?",
-                    style: TextStyle(fontSize: 12.0.sp),
-                  ),
-                  Checkbox(
-                      value: !isRead,
-                      onChanged: (val) {
-                        isRead = !isRead;
-                        txtCurrentReader.text = "";
-                        _checkValidation();
-                      }),
-                ],
-              ),
-            ),
-            //Separate Seal Number UI
-            SizedBox(
-              height: 10.h,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                      height: 100,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 12.0),
-                        child: Text(
-                          "Seal Number:",
-                          style: TextStyle(fontSize: 12.0.sp),
-                        ),
-                      )),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: SizedBox(
-                      height: 110.0,
-                      width: 50.0.w,
-                      child: Column(
-                        children: [
-                          !stats
-                              ? Text(consumerData.remarks ?? "")
-                              : TextField(
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                          decimal: true, signed: false),
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.allow(
-                                        RegExp('[0-9.,]')),
-                                  ], // Only numbers can be entered
-                                  controller: txtSealNo,
-                                  scrollPadding: EdgeInsets.symmetric(
-                                      vertical: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom +
-                                          5),
-                                  onChanged: (val) {
-                                    _checkValidation();
-                                  },
-                                  style: TextStyle(
-                                      fontSize: 12.0.sp, color: kWhiteColor),
-                                  decoration: InputDecoration(
-                                      border: const OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(16.0)),
-                                          borderSide: BorderSide(
-                                              color: Colors.black,
-                                              style: BorderStyle.solid)),
-                                      hintText: "Input Seal Number Here",
-                                      hintStyle: TextStyle(
-                                          fontSize: 12.0.sp,
-                                          color: kWhiteColor),
-                                      fillColor: isRead
-                                          ? kBackgroundColor
-                                          : Colors.grey,
-                                      filled: true),
-                                  enabled: isRead,
-                                ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            //Separate Items UI
-            !isMainLine
-                ? Container()
-                : Padding(
-                    padding: EdgeInsets.fromLTRB(6.w, 2.0, 0, 10.0),
-                    child: FittedBox(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 12.0),
-                            child: Text(
-                              "Items:",
-                              style: TextStyle(fontSize: 12.0.sp),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: SizedBox(
-                                width: 50.0.w,
-                                child: Column(
-                                  children: [
-                                    !stats
-                                        ? Text(consumerData.remarks ?? "")
-                                        : Row(
-                                            children: [
-                                              Expanded(
-                                                child: MultiSelectDropDown<
-                                                    dynamic>(
-                                                  controller: itemController,
-                                                  onOptionSelected:
-                                                      (List<ValueItem>
-                                                          selectedOptions) {
-                                                    if (selectedOptions
-                                                        .isNotEmpty) {
-                                                      selectRemark =
-                                                          selectedOptions[0]
-                                                              .label;
-                                                    } else {
-                                                      selectRemark = "";
-                                                    }
-                                                    _checkValidation();
-                                                  },
-                                                  options: UtilsHandler.itemsML,
-                                                  selectionType:
-                                                      SelectionType.multi,
-                                                  chipConfig: const ChipConfig(
-                                                      wrapType: WrapType.wrap),
-                                                  dropdownHeight: 100,
-                                                  optionTextStyle:
-                                                      const TextStyle(
-                                                          fontSize: 16),
-                                                  selectedOptionIcon:
-                                                      const Icon(
-                                                          Icons.check_circle),
-                                                ),
-                                              ),
-                                              isCustom
-                                                  ? Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 8.0),
-                                                      child: TextField(
-                                                        keyboardType:
-                                                            TextInputType
-                                                                .multiline,
-                                                        maxLines: 3,
-                                                        controller:
-                                                            txtCustomRemarks,
-                                                        scrollPadding: EdgeInsets.symmetric(
-                                                            vertical: MediaQuery.of(
-                                                                        context)
-                                                                    .viewInsets
-                                                                    .bottom +
-                                                                5),
-                                                        onChanged: (val) {
-                                                          _checkValidation();
-                                                        },
-                                                        style: TextStyle(
-                                                            fontSize: 12.0.sp,
-                                                            color: kWhiteColor),
-                                                        decoration: InputDecoration(
-                                                            border: const OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius.all(
-                                                                        Radius.circular(
-                                                                            16.0)),
-                                                                borderSide: BorderSide(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    style: BorderStyle
-                                                                        .solid)),
-                                                            hintText:
-                                                                "Input Custom Remarks Here",
-                                                            hintStyle: TextStyle(
-                                                                fontSize:
-                                                                    12.0.sp,
-                                                                color:
-                                                                    kWhiteColor),
-                                                            fillColor: isRead
-                                                                ? kBackgroundColor
-                                                                : Colors.grey,
-                                                            filled: true),
-                                                        enabled: isRead,
-                                                      ),
-                                                    )
-                                                  : Container()
-                                            ],
-                                          )
-                                  ],
-                                )),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-            //Separate Remarks UI
-            Padding(
-              padding: EdgeInsets.fromLTRB(6.w, 2.0, 0, 10.0),
-              child: FittedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 12.0),
-                      child: Text(
-                        "Remarks:",
-                        style: TextStyle(fontSize: 12.0.sp),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: SizedBox(
-                        width: 50.0.w,
-                        child: Column(
-                          children: [
-                            !stats
-                                ? Text(consumerData.remarks ?? "")
-                                : Row(
-                                    children: [
-                                      Expanded(
-                                        child: MultiSelectDropDown<dynamic>(
-                                          controller: controller,
-                                          maxItems: 3,
-                                          onOptionSelected: (List<ValueItem>
-                                              selectedOptions) {
-                                            if (selectedOptions.isNotEmpty) {
-                                              selectRemark =
-                                                  selectedOptions[0].label;
-                                            } else {
-                                              selectRemark = "";
-                                            }
-                                            _checkValidation();
-                                          },
-                                          options: UtilsHandler.remarks,
-                                          selectionType: SelectionType.single,
-                                          chipConfig: const ChipConfig(
-                                              wrapType: WrapType.wrap),
-                                          dropdownHeight: 100,
-                                          optionTextStyle:
-                                              const TextStyle(fontSize: 16),
-                                          selectedOptionIcon:
-                                              const Icon(Icons.check_circle),
-                                        ),
-                                      ),
-                                      IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              isCustom = !isCustom;
-                                            });
-                                          },
-                                          icon: isCustom
-                                              ? const Icon(Icons.close)
-                                              : const Icon(Icons.add))
-                                    ],
-                                  ),
-                            isCustom
-                                ? Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: TextField(
-                                      keyboardType: TextInputType.multiline,
-                                      maxLines: 3,
-                                      controller: txtCustomRemarks,
-                                      scrollPadding: EdgeInsets.symmetric(
-                                          vertical: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom +
-                                              5),
-                                      onChanged: (val) {
-                                        _checkValidation();
-                                      },
-                                      style: TextStyle(
-                                          fontSize: 12.0.sp,
-                                          color: kWhiteColor),
-                                      decoration: InputDecoration(
-                                          border: const OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(16.0)),
-                                              borderSide: BorderSide(
-                                                  color: Colors.black,
-                                                  style: BorderStyle.solid)),
-                                          hintText: "Input Custom Remarks Here",
-                                          hintStyle: TextStyle(
-                                              fontSize: 12.0.sp,
-                                              color: kWhiteColor),
-                                          fillColor: isRead
-                                              ? kBackgroundColor
-                                              : Colors.grey,
-                                          filled: true),
-                                      enabled: isRead,
-                                    ),
-                                  )
-                                : Container()
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            //Separate Image Widget for error handler UI
-            Padding(
-              padding: EdgeInsets.only(left: 15.0.w),
-              child: SizedBox(
-                height: 14.h,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 40.0),
-                      child: Text(
-                        "Proof:",
-                        style: TextStyle(fontSize: 12.0.sp),
-                      ),
-                    ),
-                    _imageWidget,
-                  ],
-                ),
-              ),
-            ),
-            //Separate Submit Button
-            !stats
-                ? Container()
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                        child: GestureDetector(
-                      onTap: !isFormValidate
-                          ? () {}
-                          : () async {
-                              var connectivityResult =
-                                  await (Connectivity().checkConnectivity());
-                              bool hasInternet = connectivityResult ==
-                                      ConnectivityResult.mobile ||
-                                  connectivityResult == ConnectivityResult.wifi;
-                              if (false) {
-                                if (isRead) {
-                                  int currentRead =
-                                      int.parse(txtCurrentReader.text);
-                                  int lastRead = consumerData.lastReading!;
-                                  if (currentRead >= lastRead) {
-                                    // ignore: use_build_context_synchronously
-                                    _disconnectAccount(
-                                        context, consumerData, disconnection);
-                                  } else {
-                                    // ignore: use_build_context_synchronously
-                                    showDialog(
-                                        barrierDismissible: false,
-                                        context: context,
-                                        builder: (context) => WarningMessage(
-                                              content:
-                                                  'Current reading must be greater than the Previous Reading! $lastRead',
-                                              title: 'Current Reading Error',
-                                              function: () {
-                                                Navigator.pop(context);
-                                              },
-                                            ));
-                                  }
-                                } else {
-                                  // ignore: use_build_context_synchronously
-                                  _disconnectAccount(
-                                      context, consumerData, disconnection);
-                                }
-                              } else {
-                                // ignore: use_build_context_synchronously
-                                showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (context) => ReminderMessage(
-                                            title: 'DISCONNECT ACCOUNT?',
-                                            content:
-                                                'Confirm Disconnection for ${consumerData.consumerName}?',
-                                            textButtons: [
-                                              TextButton(
-                                                  //OFFLINE REGION
-                                                  onPressed: () {
-                                                    final input = formUpdate();
-                                                    ref
-                                                        .read(
-                                                            asyncDisconnectionProvider
-                                                                .notifier)
-                                                        .offlineMode(
-                                                            input, _events);
-                                                    showDialog(
-                                                        context: context,
-                                                        barrierDismissible:
-                                                            false,
-                                                        builder: (context) =>
-                                                            StreamBuilder<int>(
-                                                                initialData: 1,
-                                                                stream: _events
-                                                                    .stream,
-                                                                builder: (BuildContext
-                                                                        context,
-                                                                    AsyncSnapshot<
-                                                                            int>
-                                                                        snapshot) {
-                                                                  switch (snapshot
-                                                                      .data!) {
-                                                                    case 300:
-                                                                      return SuccessMessage(
-                                                                        title:
-                                                                            "Success",
-                                                                        content: hasInternet
-                                                                            ? "Submitting. Please continue your disconnection"
-                                                                            : "Saved Successfully and waiting for internet to sync to server",
-                                                                        onPressedFunction:
-                                                                            () {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                          Navigator.pop(
-                                                                              context,
-                                                                              'refresh');
-                                                                          if (widget
-                                                                              .last) {
-                                                                            Navigator.pop(context,
-                                                                                'refresh');
-                                                                          }
-                                                                          if (hasInternet &&
-                                                                              !UtilsHandler.executed) {
-                                                                            Timer.run(() =>
-                                                                                ref.read(asyncSyncProvider.notifier).syncAll());
-                                                                          }
-                                                                        },
-                                                                      );
-                                                                    case 400:
-                                                                      return SuccessMessage(
-                                                                        title:
-                                                                            "Already Paid",
-                                                                        content:
-                                                                            "Please abort disconnection the Consumer was already paid",
-                                                                        onPressedFunction:
-                                                                            () {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                          Navigator.pop(
-                                                                              context,
-                                                                              'refresh');
-                                                                        },
-                                                                      );
-                                                                    case 401: //Failed to Verify Please try again
-                                                                      return ErrorMessage(
-                                                                        title:
-                                                                            'Expired Session',
-                                                                        content:
-                                                                            'Please login again.',
-                                                                        onPressedFunction:
-                                                                            () {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                          ref
-                                                                              .read(asyncAuthProvider.notifier)
-                                                                              .isExpired();
-                                                                        },
-                                                                      );
-                                                                    case 500: //Failed to Verify Please try again
-                                                                      return ErrorMessage(
-                                                                        title:
-                                                                            'Please try again',
-                                                                        content:
-                                                                            'Failed to Verify Please try again',
-                                                                        onPressedFunction:
-                                                                            () {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                      );
-                                                                    case 501: //Failed to upload from API
-                                                                      return ErrorMessage(
-                                                                        title:
-                                                                            'Please try again',
-                                                                        content:
-                                                                            'Failed to upload from API',
-                                                                        onPressedFunction:
-                                                                            () {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                      );
-                                                                    case 502: //Failed to disconnect Consumers from API
-                                                                      return ErrorMessage(
-                                                                        title:
-                                                                            'Please try again',
-                                                                        content:
-                                                                            'Failed to disconnect Consumers from API',
-                                                                        onPressedFunction:
-                                                                            () {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                      );
-                                                                    default:
-                                                                      return ErrorMessage(
-                                                                        title:
-                                                                            'Please try again',
-                                                                        content:
-                                                                            'There is error',
-                                                                        onPressedFunction:
-                                                                            () {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                      );
-                                                                  }
-                                                                }));
-                                                  },
-                                                  child: Text(
-                                                    'Yes',
-                                                    style: TextStyle(
-                                                        fontSize: 16.0.sp),
-                                                  )),
-                                              TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Text(
-                                                    'No',
-                                                    style: TextStyle(
-                                                        fontSize: 16.0.sp),
-                                                  ))
-                                            ]));
-                              }
-                            },
-                      child: Card(
-                        color: isFormValidate ? kWhiteColor : Colors.grey,
-                        elevation: 12.0,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 10.0),
-                          child: SizedBox(
-                              width: 40.w,
-                              child: Text(
-                                "SUBMIT",
-                                softWrap: true,
-                                style: TextStyle(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              )),
-                        ),
-                      ),
-                    )),
+                    consumerData.lastReading.toString(),
+                    style: const TextStyle(fontSize: 16),
                   )
+                ],
+              ),
+            ),
+            Divider(
+              thickness: 1,
+              endIndent: 10,
+              indent: 10,
+              color: Colors.blue[50],
+            ),
+            ListTile(
+              leading: Icon(Icons.info_outline_rounded,
+                  size: 35, color: Colors.red[500]),
+              title: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("No. of Months", style: TextStyle(fontSize: 14)),
+                  Text("Balance", style: TextStyle(fontSize: 14))
+                ],
+              ),
+              subtitle: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(consumerData.noOfMonths.toString(),
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(
+                    "P ${a.toStringAsFixed(2)}",
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+            ),
+            Divider(
+              thickness: 1,
+              endIndent: 10,
+              indent: 10,
+              color: Colors.blue[50],
+            ),
+            ListTile(
+              title: const Text("Current Reading"),
+              subtitle: TextField(
+                keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true, signed: false),
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
+                ], // Only numbers can be entered
+                controller: txtCurrentReader,
+                scrollPadding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).viewInsets.bottom + 5),
+                onChanged: (val) {
+                  _checkValidation();
+                },
+                style: TextStyle(fontSize: 12.0.sp, color: kWhiteColor),
+                decoration: InputDecoration(
+                    border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(7.0)),
+                        borderSide: BorderSide(
+                            color: Colors.black, style: BorderStyle.solid)),
+                    hintText: isRead ? "Input Current Here" : "Not Available",
+                    hintStyle: TextStyle(fontSize: 12.0.sp),
+                    fillColor: isRead ? Colors.white : Colors.grey,
+                    filled: true),
+                enabled: isRead,
+              ),
+              trailing: Checkbox(
+                  value: !isRead,
+                  onChanged: (val) {
+                    isRead = !isRead;
+                    txtCurrentReader.text = "";
+                    _checkValidation();
+                  }),
+            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 16.0),
+            //   child: SizedBox(
+            //     height: 20.h,
+            //     child: Row(
+            //       children: [
+            //         Column(
+            //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //           crossAxisAlignment: CrossAxisAlignment.end,
+            //           children: [
+            //             Text(
+            //               "No. of Months:",
+            //               style: TextStyle(fontSize: 12.0.sp),
+            //             ),
+            //             Text(
+            //               "Meter Number:",
+            //               style: TextStyle(fontSize: 12.0.sp),
+            //             ),
+            //             Text(
+            //               "Previous Reading:",
+            //               style: TextStyle(fontSize: 12.0.sp),
+            //             ),
+            //             Text(
+            //               "Unpaid Balance:",
+            //               style: TextStyle(fontSize: 12.0.sp),
+            //             ),
+            //             Text(
+            //               "Status:",
+            //               style: TextStyle(fontSize: 12.0.sp),
+            //             ),
+            //           ],
+            //         ),
+            //         Padding(
+            //           padding: const EdgeInsets.only(left: 8.0),
+            //           child: Column(
+            //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //             crossAxisAlignment: CrossAxisAlignment.start,
+            //             children: [
+            //               Text(
+            //                 consumerData.noOfMonths.toString(),
+            //                 style: TextStyle(
+            //                     fontSize: 12.0.sp,
+            //                     color: Colors.red,
+            //                     fontWeight: FontWeight.bold),
+            //               ),
+            //               Text(
+            //                 consumerData.meterNo.toString(),
+            //                 style: TextStyle(
+            //                     fontSize: 12.0.sp, fontWeight: FontWeight.bold),
+            //               ),
+            //               Text(
+            //                 consumerData.lastReading.toString(),
+            //                 style: TextStyle(
+            //                     fontSize: 12.0.sp, fontWeight: FontWeight.bold),
+            //               ),
+            //               Text(
+            //                 "P${a.toStringAsFixed(2)}",
+            //                 style: TextStyle(
+            //                     fontSize: 12.0.sp, fontWeight: FontWeight.bold),
+            //               ),
+            //               Text(
+            //                 // stats ? "ACTIVE" : "DISCONNECTED",
+            //                 getStatus(consumerData.status!).getStringVal,
+            //                 style: TextStyle(
+            //                     fontSize: 12.0.sp,
+            //                     fontWeight: FontWeight.bold,
+            //                     color: getStatus(consumerData.status!) ==
+            //                             StatusEnum.cancelled
+            //                         ? Colors.red
+            //                         : null),
+            //               ),
+            //             ],
+            //           ),
+            //         )
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            //Separate checkbox for cant disconnect
+            ListTile(
+              title: const Text("Serial Number"),
+              subtitle: TextField(
+                keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true, signed: false),
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
+                ], // Only numbers can be entered
+                controller: txtSealNo,
+                scrollPadding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).viewInsets.bottom + 5),
+                onChanged: (val) {
+                  _checkValidation();
+                },
+                style: TextStyle(fontSize: 12.0.sp, color: kWhiteColor),
+                decoration: InputDecoration(
+                    border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(7.0)),
+                        borderSide: BorderSide(
+                            color: Colors.black, style: BorderStyle.solid)),
+                    hintText: "Input Serial Number Here",
+                    hintStyle: TextStyle(fontSize: 12.0.sp),
+                    fillColor: isDisconnected ? Colors.white : Colors.grey,
+                    filled: true),
+                enabled: isRead,
+              ),
+              trailing: Checkbox(
+                  value: !isDisconnected,
+                  onChanged: (val) {
+                    isDisconnected = !isDisconnected;
+                    _checkValidation();
+                  }),
+            ),
+            ListTile(
+              title: const Text("Remarks"),
+              subtitle: MultiSelectDropDown<dynamic>(
+                controller: controller,
+                maxItems: 3,
+                onOptionSelected: (List<ValueItem> selectedOptions) {
+                  if (selectedOptions.isNotEmpty) {
+                    selectRemark = selectedOptions[0].label;
+                  } else {
+                    selectRemark = "";
+                  }
+                  _checkValidation();
+                },
+                options: UtilsHandler.remarks,
+                selectionType: SelectionType.single,
+                chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                dropdownHeight: 200,
+                optionTextStyle: const TextStyle(fontSize: 16),
+                selectedOptionIcon: const Icon(Icons.check_circle),
+              ),
+            ),
+            ListTile(
+              title: const Text("Proof"),
+              subtitle: _imageWidget,
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50)),
+              onPressed: () => {},
+              child: const Text("Submit"),
+            )
           ],
         ),
       ),
