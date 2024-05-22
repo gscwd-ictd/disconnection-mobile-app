@@ -29,6 +29,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:retry/retry.dart';
 
 part 'disconnection_provider.g.dart';
 
@@ -76,52 +77,46 @@ class AsyncDisconnection extends _$AsyncDisconnection {
           UtilsHandler.itemsML = itemsMLToValue;
         }
         progress = "disconnection";
-        bool discDone = false;
-        while (!discDone) {
-          try {
-            final json = await http.get(
-                isHttp
-                    ? Uri.http(hostAPI, '/disconnection')
-                    : Uri.https(hostAPI, '/disconnection'),
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json',
-                  'Authorization': 'Bearer $token',
-                }).timeout(const Duration(seconds: 10));
-            if (json.statusCode == 200 || json.statusCode == 201) {
-              // final todos = Map<String, dynamic>.from(jsonDecode(json.body));
-              final disc = DisconnectionHandler.fromJson(jsonDecode(json.body));
-              var consumerList = disc.items!.toList();
-              final offlineDiscBox = Hive.box('offlineDisconnection');
-              final disconnectionList = offlineDiscBox.values.toList();
-              for (OfflineDisconnectionHive c in disconnectionList) {
-                consumerList = consumerList
-                  ..removeWhere(
-                      (item) => item.accountNo == c.consumer.accountNo);
-              }
-              consList = consumerList;
-              libZones = disc.zoneList!;
-              await saveToConsumerBox(consumerList);
-              await saveToLibZoneBox(disc.zoneList!);
-              // final consumerList = todos.map(DisconnectionHandler.fromJson).toList();
-              //hunt for same zone and book
-            } else {
-              if (json.statusCode == 401) {
-                //TODO: Unauthorized
-              }
-              throw Exception(
-                  'Error: ${json.statusCode} \n Failed to load Zones from API');
-            }
-            discDone = true;
-          } catch (ex) {
-            if (ex.toString().toLowerCase().contains('timeout')) {
-              print("Timeout Retrying.. Getting Disconnections");
-              //TimeOut Retry
-            } else {
-              print(ex);
-              discDone = true;
-            }
+        final json = await retry(
+          // Make a GET request
+          () => http.get(
+              isHttp
+                  ? Uri.http(hostAPI, '/disconnection')
+                  : Uri.https(hostAPI, '/disconnection'),
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer $token',
+              }).timeout(const Duration(seconds: 10)),
+          // Retry on SocketException or TimeoutException
+          retryIf: (e) => e is SocketException || e is TimeoutException,
+          onRetry: (p0) {
+            print(p0);
+            print("Timeout Retrying.. Getting Disconnections");
+          },
+        );
+        if (json.statusCode == 200 || json.statusCode == 201) {
+          // final todos = Map<String, dynamic>.from(jsonDecode(json.body));
+          final disc = DisconnectionHandler.fromJson(jsonDecode(json.body));
+          var consumerList = disc.items!.toList();
+          final offlineDiscBox = Hive.box('offlineDisconnection');
+          final disconnectionList = offlineDiscBox.values.toList();
+          for (OfflineDisconnectionHive c in disconnectionList) {
+            consumerList = consumerList
+              ..removeWhere((item) => item.accountNo == c.consumer.accountNo);
           }
+          consList = consumerList;
+          libZones = disc.zoneList!;
+          await saveToConsumerBox(consumerList);
+          await saveToLibZoneBox(disc.zoneList!);
+          // final consumerList = todos.map(DisconnectionHandler.fromJson).toList();
+          //hunt for same zone and book
+        } else {
+          if (json.statusCode == 401) {
+            //TODO: Unauthorized
+          }
+          throw Exception(
+              'Error: ${json.statusCode} \n Failed to load Zones from API');
         }
         return convertToZone(consList, libZones);
       } else {
@@ -330,39 +325,42 @@ class AsyncDisconnection extends _$AsyncDisconnection {
     state = await AsyncValue.guard(() async {
       if (connectivityResult == ConnectivityResult.mobile ||
           connectivityResult == ConnectivityResult.wifi) {
-        bool verifyDone = false;
-        while (!verifyDone) {
-          try {
-            final verify = await http.get(
-                isHttp
-                    ? Uri.http(hostAPI, '/disconnection/getVerify', {
-                        "accountNo": input.accountNo,
-                        "disconnectionDate":
-                            input.disconnectionDate!.toLocal().toIso8601String()
-                      })
-                    : Uri.https(hostAPI, '/disconnection/getVerify', {
-                        "accountNo": input.accountNo,
-                        "disconnectionDate":
-                            input.disconnectionDate!.toLocal().toIso8601String()
-                      }),
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json',
-                  'Authorization': 'Bearer $token',
-                }).timeout(const Duration(seconds: 60));
-            if (verify.statusCode == 200 || verify.statusCode == 201) {
-              if (verify.body == "NotPaid") {
-                events.add(200);
-              }
-              if (verify.body == "Paid") {
-                events.add(400);
-              }
-              if (verify.body == "HasPNOrNotValidBill") {
-                events.add(410);
-              }
-            }
-            verifyDone = true;
-          } catch (ex) {}
+        final verify = await retry(
+          // Make a GET request
+          () => http.get(
+              isHttp
+                  ? Uri.http(hostAPI, '/disconnection/getVerify', {
+                      "accountNo": input.accountNo,
+                      "disconnectionDate":
+                          input.disconnectionDate!.toLocal().toIso8601String()
+                    })
+                  : Uri.https(hostAPI, '/disconnection/getVerify', {
+                      "accountNo": input.accountNo,
+                      "disconnectionDate":
+                          input.disconnectionDate!.toLocal().toIso8601String()
+                    }),
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer $token',
+              }).timeout(const Duration(seconds: 3)),
+          // Retry on SocketException or TimeoutException
+          retryIf: (e) => e is SocketException || e is TimeoutException,
+          onRetry: (p0) {
+            print(p0);
+            print('Retrying Verifying...');
+          },
+        );
+        if (verify.statusCode == 200 || verify.statusCode == 201) {
+          if (verify.body == "NotPaid") {
+            events.add(200);
+          }
+          if (verify.body == "Paid") {
+            events.add(400);
+          }
+          if (verify.body == "HasPNOrNotValidBill") {
+            events.add(410);
+          }
         }
         return _fetchGetDisconnection();
       } else {
