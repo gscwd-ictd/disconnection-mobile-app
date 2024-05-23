@@ -36,8 +36,7 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
         // widget.onPressedFunction();
         // String address =
         //     "${zoneData.barangay} Z${zoneData.zoneNumber} Book${zoneData.bookNumber}";
-        String address =
-            "Zone ${zoneData.zoneNumber} Book ${zoneData.bookNumber}";
+        String address = zoneData.barangay;
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => AssignedAccounts(
                   consumerList: zoneData.consumerList,
@@ -52,16 +51,23 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
             borderRadius: BorderRadius.all(Radius.circular(12.0))),
         child: Padding(
           padding: const EdgeInsets.only(
-              left: 8.0, right: 8.0, top: 18.0, bottom: 8.0),
+              left: 4.0, right: 8.0, top: 8.0, bottom: 8.0),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
               ListTile(
-                leading: SizedBox(
-                  child: Text(
-                    zoneData.totalCount.toString(),
-                  ),
+                leading: Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.black, width: 1)),
+                  child: Text(zoneData.totalCount.toString()),
                 ),
+                // leading: SizedBox(
+                //   child: Text(
+                //     zoneData.totalCount.toString(),
+                //   ),
+                // ),
                 title: Text(barangay),
                 subtitle: Row(
                   children: [
