@@ -107,13 +107,13 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   case ConnectionState.none:
                   case ConnectionState.waiting:
                     return const Padding(
-                      padding: EdgeInsets.all(33.0),
+                      padding: EdgeInsets.all(20.0),
                       child: Icon(Icons.image_outlined),
                     );
                   case ConnectionState.done:
                     return UtilsHandler.mediaFileList!.isEmpty
                         ? const Padding(
-                            padding: EdgeInsets.all(33.0),
+                            padding: EdgeInsets.all(20.0),
                             child: Icon(Icons.image_outlined))
                         : SizedBox(
                             height: 88,
@@ -122,11 +122,11 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   case ConnectionState.active:
                     if (snapshot.hasError) {
                       return const Padding(
-                          padding: EdgeInsets.all(33.0),
+                          padding: EdgeInsets.all(20.0),
                           child: Icon(Icons.image_outlined));
                     } else {
                       return const Padding(
-                        padding: EdgeInsets.all(33.0),
+                        padding: EdgeInsets.all(20.0),
                         child: Icon(Icons.image_outlined),
                       );
                     }
@@ -411,12 +411,12 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       );
     } else if (_pickImageError != null) {
       return const Padding(
-        padding: EdgeInsets.all(33.0),
+        padding: EdgeInsets.all(20.0),
         child: Icon(Icons.error_outline),
       );
     } else {
       return const Padding(
-        padding: EdgeInsets.all(33.0),
+        padding: EdgeInsets.all(20.0),
         child: Icon(Icons.image_outlined),
       );
     }

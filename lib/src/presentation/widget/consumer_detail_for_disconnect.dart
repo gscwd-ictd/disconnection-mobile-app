@@ -87,6 +87,9 @@ class _ConsumerDetailForDisconnectState
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kScaffoldColor,
+        leading: const BackButton(
+          color: Colors.white,
+        ),
       ),
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
@@ -105,46 +108,12 @@ class _ConsumerDetailForDisconnectState
               title: Text(consumerData.consumerName ?? ""),
               subtitle: Text(consumerData.accountNo ?? ""),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.fromLTRB(16.0, 8.0, 0, 2.0),
-            //   child: SizedBox(
-            //     height: 4.h,
-            //     child: Row(
-            //       children: [
-            //         Column(
-            //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //           crossAxisAlignment: CrossAxisAlignment.end,
-            //           children: [
-            //             Text(
-            //               "Account Number:",
-            //               style: TextStyle(fontSize: 12.0.sp),
-            //             ),
-            //           ],
-            //         ),
-            //         Padding(
-            //           padding: const EdgeInsets.only(left: 8.0),
-            //           child: Column(
-            //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               Text(
-            //                 consumerData.accountNo ?? "",
-            //                 style: TextStyle(
-            //                     fontSize: 12.0.sp, fontWeight: FontWeight.bold),
-            //               ),
-            //             ],
-            //           ),
-            //         )
-            //       ],
-            //     ),
-            //   ),
-            // ),
             //Separate Account Number Consumer Name
-            Divider(
+            const Divider(
               thickness: 1,
               endIndent: 10,
               indent: 10,
-              color: Colors.blue[50],
+              color: Colors.black12,
             ),
             ListTile(
               leading: Icon(
@@ -154,74 +123,11 @@ class _ConsumerDetailForDisconnectState
               ),
               title: Text(consumerData.address ?? ""),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 16.0),
-            //   child: FittedBox(
-            //     child: Row(
-            //       children: [
-            //         Column(
-            //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //           crossAxisAlignment: CrossAxisAlignment.end,
-            //           children: [
-            //             Text(
-            //               "Consumer Name:",
-            //               style: TextStyle(fontSize: 12.0.sp),
-            //             ),
-            //           ],
-            //         ),
-            //         Padding(
-            //           padding: const EdgeInsets.only(left: 8.0),
-            //           child: Column(
-            //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               SizedBox(
-            //                 width: 60.w,
-            //                 child: Text(
-            //                   consumerData.consumerName ?? "",
-            //                   // softWrap: true,
-            //                   style: TextStyle(
-            //                       fontSize: 12.0.sp,
-            //                       fontWeight: FontWeight.bold),
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         )
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            // Padding(
-            //   padding: EdgeInsets.only(left: 20.0.w),
-            //   child: SizedBox(
-            //     height: txtSize.width > 150 ? 6.h : null,
-            //     child: Row(
-            //       children: [
-            //         Text(
-            //           "Address:",
-            //           style: TextStyle(fontSize: 12.0.sp),
-            //         ),
-            //         Padding(
-            //           padding: const EdgeInsets.only(left: 8.0),
-            //           child: SizedBox(
-            //               width: 60.w,
-            //               child: Text(
-            //                 consumerData.address!,
-            //                 softWrap: true,
-            //                 maxLines: 3,
-            //                 style: textStyle,
-            //               )),
-            //         )
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            Divider(
+            const Divider(
               thickness: 1,
               endIndent: 10,
               indent: 10,
-              color: Colors.blue[50],
+              color: Colors.black12,
             ),
             ListTile(
               leading: Icon(
@@ -252,11 +158,11 @@ class _ConsumerDetailForDisconnectState
                 ],
               ),
             ),
-            Divider(
+            const Divider(
               thickness: 1,
               endIndent: 10,
               indent: 10,
-              color: Colors.blue[50],
+              color: Colors.black12,
             ),
             ListTile(
               leading: Icon(Icons.info_outline_rounded,
@@ -282,189 +188,157 @@ class _ConsumerDetailForDisconnectState
                 ],
               ),
             ),
-            Divider(
+            const Divider(
               thickness: 1,
               endIndent: 10,
               indent: 10,
-              color: Colors.blue[50],
+              color: Colors.black12,
             ),
-            ListTile(
-              title: const Text("Current Reading"),
-              subtitle: TextField(
-                keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true, signed: false),
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
-                ], // Only numbers can be entered
-                controller: txtCurrentReader,
-                scrollPadding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).viewInsets.bottom + 5),
-                onChanged: (val) {
-                  _checkValidation();
-                },
-                style: TextStyle(fontSize: 12.0.sp, color: kWhiteColor),
-                decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(7.0)),
-                        borderSide: BorderSide(
-                            color: Colors.black, style: BorderStyle.solid)),
-                    hintText: isRead ? "Input Current Here" : "Not Available",
-                    hintStyle: TextStyle(fontSize: 12.0.sp),
-                    fillColor: isRead ? Colors.white : Colors.grey,
-                    filled: true),
-                enabled: isRead,
-              ),
-              trailing: Checkbox(
-                  value: !isRead,
-                  onChanged: (val) {
-                    isRead = !isRead;
-                    txtCurrentReader.text = "";
-                    _checkValidation();
-                  }),
-            ),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 16.0),
-            //   child: SizedBox(
-            //     height: 20.h,
-            //     child: Row(
-            //       children: [
-            //         Column(
-            //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //           crossAxisAlignment: CrossAxisAlignment.end,
-            //           children: [
-            //             Text(
-            //               "No. of Months:",
-            //               style: TextStyle(fontSize: 12.0.sp),
-            //             ),
-            //             Text(
-            //               "Meter Number:",
-            //               style: TextStyle(fontSize: 12.0.sp),
-            //             ),
-            //             Text(
-            //               "Previous Reading:",
-            //               style: TextStyle(fontSize: 12.0.sp),
-            //             ),
-            //             Text(
-            //               "Unpaid Balance:",
-            //               style: TextStyle(fontSize: 12.0.sp),
-            //             ),
-            //             Text(
-            //               "Status:",
-            //               style: TextStyle(fontSize: 12.0.sp),
-            //             ),
-            //           ],
-            //         ),
-            //         Padding(
-            //           padding: const EdgeInsets.only(left: 8.0),
-            //           child: Column(
-            //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               Text(
-            //                 consumerData.noOfMonths.toString(),
-            //                 style: TextStyle(
-            //                     fontSize: 12.0.sp,
-            //                     color: Colors.red,
-            //                     fontWeight: FontWeight.bold),
-            //               ),
-            //               Text(
-            //                 consumerData.meterNo.toString(),
-            //                 style: TextStyle(
-            //                     fontSize: 12.0.sp, fontWeight: FontWeight.bold),
-            //               ),
-            //               Text(
-            //                 consumerData.lastReading.toString(),
-            //                 style: TextStyle(
-            //                     fontSize: 12.0.sp, fontWeight: FontWeight.bold),
-            //               ),
-            //               Text(
-            //                 "P${a.toStringAsFixed(2)}",
-            //                 style: TextStyle(
-            //                     fontSize: 12.0.sp, fontWeight: FontWeight.bold),
-            //               ),
-            //               Text(
-            //                 // stats ? "ACTIVE" : "DISCONNECTED",
-            //                 getStatus(consumerData.status!).getStringVal,
-            //                 style: TextStyle(
-            //                     fontSize: 12.0.sp,
-            //                     fontWeight: FontWeight.bold,
-            //                     color: getStatus(consumerData.status!) ==
-            //                             StatusEnum.cancelled
-            //                         ? Colors.red
-            //                         : null),
-            //               ),
-            //             ],
-            //           ),
-            //         )
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            //Separate checkbox for cant disconnect
-            ListTile(
-              title: const Text("Serial Number"),
-              subtitle: TextField(
-                keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true, signed: false),
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
-                ], // Only numbers can be entered
-                controller: txtSealNo,
-                scrollPadding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).viewInsets.bottom + 5),
-                onChanged: (val) {
-                  _checkValidation();
-                },
-                style: TextStyle(fontSize: 12.0.sp, color: kWhiteColor),
-                decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(7.0)),
-                        borderSide: BorderSide(
-                            color: Colors.black, style: BorderStyle.solid)),
-                    hintText: "Input Serial Number Here",
-                    hintStyle: TextStyle(fontSize: 12.0.sp),
-                    fillColor: isDisconnected ? Colors.white : Colors.grey,
-                    filled: true),
-                enabled: isRead,
-              ),
-              trailing: Checkbox(
-                  value: !isDisconnected,
-                  onChanged: (val) {
-                    isDisconnected = !isDisconnected;
-                    _checkValidation();
-                  }),
-            ),
-            ListTile(
-              title: const Text("Remarks"),
-              subtitle: MultiSelectDropDown<dynamic>(
-                controller: controller,
-                maxItems: 3,
-                onOptionSelected: (List<ValueItem> selectedOptions) {
-                  if (selectedOptions.isNotEmpty) {
-                    selectRemark = selectedOptions[0].label;
-                  } else {
-                    selectRemark = "";
-                  }
-                  _checkValidation();
-                },
-                options: UtilsHandler.remarks,
-                selectionType: SelectionType.single,
-                chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                dropdownHeight: 200,
-                optionTextStyle: const TextStyle(fontSize: 16),
-                selectedOptionIcon: const Icon(Icons.check_circle),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Remarks",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: DropdownMenu<dynamic>(
+                        initialSelection: "Disconnected",
+                        hintText: "Select Remarks",
+                        width: MediaQuery.of(context).size.width * .93,
+                        dropdownMenuEntries: UtilsHandler.remarks
+                            .map<DropdownMenuEntry<dynamic>>((dynamic remarks) {
+                          return DropdownMenuEntry(
+                              value: remarks.value, label: remarks.label);
+                        }).toList(),
+                      ))
+                ],
               ),
             ),
+            const Divider(
+              thickness: 1,
+              endIndent: 10,
+              indent: 10,
+              color: Colors.black12,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
+              child: Row(
+                children: [
+                  Flexible(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 5),
+                        child: Text(
+                          "Current Reading",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      TextField(
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true, signed: false),
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
+                        ], // Only numbers can be entered
+                        controller: txtCurrentReader,
+                        scrollPadding: EdgeInsets.symmetric(
+                            vertical:
+                                MediaQuery.of(context).viewInsets.bottom + 5),
+                        onChanged: (val) {
+                          _checkValidation();
+                        },
+                        style: TextStyle(fontSize: 12.0.sp),
+                        decoration: InputDecoration(
+                            border: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(7.0)),
+                                borderSide: BorderSide(
+                                    color: Colors.black,
+                                    style: BorderStyle.solid)),
+                            hintText:
+                                isRead ? "Input Current Here" : "Not Available",
+                            hintStyle: TextStyle(fontSize: 12.0.sp),
+                            fillColor: isRead ? Colors.white : Colors.grey,
+                            filled: true),
+                        enabled: isRead,
+                      )
+                    ],
+                  )),
+                ],
+              ),
+            ),
+            const Divider(
+              thickness: 1,
+              endIndent: 10,
+              indent: 10,
+              color: Colors.black12,
+            ),
+            Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 5),
+                      child: Text(
+                        "Serial Number",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    TextField(
+                      keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true, signed: false),
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
+                      ], // Only numbers can be entered
+                      controller: txtSealNo,
+                      scrollPadding: EdgeInsets.symmetric(
+                          vertical:
+                              MediaQuery.of(context).viewInsets.bottom + 5),
+                      onChanged: (val) {
+                        _checkValidation();
+                      },
+                      style: TextStyle(fontSize: 12.0.sp, color: kWhiteColor),
+                      decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(7.0)),
+                              borderSide: BorderSide(
+                                  color: Colors.black,
+                                  style: BorderStyle.solid)),
+                          hintText: "Input Serial Number Here",
+                          hintStyle: TextStyle(fontSize: 12.0.sp),
+                          fillColor:
+                              isDisconnected ? Colors.white : Colors.grey,
+                          filled: true),
+                      enabled: isDisconnected,
+                    ),
+                  ],
+                )),
             ListTile(
               title: const Text("Proof"),
               subtitle: _imageWidget,
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50)),
-              onPressed: () => {},
-              child: const Text("Submit"),
-            )
+            Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: kBackgroundColor,
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7))),
+                  onPressed: () => {},
+                  child: const Text(
+                    "Submit",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ))
           ],
         ),
       ),
