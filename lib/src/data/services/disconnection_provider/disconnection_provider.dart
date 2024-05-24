@@ -21,6 +21,7 @@ import 'package:diconnection/src/data/models/zone_model.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive/hive.dart';
+import 'package:http/http.dart';
 import 'package:logger/logger.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:native_exif/native_exif.dart';
@@ -28,6 +29,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:retry/retry.dart';
 
 part 'disconnection_provider.g.dart';
 
@@ -38,12 +40,14 @@ class AsyncDisconnection extends _$AsyncDisconnection {
     String token = await GetPreferences().getStoredAccessToken() ?? "";
     kToken = token;
     String hostAPI = UtilsHandler.apiLink == "" ? kHost : UtilsHandler.apiLink;
+    String progress = "";
     //2020-04-01Z
     try {
       List<ConsumerModel> consList = [];
       List<LibZones> libZones = [];
       if (connectivityResult == ConnectivityResult.mobile ||
           connectivityResult == ConnectivityResult.wifi) {
+        progress = "remarksJson";
         final remarksJson = await http.get(
             isHttp
                 ? Uri.http(hostAPI, '/remarks')
@@ -72,15 +76,25 @@ class AsyncDisconnection extends _$AsyncDisconnection {
           UtilsHandler.remarks = remarksToValue;
           UtilsHandler.itemsML = itemsMLToValue;
         }
-        final json = await http.get(
-            isHttp
-                ? Uri.http(hostAPI, '/disconnection')
-                : Uri.https(hostAPI, '/disconnection'),
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'Authorization': 'Bearer $token',
-            }).timeout(const Duration(seconds: 60));
+        progress = "disconnection";
+        final json = await retry(
+          // Make a GET request
+          () => http.get(
+              isHttp
+                  ? Uri.http(hostAPI, '/disconnection')
+                  : Uri.https(hostAPI, '/disconnection'),
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer $token',
+              }).timeout(const Duration(seconds: 10)),
+          // Retry on SocketException or TimeoutException
+          retryIf: (e) => e is SocketException || e is TimeoutException,
+          onRetry: (p0) {
+            print(p0);
+            print("Timeout Retrying.. Getting Disconnections");
+          },
+        );
         if (json.statusCode == 200 || json.statusCode == 201) {
           // final todos = Map<String, dynamic>.from(jsonDecode(json.body));
           final disc = DisconnectionHandler.fromJson(jsonDecode(json.body));
@@ -112,6 +126,9 @@ class AsyncDisconnection extends _$AsyncDisconnection {
         return convertToZone(consList, libZones);
       }
     } catch (ex) {
+      if (progress == "disconnection") {
+        print(progress);
+      }
       throw Exception(ex);
     }
   }
@@ -308,23 +325,32 @@ class AsyncDisconnection extends _$AsyncDisconnection {
     state = await AsyncValue.guard(() async {
       if (connectivityResult == ConnectivityResult.mobile ||
           connectivityResult == ConnectivityResult.wifi) {
-        final verify = await http.get(
-            isHttp
-                ? Uri.http(hostAPI, '/disconnection/getVerify', {
-                    "accountNo": input.accountNo,
-                    "disconnectionDate":
-                        input.disconnectionDate!.toLocal().toIso8601String()
-                  })
-                : Uri.https(hostAPI, '/disconnection/getVerify', {
-                    "accountNo": input.accountNo,
-                    "disconnectionDate":
-                        input.disconnectionDate!.toLocal().toIso8601String()
-                  }),
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'Authorization': 'Bearer $token',
-            }).timeout(const Duration(seconds: 60));
+        final verify = await retry(
+          // Make a GET request
+          () => http.get(
+              isHttp
+                  ? Uri.http(hostAPI, '/disconnection/getVerify', {
+                      "accountNo": input.accountNo,
+                      "disconnectionDate":
+                          input.disconnectionDate!.toLocal().toIso8601String()
+                    })
+                  : Uri.https(hostAPI, '/disconnection/getVerify', {
+                      "accountNo": input.accountNo,
+                      "disconnectionDate":
+                          input.disconnectionDate!.toLocal().toIso8601String()
+                    }),
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer $token',
+              }).timeout(const Duration(seconds: 3)),
+          // Retry on SocketException or TimeoutException
+          retryIf: (e) => e is SocketException || e is TimeoutException,
+          onRetry: (p0) {
+            print(p0);
+            print('Retrying Verifying...');
+          },
+        );
         if (verify.statusCode == 200 || verify.statusCode == 201) {
           if (verify.body == "NotPaid") {
             events.add(200);

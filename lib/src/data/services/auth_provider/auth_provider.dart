@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
@@ -13,6 +14,7 @@ import 'package:diconnection/src/data/models/super_user_model/super_user_model.d
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:http/http.dart' as http;
+import 'package:retry/retry.dart';
 
 part 'auth_provider.g.dart';
 
@@ -28,15 +30,23 @@ class AsyncAuth extends _$AsyncAuth {
     try {
       if (connectivityResult == ConnectivityResult.mobile ||
           connectivityResult == ConnectivityResult.wifi) {
-        final json = await http.get(
-            isHttp
-                ? Uri.http(hostAPI, 'auth/protected')
-                : Uri.https(hostAPI, 'auth/protected'),
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'Authorization': 'Bearer $token',
-            }).timeout(const Duration(seconds: 60));
+        final json = await retry(
+            // Make a GET request
+            () => http.get(
+                    isHttp
+                        ? Uri.http(hostAPI, 'auth/protected')
+                        : Uri.https(hostAPI, 'auth/protected'),
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/json',
+                      'Authorization': 'Bearer $token',
+                    }).timeout(const Duration(seconds: 10)),
+            // Retry on SocketException or TimeoutException
+            retryIf: (e) => e is SocketException || e is TimeoutException,
+            onRetry: (p0) {
+              print("Retrying Fetching User..");
+              print(p0);
+            });
         if (json.statusCode == 200 || json.statusCode == 201) {
           authCode = 1;
         } else {
@@ -80,17 +90,25 @@ class AsyncAuth extends _$AsyncAuth {
       SuperUser user = const SuperUser(
           team: null, userId: "", username: "", accessToken: "");
       try {
-        final json = await http
-            .post(
-                isHttp
-                    ? Uri.http(hostAPI, 'auth/login')
-                    : Uri.https(hostAPI, 'auth/login'),
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json',
-                },
-                body: jsonEncode(input.toJson()))
-            .timeout(const Duration(seconds: 60));
+        final json = await retry(
+            // Make a GET request
+            () => http
+                .post(
+                    isHttp
+                        ? Uri.http(hostAPI, 'auth/login')
+                        : Uri.https(hostAPI, 'auth/login'),
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/json',
+                    },
+                    body: jsonEncode(input.toJson()))
+                .timeout(const Duration(seconds: 10)),
+            // Retry on SocketException or TimeoutException
+            retryIf: (e) => e is SocketException || e is TimeoutException,
+            onRetry: (p0) {
+              print("Retrying Logging in..");
+              print(p0);
+            });
         if (json.statusCode == 200 || json.statusCode == 201) {
           user = SuperUser.fromJson(
               Map<String, dynamic>.from(jsonDecode(json.body)));
