@@ -229,47 +229,49 @@ class _ConsumerDetailForDisconnectState
               padding: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
               child: Row(
                 children: [
-                  Flexible(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 5),
-                        child: Text(
-                          "Current Reading",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                      TextField(
+                  Expanded(
+                    child: TextField(
                         keyboardType: const TextInputType.numberWithOptions(
                             decimal: true, signed: false),
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
-                        ], // Only numbers can be entered
-                        controller: txtCurrentReader,
-                        scrollPadding: EdgeInsets.symmetric(
-                            vertical:
-                                MediaQuery.of(context).viewInsets.bottom + 5),
-                        onChanged: (val) {
-                          _checkValidation();
-                        },
-                        style: TextStyle(fontSize: 12.0.sp),
-                        decoration: InputDecoration(
-                            border: const OutlineInputBorder(
+                        ],
+                        decoration: const InputDecoration(
+                            hintText: "Current Reading",
+                            border: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(7.0)),
                                 borderSide: BorderSide(
                                     color: Colors.black,
-                                    style: BorderStyle.solid)),
-                            hintText:
-                                isRead ? "Input Current Here" : "Not Available",
-                            hintStyle: TextStyle(fontSize: 12.0.sp),
-                            fillColor: isRead ? Colors.white : Colors.grey,
-                            filled: true),
-                        enabled: isRead,
-                      )
-                    ],
-                  )),
+                                    style: BorderStyle.solid)))),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true, signed: false),
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
+                      ],
+                      controller: txtSealNo,
+                      onChanged: (val) {
+                        _checkValidation();
+                      },
+                      decoration: const InputDecoration(
+                        hintText: "Serial No",
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(7.0)),
+                            borderSide: BorderSide(
+                                color: Colors.black, style: BorderStyle.solid)),
+                      ),
+                    ),
+                  ),
+
+                  // Container(color: Colors.amber, child: const Text("Test")),
+                  // Column(
+                  //   children: [Text("data"), Text("data1")],
+                  // )
                 ],
               ),
             ),
@@ -287,23 +289,14 @@ class _ConsumerDetailForDisconnectState
                     const Padding(
                       padding: EdgeInsets.only(bottom: 5),
                       child: Text(
-                        "Serial Number",
+                        "Additional Remarks",
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
                     TextField(
-                      keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true, signed: false),
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
-                      ], // Only numbers can be entered
-                      controller: txtSealNo,
                       scrollPadding: EdgeInsets.symmetric(
                           vertical:
                               MediaQuery.of(context).viewInsets.bottom + 5),
-                      onChanged: (val) {
-                        _checkValidation();
-                      },
                       style: TextStyle(fontSize: 12.0.sp, color: kWhiteColor),
                       decoration: InputDecoration(
                           border: const OutlineInputBorder(
@@ -312,12 +305,13 @@ class _ConsumerDetailForDisconnectState
                               borderSide: BorderSide(
                                   color: Colors.black,
                                   style: BorderStyle.solid)),
-                          hintText: "Input Serial Number Here",
+                          hintText: "Additional Remarks",
                           hintStyle: TextStyle(fontSize: 12.0.sp),
                           fillColor:
                               isDisconnected ? Colors.white : Colors.grey,
                           filled: true),
                       enabled: isDisconnected,
+                      maxLines: 2,
                     ),
                   ],
                 )),
