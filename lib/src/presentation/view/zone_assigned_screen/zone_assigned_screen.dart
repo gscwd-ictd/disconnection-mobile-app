@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:diconnection/src/core/handler/utils_handler.dart';
+import 'package:diconnection/src/core/messages/reminder_message/reminder_message.dart';
 import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/mock/zones_mock.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
@@ -8,7 +9,10 @@ import 'package:diconnection/src/data/services/auth_provider/auth_provider.dart'
 import 'package:diconnection/src/data/services/disconnection_provider/disconnection_provider.dart';
 import 'package:diconnection/src/presentation/widget/Zone_item_widget.dart';
 import 'package:easy_refresh/easy_refresh.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multi_dropdown/widgets/hint_text.dart';
 import 'package:sizer/sizer.dart';
@@ -55,7 +59,33 @@ class _ZoneAssignedScreenState extends ConsumerState<ZoneAssignedScreen> {
             IconButton(
                 color: kWhiteColor,
                 onPressed: () {
-                  ref.read(asyncAuthProvider.notifier).isExpired();
+                  showDialog(
+                      context: context,
+                      builder: (context) => ReminderMessage(
+                              title: "Logout",
+                              content:
+                                  "Logging out will halt all ongoing operations. Please confirm your logout to proceed. Remember, any unsaved progress may be lost. Are you sure you want to logout?",
+                              textButtons: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      ref
+                                          .read(asyncAuthProvider.notifier)
+                                          .isExpired();
+                                    },
+                                    child: Text(
+                                      'Yes',
+                                      style: TextStyle(fontSize: 16.0.sp),
+                                    )),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      'No',
+                                      style: TextStyle(fontSize: 16.0.sp),
+                                    ))
+                              ]));
                 },
                 icon: const Icon(Icons.logout_rounded))
           ],
@@ -95,9 +125,11 @@ class _ZoneAssignedScreenState extends ConsumerState<ZoneAssignedScreen> {
                   child: Scrollbar(
                     controller: _scrollController,
                     child: SingleChildScrollView(
+                      // physics: const AlwaysScrollableScrollPhysics(),
                       controller: _scrollController,
                       child: EasyRefresh(
                         controller: _controller,
+                        scrollController: _scrollController,
                         header: const ClassicHeader(),
                         onRefresh: () async {
                           if (UtilsHandler.isAvailableToSync ||
@@ -119,10 +151,29 @@ class _ZoneAssignedScreenState extends ConsumerState<ZoneAssignedScreen> {
                           _controller.finishRefresh();
                         },
                         child: SizedBox(
-                          height: 77.h,
+                          height: MediaQuery.of(context).size.height * 0.8,
                           child: switch (disconnection) {
                             AsyncData(:final value) => value.isEmpty
-                                ? const Center(child: Text("Empty"))
+                                ? ListView(
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(20.0),
+                                        constraints: BoxConstraints(
+                                          minHeight: 80.h,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'Empty',
+                                            style: TextStyle(
+                                                fontSize: 20.sp,
+                                                fontWeight: FontWeight.w900),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  )
                                 : ListView.builder(
                                     shrinkWrap: true,
                                     itemCount: txtSearch.text == ""

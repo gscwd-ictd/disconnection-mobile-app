@@ -43,6 +43,7 @@ class _ConsumerDetailForDisconnectState
   TextEditingController txtCurrentReader = TextEditingController();
   TextEditingController txtCustomRemarks = TextEditingController();
   TextEditingController txtSealNo = TextEditingController();
+  TextEditingController txtRemark = TextEditingController();
   final MultiSelectController<dynamic> controller = MultiSelectController();
   final MultiSelectController<dynamic> itemController = MultiSelectController();
   String selectRemark = "";
@@ -84,6 +85,7 @@ class _ConsumerDetailForDisconnectState
     final TextStyle textStyle =
         TextStyle(fontSize: 12.0.sp, fontWeight: FontWeight.bold);
     final Size txtSize = _textSize(consumerData.address!, textStyle);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kScaffoldColor,
@@ -93,9 +95,14 @@ class _ConsumerDetailForDisconnectState
       ),
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
+        padding: EdgeInsets.only(
+            // Just ensure this is set:
+            bottom: MediaQuery.of(context).viewInsets.bottom),
+        physics: const BouncingScrollPhysics(),
         // padding: EdgeInsets.only(
         //     top: 0, bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //Separate Account Number UI
@@ -207,6 +214,7 @@ class _ConsumerDetailForDisconnectState
                   Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: DropdownMenu<dynamic>(
+                        controller: txtRemark,
                         initialSelection: "Disconnected",
                         hintText: "Select Remarks",
                         width: MediaQuery.of(context).size.width * .93,
@@ -231,6 +239,10 @@ class _ConsumerDetailForDisconnectState
                 children: [
                   Expanded(
                     child: TextField(
+                        controller: txtCurrentReader,
+                        scrollPadding: EdgeInsets.symmetric(
+                            vertical:
+                                MediaQuery.of(context).viewInsets.bottom + 5),
                         keyboardType: const TextInputType.numberWithOptions(
                             decimal: true, signed: false),
                         inputFormatters: <TextInputFormatter>[
@@ -253,12 +265,15 @@ class _ConsumerDetailForDisconnectState
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
                       ],
+                      scrollPadding: EdgeInsets.symmetric(
+                          vertical:
+                              MediaQuery.of(context).viewInsets.bottom + 5),
                       controller: txtSealNo,
                       onChanged: (val) {
                         _checkValidation();
                       },
                       decoration: const InputDecoration(
-                        hintText: "Serial No",
+                        hintText: "Seal No",
                         border: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(7.0)),
@@ -295,8 +310,7 @@ class _ConsumerDetailForDisconnectState
                     ),
                     TextField(
                       scrollPadding: EdgeInsets.symmetric(
-                          vertical:
-                              MediaQuery.of(context).viewInsets.bottom + 5),
+                          vertical: MediaQuery.of(context).viewInsets.bottom),
                       style: TextStyle(fontSize: 12.0.sp, color: kWhiteColor),
                       decoration: InputDecoration(
                           border: const OutlineInputBorder(
@@ -323,11 +337,29 @@ class _ConsumerDetailForDisconnectState
                 padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: kBackgroundColor,
+                      backgroundColor:
+                          !isFormValidate ? Colors.grey : kBackgroundColor,
                       minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(7))),
-                  onPressed: () => {},
+                  onPressed: !isFormValidate
+                      ? () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => ErrorMessage(
+                                    title: 'No Proof',
+                                    content:
+                                        'Please Capture a proof to continue.',
+                                    onPressedFunction: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ));
+                          print('not valid');
+                        }
+                      : () {
+                          _disconnectAccount(
+                              context, consumerData, disconnection);
+                        },
                   child: const Text(
                     "Submit",
                     style: TextStyle(color: Colors.white, fontSize: 16),
@@ -356,8 +388,13 @@ class _ConsumerDetailForDisconnectState
     }
   }
 
-  Future<dynamic> _disconnectAccount(BuildContext context,
-      ConsumerModel consumerData, AsyncValue<List<ZoneModel>> disconnection) {
+  Future<dynamic> _disconnectAccount(
+      BuildContext context,
+      ConsumerModel consumerData,
+      AsyncValue<List<ZoneModel>> disconnection) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    bool hasInternet = connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi;
     return showDialog(
         context: context,
         barrierDismissible: false,
@@ -368,19 +405,10 @@ class _ConsumerDetailForDisconnectState
                 textButtons: [
                   TextButton(
                       onPressed: () {
-                        disconnection.when(data: (data) {
-                          setState(() {});
-                          return true;
-                        }, error: (error, stackTrace) {
-                          return false;
-                        }, loading: () {
-                          return true;
-                        });
-                        _events = StreamController<int>();
                         final input = formUpdate();
                         ref
                             .read(asyncDisconnectionProvider.notifier)
-                            .fetchUpdateDisconnection(input, _events);
+                            .offlineMode(input, _events);
                         showDialog(
                             context: context,
                             barrierDismissible: false,
@@ -390,30 +418,26 @@ class _ConsumerDetailForDisconnectState
                                 builder: (BuildContext context,
                                     AsyncSnapshot<int> snapshot) {
                                   switch (snapshot.data!) {
-                                    case 1:
-                                      return VerifyingMessage(
-                                        content: 'Uploading:',
-                                        onPressedFunction: () {},
-                                        state: snapshot.data!,
-                                        success: 2,
-                                        title: '',
-                                      );
-                                    case 2:
-                                      return VerifyingMessage(
-                                        content: 'Submitting',
-                                        onPressedFunction: () {},
-                                        state: snapshot.data!,
-                                        success: 2,
-                                        title: '',
-                                      );
-                                    case 3:
+                                    case 300:
                                       return SuccessMessage(
                                         title: "Success",
-                                        content: "Submit Successfully",
+                                        content: hasInternet
+                                            ? "Submitting. Please continue your disconnection"
+                                            : "Saved Successfully and waiting for internet to sync to server",
                                         onPressedFunction: () {
                                           Navigator.pop(context);
                                           Navigator.pop(context);
                                           Navigator.pop(context, 'refresh');
+                                          if (widget.last) {
+                                            Navigator.pop(context, 'refresh');
+                                          }
+                                          if (hasInternet &&
+                                              !UtilsHandler.executed) {
+                                            Timer.run(() => ref
+                                                .read(
+                                                    asyncSyncProvider.notifier)
+                                                .syncAll());
+                                          }
                                         },
                                       );
                                     case 400:
@@ -495,12 +519,9 @@ class _ConsumerDetailForDisconnectState
 
   void _checkValidation() {
     setState(() {
-      bool cantRead = isRead ? txtCurrentReader.text.isNotEmpty : true;
-      String finalRemarks = selectRemark + txtCustomRemarks.text;
-      if (finalRemarks.isNotEmpty &&
-          txtSealNo.text.isNotEmpty &&
-          cantRead &&
-          UtilsHandler.mediaFileList!.isNotEmpty) {
+      // bool cantRead = isRead ? txtCurrentReader.text.isNotEmpty : true;
+      // String finalRemarks = selectRemark + txtCustomRemarks.text;
+      if (UtilsHandler.mediaFileList!.isNotEmpty) {
         isFormValidate = true;
       } else {
         isFormValidate = false;
@@ -513,7 +534,22 @@ class _ConsumerDetailForDisconnectState
     int stats = a.jobCode == 33
         ? StatusEnum.mlDone.getIntVal
         : StatusEnum.done.getIntVal;
+    String mainRemark = 'Disconnected';
+    isDisconnected =
+        txtRemark.text.toLowerCase().contains(mainRemark.toLowerCase());
     stats = isDisconnected ? stats : StatusEnum.cancelled.getIntVal;
+    int? currentReading =
+        txtCurrentReader.text == '0' || txtCurrentReader.text.isEmpty
+            ? a.lastReading
+            : int.parse(txtCurrentReader.text);
+    String mainRemarks = txtRemark.text;
+    String additionalRemark = txtCustomRemarks.text.isEmpty
+        ? ''
+        : ', Additional Remarks: ${txtCustomRemarks.text}';
+    String sealNo = txtSealNo.text.isEmpty ? '' : ', SealNo: ${txtSealNo.text}';
+    String currentNo = txtCurrentReader.text.isEmpty
+        ? ', Current Reading: No Reading'
+        : ', Current No: ${txtCurrentReader.text}';
     final b = ConsumerModel(
         disconnectionId: a.disconnectionId,
         accountNo: a.accountNo,
@@ -524,8 +560,8 @@ class _ConsumerDetailForDisconnectState
         billAmount: a.billAmount,
         noOfMonths: a.noOfMonths,
         lastReading: a.lastReading,
-        currentReading: isRead ? int.parse(txtCurrentReader.text) : null,
-        remarks: '${txtSealNo.text} $selectRemark ${txtCustomRemarks.text}',
+        currentReading: isDisconnected ? currentReading : null,
+        remarks: '$mainRemarks$currentNo$sealNo$additionalRemark',
         disconnectionDate: a.disconnectionDate,
         disconnectedDate: isDisconnected ? a.disconnectedDate : null,
         zoneNo: a.zoneNo,

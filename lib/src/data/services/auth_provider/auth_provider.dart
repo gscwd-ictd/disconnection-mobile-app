@@ -12,6 +12,7 @@ import 'package:diconnection/src/core/utils/constants.dart';
 import 'package:diconnection/src/data/models/login_model/login_model.dart';
 import 'package:diconnection/src/data/models/super_user_model/super_user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:retry/retry.dart';
@@ -74,7 +75,21 @@ class AsyncAuth extends _$AsyncAuth {
 
   Future<void> isExpired() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() {
+    state = await AsyncValue.guard(() async {
+      final superUserBox = Hive.box('superUser');
+      final consumerBox = Hive.box('consumer');
+      final libZonesBox = Hive.box('libZones');
+      final teamBox = Hive.box('team');
+      final memberBox = Hive.box('member');
+      final proofsBox = Hive.box('proofs');
+      final offlineDiscBox = Hive.box('offlineDisconnection');
+      await superUserBox.clear();
+      await consumerBox.clear();
+      await libZonesBox.clear();
+      await teamBox.clear();
+      await memberBox.clear();
+      await proofsBox.clear();
+      await offlineDiscBox.clear();
       DeletePreferences().deleteAccessToken();
       return _fetchUser();
     });
