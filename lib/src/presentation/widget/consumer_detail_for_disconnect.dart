@@ -239,6 +239,9 @@ class _ConsumerDetailForDisconnectState
                 children: [
                   Expanded(
                     child: TextField(
+                        onChanged: (val) {
+                          _checkValidation();
+                        },
                         controller: txtCurrentReader,
                         scrollPadding: EdgeInsets.symmetric(
                             vertical:
@@ -309,9 +312,10 @@ class _ConsumerDetailForDisconnectState
                       ),
                     ),
                     TextField(
+                      controller: txtCustomRemarks,
                       scrollPadding: EdgeInsets.symmetric(
                           vertical: MediaQuery.of(context).viewInsets.bottom),
-                      style: TextStyle(fontSize: 12.0.sp, color: kWhiteColor),
+                      style: TextStyle(fontSize: 12.0.sp, color: Colors.black),
                       decoration: InputDecoration(
                           border: const OutlineInputBorder(
                               borderRadius:
@@ -349,7 +353,7 @@ class _ConsumerDetailForDisconnectState
                               builder: (context) => ErrorMessage(
                                     title: 'No Proof',
                                     content:
-                                        'Please Capture a proof to continue.',
+                                        'Please make sure your current reading is greater than Previous reading and Capture a proof to continue.',
                                     onPressedFunction: () {
                                       Navigator.pop(context);
                                     },
@@ -518,10 +522,14 @@ class _ConsumerDetailForDisconnectState
   }
 
   void _checkValidation() {
+    final a = widget.consumerData;
     setState(() {
       // bool cantRead = isRead ? txtCurrentReader.text.isNotEmpty : true;
       // String finalRemarks = selectRemark + txtCustomRemarks.text;
-      if (UtilsHandler.mediaFileList!.isNotEmpty) {
+      var myInt =
+          txtCurrentReader.text.isEmpty ? 0 : int.parse(txtCurrentReader.text);
+      bool currentReadValidations = myInt > a.lastReading! || myInt == 0;
+      if (UtilsHandler.mediaFileList!.isNotEmpty && currentReadValidations) {
         isFormValidate = true;
       } else {
         isFormValidate = false;
@@ -560,7 +568,7 @@ class _ConsumerDetailForDisconnectState
         billAmount: a.billAmount,
         noOfMonths: a.noOfMonths,
         lastReading: a.lastReading,
-        currentReading: isDisconnected ? currentReading : null,
+        currentReading: currentReading,
         remarks: '$mainRemarks$currentNo$sealNo$additionalRemark',
         disconnectionDate: a.disconnectionDate,
         disconnectedDate: isDisconnected ? a.disconnectedDate : null,
