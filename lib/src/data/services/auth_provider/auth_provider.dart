@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:diconnection/src/core/handler/utils_handler.dart';
+import 'package:diconnection/src/core/messages/error_message/error_message.dart';
 import 'package:diconnection/src/core/messages/warning_message/warning_message.dart';
 import 'package:diconnection/src/core/shared_preferences/delete_preferences.dart';
 import 'package:diconnection/src/core/shared_preferences/get_preferences.dart';
@@ -44,6 +45,7 @@ class AsyncAuth extends _$AsyncAuth {
                     }).timeout(const Duration(seconds: 10)),
             // Retry on SocketException or TimeoutException
             retryIf: (e) => e is SocketException || e is TimeoutException,
+            maxAttempts: 3,
             onRetry: (p0) {
               print("Retrying Fetching User..");
               print(p0);
@@ -120,6 +122,7 @@ class AsyncAuth extends _$AsyncAuth {
                 .timeout(const Duration(seconds: 10)),
             // Retry on SocketException or TimeoutException
             retryIf: (e) => e is SocketException || e is TimeoutException,
+            maxAttempts: 3,
             onRetry: (p0) {
               print("Retrying Logging in..");
               print(p0);
@@ -132,18 +135,32 @@ class AsyncAuth extends _$AsyncAuth {
           UtilsHandler().passText.clear();
           return _fetchUser();
         } else {
+          if (json.statusCode == 401) {
+            showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) => WarningMessage(
+                      content: 'invalid username or password',
+                      title: 'Invalid Credential',
+                      function: () {
+                        Navigator.pop(context);
+                      },
+                    ));
+          } else {
+            showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) => ErrorMessage(
+                    title: 'Cant Connect',
+                    content:
+                        'Cant connect to server. Please Contact Technical or Your Supervisor',
+                    onPressedFunction: () {
+                      Navigator.pop(context);
+                    }));
+          }
           events.add(2);
           // ignore: use_build_context_synchronously
-          showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) => WarningMessage(
-                    content: 'invalid username or password',
-                    title: 'Invalid Credential',
-                    function: () {
-                      Navigator.pop(context);
-                    },
-                  ));
+
           throw Exception(
               'Error: ${json.statusCode} \n Failed to Login from API');
         }

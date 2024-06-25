@@ -120,7 +120,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    final ping = Ping('122.3.104.117', timeout: 2, interval: 2);
+    final ping = Ping('disconnection-api.gscwd.app', timeout: 2, interval: 2);
     // Begin ping process and listen for output
     Offset _offset = Offset.zero;
     bool initConState = false;
@@ -147,50 +147,56 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             initialData: Connectivity().checkConnectivity(),
             stream: Connectivity().onConnectivityChanged,
             builder: (context, snapshot) {
-              final connectivityResult = snapshot.data;
-              if (connectivityResult == ConnectivityResult.mobile ||
-                  connectivityResult == ConnectivityResult.wifi ||
-                  connectivityResult == ConnectivityResult.ethernet) {
-                //ONLINE REGION
-                print('Running command: ${ping.command}');
-                try {
-                  ping.stream.listen((event) {
-                    try {
-                      UtilsHandler.ping = event.response!.time!.inMilliseconds;
-                    } catch (ex) {
-                      UtilsHandler.ping = 0;
-                    }
-                    print(event);
-                  });
-                } catch (e) {
-                  print(e);
-                }
-                if (UtilsHandler.isAvailableToSync) {
-                  Timer.run(
-                      () => ref.read(asyncSyncProvider.notifier).syncAll());
-                }
-                if (initConState) {
-                  SnackBar snackBar = const SnackBar(
-                      backgroundColor: Colors.greenAccent,
-                      content: Text(
-                        "Connection Restored",
-                        style: TextStyle(color: Colors.black),
-                      ));
+              try {
+                final connectivityResult =
+                    snapshot.data as List<ConnectivityResult>;
+                if (connectivityResult[0] == ConnectivityResult.mobile ||
+                    connectivityResult[0] == ConnectivityResult.wifi ||
+                    connectivityResult[0] == ConnectivityResult.ethernet) {
+                  //ONLINE REGION
+                  print('Running command: ${ping.command}');
+                  try {
+                    ping.stream.listen((event) {
+                      try {
+                        UtilsHandler.ping =
+                            event.response!.time!.inMilliseconds;
+                      } catch (ex) {
+                        UtilsHandler.ping = 0;
+                      }
+                      print(event);
+                    });
+                  } catch (e) {
+                    print(e);
+                  }
+                  if (UtilsHandler.isAvailableToSync) {
+                    Timer.run(
+                        () => ref.read(asyncSyncProvider.notifier).syncAll());
+                  }
+                  if (initConState) {
+                    SnackBar snackBar = const SnackBar(
+                        backgroundColor: Colors.greenAccent,
+                        content: Text(
+                          "Connection Restored",
+                          style: TextStyle(color: Colors.black),
+                        ));
+                    Timer.run(() =>
+                        ScaffoldMessenger.of(_scaffoldKey.currentContext!)
+                            .showSnackBar(snackBar));
+                  }
+                  UtilsHandler.hasConnection = true;
+                } else {
+                  UtilsHandler.ping = 0;
+                  //OFLINE REGION
+                  const SnackBar snackBar =
+                      SnackBar(content: Text("No Internet Connection"));
                   Timer.run(() =>
                       ScaffoldMessenger.of(_scaffoldKey.currentContext!)
                           .showSnackBar(snackBar));
+                  UtilsHandler.hasConnection = false;
+                  initConState = true;
                 }
-                UtilsHandler.hasConnection = true;
-              } else {
-                UtilsHandler.ping = 0;
-                //OFLINE REGION
-                const SnackBar snackBar =
-                    SnackBar(content: Text("No Internet Connection"));
-                Timer.run(() =>
-                    ScaffoldMessenger.of(_scaffoldKey.currentContext!)
-                        .showSnackBar(snackBar));
-                UtilsHandler.hasConnection = false;
-                initConState = true;
+              } catch (ex) {
+                print(ex);
               }
               return const Login();
             }),

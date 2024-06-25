@@ -43,7 +43,7 @@ class _LoginState extends ConsumerState<Login> {
     super.initState();
   }
 
-  void _hidePass(OverlayScreen overlay) {
+  void _hidePass() {
     setState(() {
       if (_hidePassword) {
         _hidePassword = false;
@@ -200,9 +200,9 @@ class _LoginState extends ConsumerState<Login> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0)),
                     suffixIcon: IconButton(
-                      icon: Icon(Icons.remove_red_eye),
+                      icon: const Icon(Icons.remove_red_eye),
                       onPressed: () {
-                        _hidePass(overlayScreen!);
+                        _hidePass();
                       },
                     ),
                   ),
@@ -244,9 +244,9 @@ class _LoginState extends ConsumerState<Login> {
       //         borderRadius: BorderRadius.circular(5.0)))),
       onPressed: () async {
         var connectivityResult = await (Connectivity().checkConnectivity());
-        if (connectivityResult == ConnectivityResult.mobile ||
-            connectivityResult == ConnectivityResult.wifi ||
-            connectivityResult == ConnectivityResult.ethernet) {
+        if (connectivityResult[0] == ConnectivityResult.mobile ||
+            connectivityResult[0] == ConnectivityResult.wifi ||
+            connectivityResult[0] == ConnectivityResult.ethernet) {
           LoginM a = LoginM(password: passText.text, username: userText.text);
           // ignore: use_build_context_synchronously
           ref
