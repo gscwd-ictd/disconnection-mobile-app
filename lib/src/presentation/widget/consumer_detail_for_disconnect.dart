@@ -397,8 +397,8 @@ class _ConsumerDetailForDisconnectState
       ConsumerModel consumerData,
       AsyncValue<List<ZoneModel>> disconnection) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    bool hasInternet = connectivityResult == ConnectivityResult.mobile ||
-        connectivityResult == ConnectivityResult.wifi;
+    bool hasInternet = connectivityResult[0] == ConnectivityResult.mobile ||
+        connectivityResult[0] == ConnectivityResult.wifi;
     return showDialog(
         context: context,
         barrierDismissible: false,
