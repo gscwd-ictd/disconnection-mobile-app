@@ -42,6 +42,8 @@ mixin _$ConsumerModel {
   int? get seqNo => throw _privateConstructorUsedError;
   int? get jobCode => throw _privateConstructorUsedError;
   Team? get disconnectionTeam => throw _privateConstructorUsedError;
+  DateTime? get dispatchDateTime => throw _privateConstructorUsedError;
+  DateTime? get lastUpdated => throw _privateConstructorUsedError;
   List<ProofOfDisconnection>? get proofOfDisconnection =>
       throw _privateConstructorUsedError;
 
@@ -80,6 +82,8 @@ abstract class $ConsumerModelCopyWith<$Res> {
       int? seqNo,
       int? jobCode,
       Team? disconnectionTeam,
+      DateTime? dispatchDateTime,
+      DateTime? lastUpdated,
       List<ProofOfDisconnection>? proofOfDisconnection});
 
   $TeamCopyWith<$Res>? get disconnectionTeam;
@@ -120,6 +124,8 @@ class _$ConsumerModelCopyWithImpl<$Res, $Val extends ConsumerModel>
     Object? seqNo = freezed,
     Object? jobCode = freezed,
     Object? disconnectionTeam = freezed,
+    Object? dispatchDateTime = freezed,
+    Object? lastUpdated = freezed,
     Object? proofOfDisconnection = freezed,
   }) {
     return _then(_value.copyWith(
@@ -211,6 +217,14 @@ class _$ConsumerModelCopyWithImpl<$Res, $Val extends ConsumerModel>
           ? _value.disconnectionTeam
           : disconnectionTeam // ignore: cast_nullable_to_non_nullable
               as Team?,
+      dispatchDateTime: freezed == dispatchDateTime
+          ? _value.dispatchDateTime
+          : dispatchDateTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      lastUpdated: freezed == lastUpdated
+          ? _value.lastUpdated
+          : lastUpdated // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       proofOfDisconnection: freezed == proofOfDisconnection
           ? _value.proofOfDisconnection
           : proofOfDisconnection // ignore: cast_nullable_to_non_nullable
@@ -262,6 +276,8 @@ abstract class _$$ConsumerModelImplCopyWith<$Res>
       int? seqNo,
       int? jobCode,
       Team? disconnectionTeam,
+      DateTime? dispatchDateTime,
+      DateTime? lastUpdated,
       List<ProofOfDisconnection>? proofOfDisconnection});
 
   @override
@@ -301,6 +317,8 @@ class __$$ConsumerModelImplCopyWithImpl<$Res>
     Object? seqNo = freezed,
     Object? jobCode = freezed,
     Object? disconnectionTeam = freezed,
+    Object? dispatchDateTime = freezed,
+    Object? lastUpdated = freezed,
     Object? proofOfDisconnection = freezed,
   }) {
     return _then(_$ConsumerModelImpl(
@@ -392,6 +410,14 @@ class __$$ConsumerModelImplCopyWithImpl<$Res>
           ? _value.disconnectionTeam
           : disconnectionTeam // ignore: cast_nullable_to_non_nullable
               as Team?,
+      dispatchDateTime: freezed == dispatchDateTime
+          ? _value.dispatchDateTime
+          : dispatchDateTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      lastUpdated: freezed == lastUpdated
+          ? _value.lastUpdated
+          : lastUpdated // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       proofOfDisconnection: freezed == proofOfDisconnection
           ? _value._proofOfDisconnection
           : proofOfDisconnection // ignore: cast_nullable_to_non_nullable
@@ -426,6 +452,8 @@ class _$ConsumerModelImpl implements _ConsumerModel {
       required this.seqNo,
       required this.jobCode,
       required this.disconnectionTeam,
+      required this.dispatchDateTime,
+      required this.lastUpdated,
       required final List<ProofOfDisconnection>? proofOfDisconnection})
       : _proofOfDisconnection = proofOfDisconnection;
 
@@ -476,6 +504,10 @@ class _$ConsumerModelImpl implements _ConsumerModel {
   final int? jobCode;
   @override
   final Team? disconnectionTeam;
+  @override
+  final DateTime? dispatchDateTime;
+  @override
+  final DateTime? lastUpdated;
   final List<ProofOfDisconnection>? _proofOfDisconnection;
   @override
   List<ProofOfDisconnection>? get proofOfDisconnection {
@@ -489,7 +521,7 @@ class _$ConsumerModelImpl implements _ConsumerModel {
 
   @override
   String toString() {
-    return 'ConsumerModel(disconnectionId: $disconnectionId, accountNo: $accountNo, prevAccountNo: $prevAccountNo, consumerName: $consumerName, address: $address, meterNo: $meterNo, billAmount: $billAmount, noOfMonths: $noOfMonths, lastReading: $lastReading, currentReading: $currentReading, remarks: $remarks, disconnectionDate: $disconnectionDate, disconnectedDate: $disconnectedDate, disconnectedTime: $disconnectedTime, zoneNo: $zoneNo, bookNo: $bookNo, isConnected: $isConnected, isPayed: $isPayed, status: $status, seqNo: $seqNo, jobCode: $jobCode, disconnectionTeam: $disconnectionTeam, proofOfDisconnection: $proofOfDisconnection)';
+    return 'ConsumerModel(disconnectionId: $disconnectionId, accountNo: $accountNo, prevAccountNo: $prevAccountNo, consumerName: $consumerName, address: $address, meterNo: $meterNo, billAmount: $billAmount, noOfMonths: $noOfMonths, lastReading: $lastReading, currentReading: $currentReading, remarks: $remarks, disconnectionDate: $disconnectionDate, disconnectedDate: $disconnectedDate, disconnectedTime: $disconnectedTime, zoneNo: $zoneNo, bookNo: $bookNo, isConnected: $isConnected, isPayed: $isPayed, status: $status, seqNo: $seqNo, jobCode: $jobCode, disconnectionTeam: $disconnectionTeam, dispatchDateTime: $dispatchDateTime, lastUpdated: $lastUpdated, proofOfDisconnection: $proofOfDisconnection)';
   }
 
   @override
@@ -532,6 +564,10 @@ class _$ConsumerModelImpl implements _ConsumerModel {
             (identical(other.jobCode, jobCode) || other.jobCode == jobCode) &&
             (identical(other.disconnectionTeam, disconnectionTeam) ||
                 other.disconnectionTeam == disconnectionTeam) &&
+            (identical(other.dispatchDateTime, dispatchDateTime) ||
+                other.dispatchDateTime == dispatchDateTime) &&
+            (identical(other.lastUpdated, lastUpdated) ||
+                other.lastUpdated == lastUpdated) &&
             const DeepCollectionEquality()
                 .equals(other._proofOfDisconnection, _proofOfDisconnection));
   }
@@ -562,6 +598,8 @@ class _$ConsumerModelImpl implements _ConsumerModel {
         seqNo,
         jobCode,
         disconnectionTeam,
+        dispatchDateTime,
+        lastUpdated,
         const DeepCollectionEquality().hash(_proofOfDisconnection)
       ]);
 
@@ -603,6 +641,8 @@ abstract class _ConsumerModel implements ConsumerModel {
           required final int? seqNo,
           required final int? jobCode,
           required final Team? disconnectionTeam,
+          required final DateTime? dispatchDateTime,
+          required final DateTime? lastUpdated,
           required final List<ProofOfDisconnection>? proofOfDisconnection}) =
       _$ConsumerModelImpl;
 
@@ -653,6 +693,10 @@ abstract class _ConsumerModel implements ConsumerModel {
   int? get jobCode;
   @override
   Team? get disconnectionTeam;
+  @override
+  DateTime? get dispatchDateTime;
+  @override
+  DateTime? get lastUpdated;
   @override
   List<ProofOfDisconnection>? get proofOfDisconnection;
   @override

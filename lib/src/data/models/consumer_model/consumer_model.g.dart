@@ -36,6 +36,12 @@ _$ConsumerModelImpl _$$ConsumerModelImplFromJson(Map<String, dynamic> json) =>
       disconnectionTeam: json['disconnectionTeam'] == null
           ? null
           : Team.fromJson(json['disconnectionTeam'] as Map<String, dynamic>),
+      dispatchDateTime: json['dispatchDateTime'] == null
+          ? null
+          : DateTime.parse(json['dispatchDateTime'] as String),
+      lastUpdated: json['lastUpdated'] == null
+          ? null
+          : DateTime.parse(json['lastUpdated'] as String),
       proofOfDisconnection: (json['proofOfDisconnection'] as List<dynamic>?)
           ?.map((e) => ProofOfDisconnection.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -65,5 +71,7 @@ Map<String, dynamic> _$$ConsumerModelImplToJson(_$ConsumerModelImpl instance) =>
       'seqNo': instance.seqNo,
       'jobCode': instance.jobCode,
       'disconnectionTeam': instance.disconnectionTeam,
+      'dispatchDateTime': instance.dispatchDateTime?.toIso8601String(),
+      'lastUpdated': instance.lastUpdated?.toIso8601String(),
       'proofOfDisconnection': instance.proofOfDisconnection,
     };

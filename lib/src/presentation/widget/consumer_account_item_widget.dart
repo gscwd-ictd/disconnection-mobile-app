@@ -60,118 +60,132 @@ class _ConsumerAccountItemWidgetState
       onTap: () async {
         _events = StreamController<int>();
         if (stats) {
-          ref
-              .read(asyncDisconnectionProvider.notifier)
-              .verify(consumerData, _events);
-          // ignore: use_build_context_synchronously
-          showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (context) => StreamBuilder<int>(
-                  initialData: 0,
-                  stream: _events.stream,
-                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                    switch (snapshot.data!) {
-                      case 0:
-                        return VerifyingMessage(
-                          content: 'Verifying:',
-                          onPressedFunction: () {},
-                          state: snapshot.data!,
-                          success: 1,
-                          title: '',
-                        );
-                      case 200:
-                        return ProceedMessage(
-                            hasWifi: true,
-                            title: 'Not Paid ',
-                            content: '${consumerName} has not paid yet',
-                            function: () async {
-                              Navigator.pop(context);
-                              refresh = await Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ConsumerDetailForDisconnect(
-                                                last: widget.last,
-                                                consumerData: consumerData,
-                                                index: 0,
-                                                onPressedFunction: () {},
-                                              ))) ??
-                                  "";
-                              if (refresh == 'refresh') {
-                                widget.onPressedFunction();
-                              }
-                            });
-                      case 300:
-                        return ProceedMessage(
-                            hasWifi: false,
-                            title: 'No Internet ',
+          if (consumerData.status == StatusEnum.cancelled.getIntVal) {
+            showDialog(
+                context: context,
+                builder: (constext) => SuccessMessage(
+                    title: 'Already Cancelled',
+                    content:
+                        'The request to cancel has been processed and confirmed.',
+                    onPressedFunction: () {
+                      Navigator.pop(context);
+                      setState(() {});
+                    }));
+          } else {
+            ref
+                .read(asyncDisconnectionProvider.notifier)
+                .verify(consumerData, _events);
+            // ignore: use_build_context_synchronously
+            showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) => StreamBuilder<int>(
+                    initialData: 0,
+                    stream: _events.stream,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<int> snapshot) {
+                      switch (snapshot.data!) {
+                        case 0:
+                          return VerifyingMessage(
+                            content: 'Verifying:',
+                            onPressedFunction: () {},
+                            state: snapshot.data!,
+                            success: 1,
+                            title: '',
+                          );
+                        case 200:
+                          return ProceedMessage(
+                              hasWifi: true,
+                              title: 'Not Paid ',
+                              content: '${consumerName} has not paid yet',
+                              function: () async {
+                                Navigator.pop(context);
+                                refresh = await Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ConsumerDetailForDisconnect(
+                                                  last: widget.last,
+                                                  consumerData: consumerData,
+                                                  index: 0,
+                                                  onPressedFunction: () {},
+                                                ))) ??
+                                    "";
+                                if (refresh == 'refresh') {
+                                  widget.onPressedFunction();
+                                }
+                              });
+                        case 300:
+                          return ProceedMessage(
+                              hasWifi: false,
+                              title: 'No Internet ',
+                              content:
+                                  '$consumerName not verified if paid or not. Please call to verify',
+                              function: () async {
+                                Navigator.pop(context);
+                                refresh = await Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ConsumerDetailForDisconnect(
+                                                  last: widget.last,
+                                                  consumerData: consumerData,
+                                                  index: 0,
+                                                  onPressedFunction: () {},
+                                                ))) ??
+                                    "";
+                                if (refresh == 'refresh') {
+                                  widget.onPressedFunction();
+                                }
+                              });
+                        case 400:
+                          return SuccessMessage(
+                            title: "Already Paid",
                             content:
-                                '$consumerName not verified if paid or not. Please call to verify',
-                            function: () async {
+                                "Please abort disconnection the Consumer was already paid",
+                            onPressedFunction: () {
+                              Navigator.pop(context, 'refresh');
+                              setState(() {});
+                            },
+                          );
+                        case 410:
+                          return SuccessMessage(
+                            title: "Has Promissory Note/Bill was not valid",
+                            content:
+                                "Please abort disconnection for $consumerName",
+                            onPressedFunction: () {
+                              Navigator.pop(context, 'refresh');
+                              setState(() {});
+                            },
+                          );
+                        case 401: //Failed to Verify Please try again
+                          return ErrorMessage(
+                            title: 'Expired Session',
+                            content: 'Please login again.',
+                            onPressedFunction: () {
                               Navigator.pop(context);
-                              refresh = await Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ConsumerDetailForDisconnect(
-                                                last: widget.last,
-                                                consumerData: consumerData,
-                                                index: 0,
-                                                onPressedFunction: () {},
-                                              ))) ??
-                                  "";
-                              if (refresh == 'refresh') {
-                                widget.onPressedFunction();
-                              }
-                            });
-                      case 400:
-                        return SuccessMessage(
-                          title: "Already Paid",
-                          content:
-                              "Please abort disconnection the Consumer was already paid",
-                          onPressedFunction: () {
-                            Navigator.pop(context, 'refresh');
-                            setState(() {});
-                          },
-                        );
-                      case 410:
-                        return SuccessMessage(
-                          title: "Has Promissory Note/Bill was not valid",
-                          content:
-                              "Please abort disconnection for $consumerName",
-                          onPressedFunction: () {
-                            Navigator.pop(context, 'refresh');
-                            setState(() {});
-                          },
-                        );
-                      case 401: //Failed to Verify Please try again
-                        return ErrorMessage(
-                          title: 'Expired Session',
-                          content: 'Please login again.',
-                          onPressedFunction: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                        );
-                      case 500: //Failed to Verify Please try again
-                        return ErrorMessage(
-                          title: 'Please try again',
-                          content: 'Failed to Verify Please try again',
-                          onPressedFunction: () {
-                            Navigator.pop(context);
-                          },
-                        );
-                      default:
-                        return ErrorMessage(
-                          title: 'Please try again',
-                          content: 'There is error',
-                          onPressedFunction: () {
-                            Navigator.pop(context);
-                          },
-                        );
-                    }
-                  }));
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                          );
+                        case 500: //Failed to Verify Please try again
+                          return ErrorMessage(
+                            title: 'Please try again',
+                            content: 'Failed to Verify Please try again',
+                            onPressedFunction: () {
+                              Navigator.pop(context);
+                            },
+                          );
+                        default:
+                          return ErrorMessage(
+                            title: 'Please try again',
+                            content: 'There is error',
+                            onPressedFunction: () {
+                              Navigator.pop(context);
+                            },
+                          );
+                      }
+                    }));
+          }
         } else {
           refresh = await Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => !stats

@@ -79,6 +79,12 @@ class ConsumerHive {
   @HiveField(44)
   final int? jobCode;
 
+  @HiveField(45)
+  final DateTime? dispatchDateTime;
+
+  @HiveField(46)
+  final DateTime? lastUpdated;
+
   ConsumerHive(
       {this.disconnectionId,
       this.accountNo,
@@ -102,5 +108,7 @@ class ConsumerHive {
       this.seqNo,
       this.disconnectionTeam,
       this.proofOfDisconnection,
-      this.jobCode});
+      this.jobCode,
+      this.dispatchDateTime,
+      this.lastUpdated});
 }

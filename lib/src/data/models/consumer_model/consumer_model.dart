@@ -31,6 +31,8 @@ class ConsumerModel with _$ConsumerModel {
           required int? seqNo,
           required int? jobCode,
           required Team? disconnectionTeam,
+          required DateTime? dispatchDateTime,
+          required DateTime? lastUpdated,
           required List<ProofOfDisconnection>? proofOfDisconnection}) =
       _ConsumerModel;
 

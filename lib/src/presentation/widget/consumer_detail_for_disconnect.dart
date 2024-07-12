@@ -559,6 +559,8 @@ class _ConsumerDetailForDisconnectState
         ? ', Current Reading: No Reading'
         : ', Current No: ${txtCurrentReader.text}';
     final b = ConsumerModel(
+        lastUpdated: a.lastUpdated,
+        dispatchDateTime: a.dispatchDateTime,
         disconnectionId: a.disconnectionId,
         accountNo: a.accountNo,
         prevAccountNo: a.prevAccountNo ?? "",

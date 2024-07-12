@@ -20,7 +20,7 @@ LoginM _$LoginMFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$LoginM {
-  String? get username => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
   String? get password => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -33,7 +33,7 @@ abstract class $LoginMCopyWith<$Res> {
   factory $LoginMCopyWith(LoginM value, $Res Function(LoginM) then) =
       _$LoginMCopyWithImpl<$Res, LoginM>;
   @useResult
-  $Res call({String? username, String? password});
+  $Res call({String? email, String? password});
 }
 
 /// @nodoc
@@ -49,13 +49,13 @@ class _$LoginMCopyWithImpl<$Res, $Val extends LoginM>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? username = freezed,
+    Object? email = freezed,
     Object? password = freezed,
   }) {
     return _then(_value.copyWith(
-      username: freezed == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
               as String?,
       password: freezed == password
           ? _value.password
@@ -72,7 +72,7 @@ abstract class _$$LoginMImplCopyWith<$Res> implements $LoginMCopyWith<$Res> {
       __$$LoginMImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? username, String? password});
+  $Res call({String? email, String? password});
 }
 
 /// @nodoc
@@ -86,13 +86,13 @@ class __$$LoginMImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? username = freezed,
+    Object? email = freezed,
     Object? password = freezed,
   }) {
     return _then(_$LoginMImpl(
-      username: freezed == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
               as String?,
       password: freezed == password
           ? _value.password
@@ -105,19 +105,19 @@ class __$$LoginMImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$LoginMImpl implements _LoginM {
-  const _$LoginMImpl({required this.username, required this.password});
+  const _$LoginMImpl({required this.email, required this.password});
 
   factory _$LoginMImpl.fromJson(Map<String, dynamic> json) =>
       _$$LoginMImplFromJson(json);
 
   @override
-  final String? username;
+  final String? email;
   @override
   final String? password;
 
   @override
   String toString() {
-    return 'LoginM(username: $username, password: $password)';
+    return 'LoginM(email: $email, password: $password)';
   }
 
   @override
@@ -125,15 +125,14 @@ class _$LoginMImpl implements _LoginM {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoginMImpl &&
-            (identical(other.username, username) ||
-                other.username == username) &&
+            (identical(other.email, email) || other.email == email) &&
             (identical(other.password, password) ||
                 other.password == password));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, username, password);
+  int get hashCode => Object.hash(runtimeType, email, password);
 
   @JsonKey(ignore: true)
   @override
@@ -151,13 +150,13 @@ class _$LoginMImpl implements _LoginM {
 
 abstract class _LoginM implements LoginM {
   const factory _LoginM(
-      {required final String? username,
+      {required final String? email,
       required final String? password}) = _$LoginMImpl;
 
   factory _LoginM.fromJson(Map<String, dynamic> json) = _$LoginMImpl.fromJson;
 
   @override
-  String? get username;
+  String? get email;
   @override
   String? get password;
   @override

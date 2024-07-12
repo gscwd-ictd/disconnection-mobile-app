@@ -6,6 +6,8 @@ import 'package:diconnection/src/data/models/team_model/team_transform_model.dar
 class ConsumerTransform {
   ConsumerModel consumerHiveToModel(ConsumerHive a) {
     final consumerModel = ConsumerModel(
+        lastUpdated: a.lastUpdated,
+        dispatchDateTime: a.dispatchDateTime,
         accountNo: a.accountNo,
         address: a.address,
         billAmount: a.billAmount,

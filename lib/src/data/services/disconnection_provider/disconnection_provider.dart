@@ -45,8 +45,8 @@ class AsyncDisconnection extends _$AsyncDisconnection {
     try {
       List<ConsumerModel> consList = [];
       List<LibZones> libZones = [];
-      if (connectivityResult == ConnectivityResult.mobile ||
-          connectivityResult == ConnectivityResult.wifi) {
+      if (connectivityResult[0] == ConnectivityResult.mobile ||
+          connectivityResult[0] == ConnectivityResult.wifi) {
         progress = "remarksJson";
         final remarksJson = await http.get(
             isHttp
@@ -105,9 +105,19 @@ class AsyncDisconnection extends _$AsyncDisconnection {
             consumerList = consumerList
               ..removeWhere((item) => item.accountNo == c.consumer.accountNo);
           }
+          // for (var consumer in consumerList) {
+          //   if (consumer.lastUpdated != null) {
+          //     int inDays = consumer.lastUpdated!
+          //         .difference(DateTime(2024, 7, 12, 23))
+          //         .inDays;
+          //     if (inDays == 0 && consumer.status == 2) {
+          //       consList.add(consumer);
+          //     }
+          //   }
+          // }
           consList = consumerList;
           libZones = disc.zoneList!;
-          await saveToConsumerBox(consumerList);
+          await saveToConsumerBox(consList);
           await saveToLibZoneBox(disc.zoneList!);
           // final consumerList = todos.map(DisconnectionHandler.fromJson).toList();
           //hunt for same zone and book
@@ -182,6 +192,8 @@ class AsyncDisconnection extends _$AsyncDisconnection {
     List<ConsumerModel> consumerList = [];
     for (var a in consumerSorted) {
       final consumer = ConsumerModel(
+          lastUpdated: a.lastUpdated,
+          dispatchDateTime: a.dispatchDateTime,
           disconnectionId: a.disconnectionId,
           accountNo: a.accountNo,
           prevAccountNo: a.prevAccountNo,
@@ -323,8 +335,8 @@ class AsyncDisconnection extends _$AsyncDisconnection {
     String token = await GetPreferences().getStoredAccessToken() ?? "";
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      if (connectivityResult == ConnectivityResult.mobile ||
-          connectivityResult == ConnectivityResult.wifi) {
+      if (connectivityResult[0] == ConnectivityResult.mobile ||
+          connectivityResult[0] == ConnectivityResult.wifi) {
         final verify = await retry(
           // Make a GET request
           () => http.get(
@@ -356,10 +368,12 @@ class AsyncDisconnection extends _$AsyncDisconnection {
             events.add(200);
           }
           if (verify.body == "Paid") {
-            events.add(400);
+            // events.add(400);
+            events.add(200);
           }
           if (verify.body == "HasPNOrNotValidBill") {
-            events.add(410);
+            // events.add(410);
+            events.add(200);
           }
         }
         return _fetchGetDisconnection();
@@ -387,6 +401,8 @@ class AsyncDisconnection extends _$AsyncDisconnection {
 
   ConsumerModel consumerHiveToModel(ConsumerHive a) {
     final consumerModel = ConsumerModel(
+        lastUpdated: a.lastUpdated,
+        dispatchDateTime: a.dispatchDateTime,
         accountNo: a.accountNo,
         address: a.address,
         billAmount: a.billAmount,

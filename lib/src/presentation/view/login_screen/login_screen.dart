@@ -247,7 +247,7 @@ class _LoginState extends ConsumerState<Login> {
         if (connectivityResult[0] == ConnectivityResult.mobile ||
             connectivityResult[0] == ConnectivityResult.wifi ||
             connectivityResult[0] == ConnectivityResult.ethernet) {
-          LoginM a = LoginM(password: passText.text, username: userText.text);
+          LoginM a = LoginM(password: passText.text, email: userText.text);
           // ignore: use_build_context_synchronously
           ref
               .read(asyncAuthProvider.notifier)

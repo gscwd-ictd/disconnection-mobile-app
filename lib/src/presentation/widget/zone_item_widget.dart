@@ -1,3 +1,4 @@
+import 'package:diconnection/src/core/enums/status/status_enum.dart';
 import 'package:diconnection/src/data/models/zone_model.dart';
 import 'package:diconnection/src/presentation/view/assigned_team_accounts/view_assigned_accounts.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class _ZoneItemWidgetState extends State<ZoneItemWidget> {
     String barangay = fixText(zoneData.barangay, limit: 40);
     bool notOverSize = (barangay.length <= 22);
     bool isDisconnected = zoneData.consumerList
-        .where((element) => element.isConnected == true)
+        .where((element) => element.status == StatusEnum.ongoing.getIntVal)
         .isEmpty;
     return GestureDetector(
       onTap: () {
