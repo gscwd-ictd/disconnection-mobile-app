@@ -1,4 +1,5 @@
 import 'package:diconnection/src/data/models/zone_model.dart';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_dropdown/models/value_item.dart';
@@ -18,4 +19,8 @@ class UtilsHandler {
   static List<ValueItem> itemsML = [];
   static List<ValueItem> remarks = [];
   static int ping = 1;
+  static EasyRefreshController easyRefresh = EasyRefreshController(
+    controlFinishRefresh: true,
+    controlFinishLoad: true,
+  );
 }

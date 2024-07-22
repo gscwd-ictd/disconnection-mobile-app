@@ -91,133 +91,139 @@ class _AssignedAccountsState extends ConsumerState<AssignedAccounts> {
         title:
             Text(widget.address, style: const TextStyle(color: Colors.white)),
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Padding(
-              padding: const EdgeInsets.all(5),
-              child: TextField(
-                onChanged: (val) {
-                  setState(() {});
-                },
-                controller: txtSearch,
-                style: const TextStyle(fontSize: 16.0, color: Colors.black),
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                      borderSide: BorderSide(
-                          color: Colors.black, style: BorderStyle.solid)),
-                  hintText: "Search here",
-                  hintStyle: TextStyle(fontSize: 16.0, color: Colors.grey),
+      body: StatefulBuilder(builder: (lowerContext, innerSetState) {
+        return Column(
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: TextField(
+                  onChanged: (val) {
+                    setState(() {});
+                  },
+                  controller: txtSearch,
+                  style: const TextStyle(fontSize: 16.0, color: Colors.black),
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        borderSide: BorderSide(
+                            color: Colors.black, style: BorderStyle.solid)),
+                    hintText: "Search here",
+                    hintStyle: TextStyle(fontSize: 16.0, color: Colors.grey),
+                  ),
+                  enabled: true,
                 ),
-                enabled: true,
               ),
             ),
-          ),
-          // Padding(
-          //   padding: const EdgeInsets.only(top: 12.0, left: 10.0),
-          //   child: Row(
-          //     col
-          //   ),
-          // ),
-          EasyRefresh(
-            controller: _controller,
-            header: const ClassicHeader(),
-            onRefresh: () async {
-              if (UtilsHandler.isAvailableToSync || !UtilsHandler.doneSync) {
-                print('you cant refresh');
-              } else {
-                print('refreshing');
-                await ref
-                    .read(asyncAuthProvider.notifier)
-                    .refresh()
-                    .then((value) => () async {
-                          await ref
-                              .read(asyncDisconnectionProvider.notifier)
-                              .refresh();
-                        });
-                setState(() {});
-              }
-              _controller.finishRefresh();
-            },
-            child: SizedBox(
-                height: 70.h,
-                child: PageView(
-                  scrollDirection: Axis.horizontal,
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: pageController,
-                  children: [
-                    ForDisconnectScreen(
-                      consumerList: forDiscon,
-                      onPressedFunction: () {
-                        setState(() {});
-                      },
-                    ),
-                    DisconnectedScreen(
-                      consumerList: disconnected,
-                      onPressedFunction: () {
-                        setState(() {});
-                      },
-                    )
-                  ],
-                )),
-          ),
-          Row(
-            children: [
-              GestureDetector(
-                  onTap: () {
-                    pageController.previousPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeIn);
-                    if (pageController.page != 0) {
-                      isSecondPage = !isSecondPage;
-                    }
-                    setState(() {});
-                  },
-                  child: SizedBox(
-                      width: 49.w,
-                      height: 8.h,
-                      child: Card(
-                          color: !isSecondPage
-                              ? kBackgroundColor
-                              : Colors.grey[300],
-                          child: Center(
-                              child: Text("For Disconnection",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: isSecondPage
-                                          ? Colors.black
-                                          : Colors.white)))))),
-              GestureDetector(
-                  onTap: () {
-                    pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeIn);
-                    if (pageController.page != 1) {
-                      isSecondPage = !isSecondPage;
-                    }
-                    setState(() {});
-                  },
-                  child: SizedBox(
-                      width: 49.w,
-                      height: 8.h,
-                      child: Card(
-                          color: isSecondPage
-                              ? kBackgroundColor
-                              : Colors.grey[300],
-                          child: Center(
-                              child: Text("Disconnected",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: !isSecondPage
-                                          ? Colors.black
-                                          : Colors.white))))))
-            ],
-          )
-        ],
-      ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 12.0, left: 10.0),
+            //   child: Row(
+            //     col
+            //   ),
+            // ),
+            EasyRefresh(
+              controller: _controller,
+              header: const ClassicHeader(),
+              onRefresh: () async {
+                if (UtilsHandler.isAvailableToSync || !UtilsHandler.doneSync) {
+                  print('you cant refresh');
+                } else {
+                  print('refreshing');
+                  await ref
+                      .read(asyncAuthProvider.notifier)
+                      .refresh()
+                      .then((value) => () async {
+                            await ref
+                                .read(asyncDisconnectionProvider.notifier)
+                                .refresh();
+                          });
+                  setState(() {});
+                }
+                _controller.finishRefresh();
+              },
+              child: SizedBox(
+                  height: 70.h,
+                  child: PageView(
+                    scrollDirection: Axis.horizontal,
+                    physics: const NeverScrollableScrollPhysics(),
+                    controller: pageController,
+                    children: [
+                      ForDisconnectScreen(
+                        consumerList: forDiscon,
+                        onPressedFunction: () {
+                          Future.delayed(const Duration(milliseconds: 100), () {
+                            setState(() {});
+                          });
+                        },
+                      ),
+                      DisconnectedScreen(
+                        consumerList: disconnected,
+                        onPressedFunction: () {
+                          Future.delayed(const Duration(milliseconds: 100), () {
+                            setState(() {});
+                          });
+                        },
+                      )
+                    ],
+                  )),
+            ),
+            Row(
+              children: [
+                GestureDetector(
+                    onTap: () {
+                      pageController.previousPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeIn);
+                      if (pageController.page != 0) {
+                        isSecondPage = !isSecondPage;
+                      }
+                      setState(() {});
+                    },
+                    child: SizedBox(
+                        width: 49.w,
+                        height: 8.h,
+                        child: Card(
+                            color: !isSecondPage
+                                ? kBackgroundColor
+                                : Colors.grey[300],
+                            child: Center(
+                                child: Text("For Disconnection",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: isSecondPage
+                                            ? Colors.black
+                                            : Colors.white)))))),
+                GestureDetector(
+                    onTap: () {
+                      pageController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeIn);
+                      if (pageController.page != 1) {
+                        isSecondPage = !isSecondPage;
+                      }
+                      setState(() {});
+                    },
+                    child: SizedBox(
+                        width: 49.w,
+                        height: 8.h,
+                        child: Card(
+                            color: isSecondPage
+                                ? kBackgroundColor
+                                : Colors.grey[300],
+                            child: Center(
+                                child: Text("Disconnected",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: !isSecondPage
+                                            ? Colors.black
+                                            : Colors.white))))))
+              ],
+            )
+          ],
+        );
+      }),
     );
   }
 }

@@ -337,14 +337,16 @@ class AsyncDisconnection extends _$AsyncDisconnection {
     state = await AsyncValue.guard(() async {
       if (connectivityResult[0] == ConnectivityResult.mobile ||
           connectivityResult[0] == ConnectivityResult.wifi) {
+        final myDateTime = input.disconnectionDate!;
+        final dateOnly =
+            DateTime(myDateTime.year, myDateTime.month, myDateTime.day);
         final verify = await retry(
           // Make a GET request
           () => http.get(
               isHttp
                   ? Uri.http(hostAPI, '/disconnection/getVerify', {
                       "accountNo": input.accountNo,
-                      "disconnectionDate":
-                          input.disconnectionDate!.toLocal().toIso8601String()
+                      "disconnectionDate": dateOnly.toLocal().toIso8601String()
                     })
                   : Uri.https(hostAPI, '/disconnection/getVerify', {
                       "accountNo": input.accountNo,
@@ -368,12 +370,12 @@ class AsyncDisconnection extends _$AsyncDisconnection {
             events.add(200);
           }
           if (verify.body == "Paid") {
-            // events.add(400);
-            events.add(200);
+            events.add(400);
+            // events.add(200);
           }
           if (verify.body == "HasPNOrNotValidBill") {
-            // events.add(410);
-            events.add(200);
+            events.add(410);
+            // events.add(200);
           }
         }
         return _fetchGetDisconnection();

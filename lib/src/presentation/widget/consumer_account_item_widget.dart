@@ -67,10 +67,7 @@ class _ConsumerAccountItemWidgetState
                     title: 'Already Cancelled',
                     content:
                         'The request to cancel has been processed and confirmed.',
-                    onPressedFunction: () {
-                      Navigator.pop(context);
-                      setState(() {});
-                    }));
+                    onPressedFunction: widget.onPressedFunction));
           } else {
             ref
                 .read(asyncDisconnectionProvider.notifier)
@@ -97,7 +94,7 @@ class _ConsumerAccountItemWidgetState
                           return ProceedMessage(
                               hasWifi: true,
                               title: 'Not Paid ',
-                              content: '${consumerName} has not paid yet',
+                              content: '$consumerName has not paid yet',
                               function: () async {
                                 Navigator.pop(context);
                                 refresh = await Navigator.of(context).push(
@@ -141,20 +138,14 @@ class _ConsumerAccountItemWidgetState
                             title: "Already Paid",
                             content:
                                 "Please abort disconnection the Consumer was already paid",
-                            onPressedFunction: () {
-                              Navigator.pop(context, 'refresh');
-                              setState(() {});
-                            },
+                            onPressedFunction: widget.onPressedFunction,
                           );
                         case 410:
                           return SuccessMessage(
                             title: "Has Promissory Note/Bill was not valid",
                             content:
                                 "Please abort disconnection for $consumerName",
-                            onPressedFunction: () {
-                              Navigator.pop(context, 'refresh');
-                              setState(() {});
-                            },
+                            onPressedFunction: widget.onPressedFunction,
                           );
                         case 401: //Failed to Verify Please try again
                           return ErrorMessage(
