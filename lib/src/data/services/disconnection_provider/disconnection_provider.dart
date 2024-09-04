@@ -340,6 +340,7 @@ class AsyncDisconnection extends _$AsyncDisconnection {
         final myDateTime = input.disconnectionDate!;
         final dateOnly =
             DateTime(myDateTime.year, myDateTime.month, myDateTime.day);
+        int count = 0;
         final verify = await retry(
           // Make a GET request
           () => http.get(
@@ -363,6 +364,10 @@ class AsyncDisconnection extends _$AsyncDisconnection {
           onRetry: (p0) {
             print(p0);
             print('Retrying Verifying...');
+            if (count >= 1) {
+              events.add(300);
+            }
+            count++;
           },
         );
         if (verify.statusCode == 200 || verify.statusCode == 201) {

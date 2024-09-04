@@ -30,8 +30,8 @@ class AsyncAuth extends _$AsyncAuth {
     //2020-04-01Z
     String token = await GetPreferences().getStoredAccessToken() ?? "";
     try {
-      if (connectivityResult == ConnectivityResult.mobile ||
-          connectivityResult == ConnectivityResult.wifi) {
+      if (connectivityResult[0] == ConnectivityResult.mobile ||
+          connectivityResult[0] == ConnectivityResult.wifi) {
         final json = await retry(
             // Make a GET request
             () => http.get(

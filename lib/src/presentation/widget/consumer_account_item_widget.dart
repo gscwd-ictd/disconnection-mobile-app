@@ -22,13 +22,12 @@ class ConsumerAccountItemWidget extends ConsumerStatefulWidget {
   final Function onPressedFunction;
   final bool isDiconnected;
   const ConsumerAccountItemWidget(
-      {Key? key,
+      {super.key,
       required this.consumerData,
       required this.onPressedFunction,
       required this.index,
       required this.isDiconnected,
-      required this.last})
-      : super(key: key);
+      required this.last});
 
   @override
   ConsumerState<ConsumerAccountItemWidget> createState() =>

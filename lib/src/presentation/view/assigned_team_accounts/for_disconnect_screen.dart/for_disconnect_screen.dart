@@ -92,10 +92,15 @@ class _ForDisconnectScreenState extends ConsumerState<ForDisconnectScreen> {
                                     : consumerList[index],
                                 index: index,
                                 onPressedFunction: () {
-                                  ref
-                                      .read(asyncDisconnectionProvider.notifier)
-                                      .refresh();
-                                  Navigator.pop(context, 'refresh');
+                                  if (UtilsHandler.isAvailableToSync ||
+                                      !UtilsHandler.doneSync) {
+                                    print('You cant refresh');
+                                    ref
+                                        .read(
+                                            asyncDisconnectionProvider.notifier)
+                                        .refresh();
+                                  }
+                                  // Navigator.pop(context, 'refresh');
                                   innerSetState(() {});
                                   widget.onPressedFunction();
                                 },
