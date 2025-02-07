@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 // const String kHost = "122.3.104.117:8991";
 // const String kHost = "192.168.99.131:3000";
 // const String kHost = "dde4-122-3-104-117.ngrok-free.app";
-const String kHost = "172.20.110.135:8991";
-// const String kHost = "disconnection-api.gscwd.app";
+// const String kHost = "172.20.110.135:8991";
+const String kHost = "disconnection-api.gscwd.app";
 const String kHostHttp = "https://172.20.10.23:3000";
-const bool isHttp = true;
+const bool isHttp = false;
 
 const String kMaterialAppTitle = 'Disconnection App';
 const String bingMapKey =
