@@ -1,6 +1,6 @@
 {
-    "name": "diconnection",
-    "short_name": "diconnection",
+    "name": "disconnection_mobile",
+    "short_name": "disconnection_mobile",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
